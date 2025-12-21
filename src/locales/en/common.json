@@ -1,6 +1,6 @@
 {
   "apisix": {
-    "dashboard": "APISIX Dashboard",
+    "dashboard": "Security Gateway",
     "logo": "APISIX Logo"
   },
   "consumerGroups": {
@@ -287,7 +287,6 @@
   "globalRules": {
     "singular": "Global Rule"
   },
-  "help-us-translate": "Help Us Translate!",
   "info": {
     "add": {
       "success": "Add {{name}} Successfully",

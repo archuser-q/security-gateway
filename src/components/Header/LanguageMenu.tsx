@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ActionIcon, Anchor, Menu } from '@mantine/core';
+import { ActionIcon, Menu } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import i18nProgress from 'virtual:i18n-progress';
 
@@ -23,14 +23,11 @@ import IconLanguage from '~icons/material-symbols/language-chinese-array';
 
 const LangMap: Record<keyof Resources, string> = {
   en: 'English',
-  de: 'Deutsch',
-  zh: '中文',
-  es: 'Español',
-  tr: 'Türkçe',
+  vn: 'Vietnamese',
 };
 
 const TranslationProgress = ({ lang }: { lang: string }) => {
-  const percent = i18nProgress[lang].percent;
+  const percent = i18nProgress[lang]?.percent;
   if (typeof percent === 'number' && percent < 100) {
     return (
       <span
@@ -73,16 +70,6 @@ export const LanguageMenu = () => {
             <TranslationProgress lang={lang} />
           </Menu.Item>
         ))}
-        <Menu.Divider />
-        <Menu.Label>
-          <Anchor
-            href="https://github.com/apache/apisix-dashboard/issues/1407"
-            target="_blank"
-            size="xs"
-          >
-            {t('help-us-translate')}
-          </Anchor>
-        </Menu.Label>
       </Menu.Dropdown>
     </Menu>
   );
