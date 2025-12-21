@@ -30,7 +30,6 @@ import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import PageHeader from '@/components/page/PageHeader';
 import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
-import { pipeProduce } from '@/utils/producer';
 
 const ConsumerGroupAddForm = () => {
   const { t } = useTranslation();
