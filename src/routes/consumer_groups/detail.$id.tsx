@@ -85,7 +85,7 @@ const ConsumerGroupDetailForm = (props: Props) => {
     <FormProvider {...form}>
       <form
         onSubmit={form.handleSubmit((d) =>
-          putConsumerGroup.mutateAsync(pipeProduce()({ ...d, id }))
+          putConsumerGroup.mutateAsync({ ...d, id })
         )}
       >
         <FormSectionGeneral readOnly />
