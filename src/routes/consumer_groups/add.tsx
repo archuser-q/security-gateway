@@ -65,7 +65,7 @@ const ConsumerGroupAddForm = () => {
     <FormProvider {...form}>
       <form
         onSubmit={form.handleSubmit((d) =>
-          putConsumerGroup.mutateAsync(pipeProduce()(d))
+          putConsumerGroup.mutateAsync(d)
         )}
       >
         <FormSectionGeneral />
