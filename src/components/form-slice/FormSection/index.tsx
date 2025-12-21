@@ -37,6 +37,7 @@ import {
 import { APPSHELL_HEADER_HEIGHT } from '@/config/constant';
 
 import classes from './style.module.css';
+import { observer } from 'mobx-react-lite';
 
 const SectionDepthCtx = createContext<number>(0);
 
@@ -75,7 +76,7 @@ const LegendGroup = ({
   );
 };
 
-export const FormSection = (props: FormSectionProps) => {
+export const FormSection = observer((props: FormSectionProps) => {
   const { className, legend, extra, children, ...restProps } = props;
   const parentDepth = useContext(SectionDepthCtx);
   const { refreshTOC } = useContext(FormTOCCtx);
@@ -103,7 +104,7 @@ export const FormSection = (props: FormSectionProps) => {
       </Fieldset>
     </SectionDepthProvider>
   );
-};
+});
 
 const TOC = (props: Pick<TableOfContentsProps, 'reinitializeRef'>) => {
   return (

@@ -23,7 +23,7 @@ import {
   type TextInputProps,
   useVirtualizedCombobox,
 } from '@mantine/core';
-import { useLocalObservable } from 'mobx-react-lite';
+import { observer, useLocalObservable } from 'mobx-react-lite';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -102,7 +102,7 @@ export type PluginCardListProps = Omit<OptionProps, 'name'> &
     plugins: string[];
   };
 
-export const PluginCardList = (props: PluginCardListProps) => {
+export const PluginCardList = observer((props: PluginCardListProps) => {
   const { search = '', cols = 3, h, mah, plugins } = props;
   const { mode, onAdd, onEdit, onDelete, onView } = props;
   const { t } = useTranslation();
@@ -154,4 +154,4 @@ export const PluginCardList = (props: PluginCardListProps) => {
       </Combobox.Options>
     </Combobox>
   );
-};
+});

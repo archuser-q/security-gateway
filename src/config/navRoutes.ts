@@ -17,57 +17,87 @@
 import type { Resources } from '@/config/i18n';
 import type { FileRouteTypes } from '@/routeTree.gen';
 
+// ✅ Import Tabler icons
+import {
+  IconServer,
+  IconRoute,
+  IconTopologyStar,
+  IconArrowMerge,
+  IconUsers,
+  IconUserCog,
+  IconLock,
+  IconShield,
+  IconPuzzle,
+  IconSettings,
+  IconKey,
+  IconCode,
+} from '@tabler/icons-react';
+
 export type NavRoute = {
   to: FileRouteTypes['to'];
   label: keyof Resources['en']['common']['sources'];
+  icon: React.ElementType; // 👈 add icon type
 };
+
 export const navRoutes: NavRoute[] = [
   {
     to: '/services',
     label: 'services',
+    icon: IconServer,
   },
   {
     to: '/routes',
     label: 'routes',
+    icon: IconRoute,
   },
   {
     to: '/stream_routes',
     label: 'streamRoutes',
+    icon: IconTopologyStar,
   },
   {
     to: '/upstreams',
     label: 'upstreams',
+    icon: IconArrowMerge,
   },
   {
     to: '/consumers',
     label: 'consumers',
+    icon: IconUserCog, 
   },
   {
     to: '/consumer_groups',
     label: 'consumerGroups',
+    icon: IconUsers,
   },
   {
     to: '/ssls',
     label: 'ssls',
+    icon: IconLock,
   },
   {
     to: '/global_rules',
     label: 'globalRules',
+    icon: IconShield,
   },
   {
     to: '/plugin_metadata',
     label: 'pluginMetadata',
+    icon: IconPuzzle,
   },
   {
     to: '/plugin_configs',
     label: 'pluginConfigs',
+    icon: IconSettings,
   },
   {
     to: '/secrets',
     label: 'secrets',
+    icon: IconKey,
   },
   {
     to: '/protos',
     label: 'protos',
+    icon: IconCode,
   },
 ];

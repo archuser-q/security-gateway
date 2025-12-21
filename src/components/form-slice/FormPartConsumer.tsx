@@ -23,15 +23,16 @@ import type { APISIXType } from '@/types/schema/apisix';
 import { FormItemPlugins } from './FormItemPlugins';
 import { FormPartBasic } from './FormPartBasic';
 import { FormSection } from './FormSection';
+import { observer } from 'mobx-react-lite';
 
-export const FormSectionPluginsOnly = () => {
+export const FormSectionPluginsOnly = observer(() => {
   const { t } = useTranslation();
   return (
     <FormSection legend={t('form.plugins.label')}>
       <FormItemPlugins name="plugins" />
     </FormSection>
   );
-};
+});
 
 export const FormPartConsumer = () => {
   const { t } = useTranslation();

@@ -43,13 +43,17 @@ export const Navbar = () => {
   const { t } = useTranslation();
   return (
     <AppShellNavbar>
-      {navRoutes.map((route) => (
-        <NavbarLink
-          {...route}
-          key={route.to}
-          label={t(`sources.${route.label}`)}
-        />
-      ))}
+      {navRoutes.map((route) => {
+        const Icon = route.icon; 
+        return (
+          <NavbarLink
+            to={route.to}
+            key={route.to}
+            label={t(`sources.${route.label}`)}
+            leftSection={<Icon size={18} stroke={1.5} />} 
+          />
+        );
+      })}
     </AppShellNavbar>
   );
 };

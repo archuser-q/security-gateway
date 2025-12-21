@@ -22,7 +22,7 @@ import {
 } from '@mantine/core';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { toJS } from 'mobx';
-import { useLocalObservable } from 'mobx-react-lite';
+import { observer, useLocalObservable } from 'mobx-react-lite';
 import { difference } from 'rambdax';
 import { useEffect, useMemo } from 'react';
 import {
@@ -50,7 +50,7 @@ export type FormItemPluginsProps<T extends FieldValues> = InputWrapperProps &
     onChange?: (value: Record<string, unknown>) => void;
   } & Partial<NeedPluginSchema>;
 
-export const FormItemPlugins = <T extends FieldValues>(
+export const FormItemPlugins = observer(<T extends FieldValues>(
   props: FormItemPluginsProps<T>
 ) => {
   const {
@@ -186,4 +186,4 @@ export const FormItemPlugins = <T extends FieldValues>(
       </Drawer.Stack>
     </InputWrapper>
   );
-};
+});

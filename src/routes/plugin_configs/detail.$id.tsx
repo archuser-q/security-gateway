@@ -57,7 +57,7 @@ const PluginConfigDetailForm = (props: Props) => {
 
   const putPluginConfig = useMutation({
     mutationFn: (d: APISIXType['PluginConfigPut']) =>
-      putPluginConfigReq(req, pipeProduce()({ ...d, id })),
+      putPluginConfigReq(req, d),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('pluginConfigs.singular') }),
