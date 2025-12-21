@@ -35,7 +35,7 @@ const ConsumerAddForm = () => {
   const router = useRouter();
 
   const putConsumer = useMutation({
-    mutationFn: (d: APISIXType['ConsumerPut']) => putConsumerReq(req, d),
+    mutationFn: (d: APISIXType['ConsumerPut']) => putConsumerReq(req, pipeProduce()(d)),
     async onSuccess(_, res) {
       notifications.show({
         message: t('info.add.success', { name: t('consumers.singular') }),
