@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { observer } from 'mobx-react-lite';
 import { FormPartBasic, type FormPartBasicProps } from './FormPartBasic';
 import { FormSectionPluginsOnly } from './FormPartConsumer';
 
-export const FormPartPluginConfig = (
+export const FormPartPluginConfig = observer((
   props: {
     basicProps?: FormPartBasicProps;
   } = {}
@@ -29,4 +30,4 @@ export const FormPartPluginConfig = (
       <FormSectionPluginsOnly />
     </>
   );
-};
+});

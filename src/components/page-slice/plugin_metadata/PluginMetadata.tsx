@@ -17,8 +17,8 @@
 import { Drawer, Group } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
-import { toJS } from 'mobx';
-import { useLocalObservable } from 'mobx-react-lite';
+import { observable, toJS } from 'mobx';
+import { observer, useLocalObservable } from 'mobx-react-lite';
 import { difference } from 'rambdax';
 import { useTranslation } from 'react-i18next';
 import { useDeepCompareEffect } from 'react-use';
@@ -37,7 +37,7 @@ import { SelectPluginsDrawer } from '@/components/form-slice/FormItemPlugins/Sel
 
 import { type PluginInfo, usePluginMetadataList } from './hooks';
 
-export const PluginMetadata = () => {
+export const PluginMetadata = observer(() => {
   const { t } = useTranslation();
 
   const getMetadataListReq = usePluginMetadataList();
@@ -67,8 +67,8 @@ export const PluginMetadata = () => {
   });
 
   const pluginsOb = useLocalObservable(() => ({
-    __map: new Map<string, PluginConfig>(),
-    __schemaMap: new Map<string, object>(),
+    __map: observable.map<string, PluginConfig>(),
+    __schemaMap: observable.map<string, object>(),
     init(map: Map<string, PluginInfo>, hasConfigNames: string[]) {
       // we need to clear the map first
       this.__map.clear();
@@ -166,4 +166,4 @@ export const PluginMetadata = () => {
       />
     </Drawer.Stack>
   );
-};
+});

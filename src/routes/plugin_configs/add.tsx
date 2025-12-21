@@ -30,9 +30,9 @@ import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import PageHeader from '@/components/page/PageHeader';
 import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
-import { pipeProduce } from '@/utils/producer';
+import { observer } from 'mobx-react-lite';
 
-const PluginConfigAddForm = () => {
+const PluginConfigAddForm = observer(() => {
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -65,7 +65,7 @@ const PluginConfigAddForm = () => {
     <FormProvider {...form}>
       <form
         onSubmit={form.handleSubmit((d) =>
-          putPluginConfig.mutateAsync(pipeProduce()(d))
+          putPluginConfig.mutateAsync(d)
         )}
       >
         <FormSectionGeneral />
@@ -74,7 +74,7 @@ const PluginConfigAddForm = () => {
       </form>
     </FormProvider>
   );
-};
+});
 
 function RouteComponent() {
   const { t } = useTranslation();
