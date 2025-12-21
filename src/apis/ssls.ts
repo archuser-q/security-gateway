@@ -16,7 +16,7 @@
  */
 import type { AxiosInstance } from 'axios';
 
-import type { SSLPostType } from '@/components/form-slice/FormPartSSL/schema';
+import type { SSLPostType, SSLPutType } from '@/components/form-slice/FormPartSSL/schema';
 import { API_SSLS } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
 import type { PageSearchType } from '@/types/schema/pageSearch';
@@ -33,7 +33,7 @@ export const getSSLReq = (req: AxiosInstance, id: string) =>
     .get<unknown, APISIXType['RespSSLDetail']>(`${API_SSLS}/${id}`)
     .then((v) => v.data);
 
-export const putSSLReq = (req: AxiosInstance, data: APISIXType['SSL']) => {
+export const putSSLReq = (req: AxiosInstance, data: SSLPutType) => {
   const { id, ...rest } = data;
   return req.put<APISIXType['SSL'], APISIXType['RespSSLDetail']>(
     `${API_SSLS}/${id}`,
