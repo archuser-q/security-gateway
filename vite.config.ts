@@ -95,9 +95,7 @@ export default defineConfig({
       baseLang: 'en',
       getTranslationDir: (lang) => `./src/locales/${lang}`,
     }),
-    react({
-      plugins: [observerPlugin() as never],
-    }),
+    react(),
   ],
   css: {
     postcss: {
