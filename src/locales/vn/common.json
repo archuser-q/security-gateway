@@ -348,7 +348,8 @@
     "services": "Dịch Vụ",
     "ssls": "SSLs",
     "streamRoutes": "Tuyến Stream",
-    "upstreams": "Upstreams"
+    "upstreams": "Upstreams",
+    "admin": "Quản Trị Viên"
   },
   "ssls": {
     "singular": "SSL"

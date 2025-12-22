@@ -44,6 +44,7 @@ import { getSecretListReq, getSecretReq } from './secrets';
 import { getServiceListReq, getServiceReq } from './services';
 import { getSSLListReq, getSSLReq } from './ssls';
 import { getStreamRouteListReq, getStreamRouteReq } from './stream_routes';
+import { getAdminListReq, getAdminReq } from './admin';
 
 const genDetailQueryOptions =
   <T extends unknown[], R>(
@@ -225,6 +226,10 @@ export const useCredentialsList = (username: string) => {
 export const getProtoQueryOptions = genDetailQueryOptions('proto', getProtoReq);
 export const getProtoListQueryOptions = genListQueryOptions('protos', getProtoListReq);
 export const useProtoList = genUseList('/protos/', getProtoListQueryOptions);
+
+export const getAdminQueryOptions = genDetailQueryOptions('admins', getAdminReq);
+export const getAdminListQueryOptions = genListQueryOptions('admins', getAdminListReq);
+export const useAdminList = genUseList('/admins/', getAdminListQueryOptions);
 
 export const getSecretQueryOptions = genDetailQueryOptions(
   'secret',

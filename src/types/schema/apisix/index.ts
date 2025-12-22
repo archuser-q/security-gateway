@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { APISIXAdmin } from './admin';
 import { APISIXCommon } from './common';
 import { APISIXConsumerGroups } from './consumer_groups';
 import { APISIXConsumers } from './consumers';
@@ -47,4 +48,5 @@ export const APISIX = {
   ...APISIXSecrets,
   ...APISIXCredentials,
   ...APISIXPluginConfigs,
+  ...APISIXAdmin
 };
