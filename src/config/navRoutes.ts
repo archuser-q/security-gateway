@@ -100,4 +100,9 @@ export const navRoutes: NavRoute[] = [
     label: 'protos',
     icon: IconCode,
   },
+  {
+    to: '/admins',
+    label: 'admin',
+    icon: IconUsers,
+  }
 ];
