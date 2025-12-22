@@ -18,7 +18,7 @@ import { EditableProTable, type ProColumns } from '@ant-design/pro-components';
 import { Button, InputWrapper, type InputWrapperProps } from '@mantine/core';
 import { useClickOutside } from '@mantine/hooks';
 import { toJS } from 'mobx';
-import { useLocalObservable } from 'mobx-react-lite';
+import { observer, useLocalObservable } from 'mobx-react-lite';
 import { nanoid } from 'nanoid';
 import { equals, isNil } from 'rambdax';
 import { useEffect, useMemo } from 'react';
@@ -111,7 +111,7 @@ export type FormItemNodesProps<T extends FieldValues> =
     defaultValue?: APISIXType['UpstreamNode'][];
   } & Pick<InputWrapperProps, 'label' | 'required' | 'withAsterisk'>;
 
-export const FormItemNodes = <T extends FieldValues>(
+export const FormItemNodes = observer(<T extends FieldValues>(
   props: FormItemNodesProps<T>
 ) => {
   const { controllerProps, restProps } = useMemo(
@@ -263,4 +263,4 @@ export const FormItemNodes = <T extends FieldValues>(
       </Button>
     </InputWrapper>
   );
-};
+});
