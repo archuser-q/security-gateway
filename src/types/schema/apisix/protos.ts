@@ -25,6 +25,6 @@ const Proto = z
   .merge(APISIXCommon.Info);
 
 export const APISIXProtos = {
-  Proto,
-  ProtoPost: Proto.omit({ id: true, create_time: true, update_time: true }),
+  Proto: Proto.omit({ create_time: true, update_time: true }),
+  ProtoPost: Proto.omit({ id: true, create_time: true, update_time: true })
 };
