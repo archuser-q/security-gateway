@@ -33,6 +33,8 @@ import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
+import { queryClient } from '@/config/global';
+import { getRouteQueryOptions } from '@/apis/hooks';
 
 type Props = {
   navigate: (res: APISIXType['RespRouteDetail']) => Promise<void>;
@@ -46,6 +48,9 @@ export const RouteAddForm = (props: Props) => {
   const postRoute = useMutation({
     mutationFn: (d: RoutePostType) => postRouteReq(req, produceRoute(d)),
     async onSuccess(res) {
+      const routeId = res.data.value.id;
+      
+      await queryClient.prefetchQuery(getRouteQueryOptions(routeId));
       notifications.show({
         message: t('info.add.success', { name: t('routes.singular') }),
         color: 'green',
