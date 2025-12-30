@@ -36,7 +36,7 @@ export const getServiceReq = (req: AxiosInstance, id: string) =>
 
 export const putServiceReq = (
   req: AxiosInstance,
-  data: APISIXType['Service']
+  data: APISIXType['ServicePut']
 ) => {
   const { id, ...rest } = data;
   return req.put<APISIXType['Service'], APISIXType['RespServiceDetail']>(

@@ -56,7 +56,7 @@ const ServiceDetailForm = (props: Props) => {
   const { data: serviceData, isLoading, refetch } = serviceQuery;
 
   const form = useForm({
-    resolver: zodResolver(APISIX.Service),
+    resolver: zodResolver(APISIX.ServicePut),
     shouldUnregister: true,
     shouldFocusError: true,
     mode: 'all',
@@ -70,7 +70,7 @@ const ServiceDetailForm = (props: Props) => {
   }, [serviceData, form, isLoading]);
 
   const putService = useMutation({
-    mutationFn: (d: APISIXType['Service']) =>
+    mutationFn: (d: APISIXType['ServicePut']) =>
       putServiceReq(
         req,
         pipeProduce(produceRmUpstreamWhenHas('upstream_id'))(d)
