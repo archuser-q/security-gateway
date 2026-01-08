@@ -80,7 +80,10 @@ const SSLDetailForm = (props: Props & { id: string }) => {
 
   useEffect(() => {
     if (sslData && !isLoading) {
-      form.reset(produceToSSLForm(sslData));
+      const base = produceToSSLForm(sslData);
+      form.reset(base);
+      form.setValue('create_time', sslData.create_time);
+      form.setValue('update_time', sslData.update_time);
     }
   }, [sslData, form, isLoading]);
 
