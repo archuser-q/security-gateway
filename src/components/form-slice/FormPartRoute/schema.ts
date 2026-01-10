@@ -31,7 +31,10 @@ export const RoutePostSchema = APISIX.Route.omit({
 
 export type RoutePostType = z.infer<typeof RoutePostSchema>;
 
-export const RoutePutSchema = APISIX.Route.extend({
+export const RoutePutSchema = APISIX.Route.omit({
+  create_time: true,
+  update_time: true,
+}).extend({
   vars: z.string().optional(),
 });
 
