@@ -64,7 +64,7 @@ const RouteDetailForm = (props: Props) => {
 
   const form = useForm({
     resolver: zodResolver(RoutePutSchema),
-    shouldUnregister: true,
+    shouldUnregister: false,
     shouldFocusError: true,
     mode: 'all',
     disabled: readOnly,
