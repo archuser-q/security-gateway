@@ -57,14 +57,22 @@ export const produceRmDoubleUnderscoreKeys = produce((draft) => {
 export const pipeProduce = (...funcs: ((a: any) => unknown)[]) => {
   return <T>(val: T) =>
     produce(val, (draft) => {
+      const plugins = (draft as any).plugins;
       const fs = funcs;
-      return pipe(
+      const result = pipe(
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
         ...fs,
         produceRmDoubleUnderscoreKeys,
         produceTime,
         produceDeepCleanEmptyKeys()
-      )(draft) as never;
+      )(draft);
+    
+    // Restore plugins after transformation if they existed
+    if (plugins !== undefined) {
+      (result as any).plugins = plugins;
+    }
+    
+    return result as never;
     }) as T;
 };
