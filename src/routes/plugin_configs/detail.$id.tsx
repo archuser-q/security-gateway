@@ -39,7 +39,6 @@ import PageHeader from '@/components/page/PageHeader';
 import { API_PLUGIN_CONFIGS } from '@/config/constant';
 import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
-import { pipeProduce } from '@/utils/producer';
 
 type Props = {
   id: string;
