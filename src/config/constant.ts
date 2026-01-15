@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export const BASE_PATH = '/ui';
+export const BASE_PATH = '/';
 export const PAGE_SIZE_MIN = 10;
 export const PAGE_SIZE_MAX = 500;
 export const API_HEADER_KEY = 'X-API-KEY';
