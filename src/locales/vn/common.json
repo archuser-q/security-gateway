@@ -336,6 +336,7 @@
     "ui-commit-sha": "UI Commit SHA"
   },
   "sources": {
+    "overview": "Tổng quan",
     "consumerGroups": "Nhóm Người Dùng",
     "consumers": "Người Dùng",
     "credentials": "Thông Tin Xác Thực",

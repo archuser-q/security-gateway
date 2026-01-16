@@ -336,6 +336,7 @@
     "ui-commit-sha": "UI Commit SHA"
   },
   "sources": {
+    "overview": "Overview",
     "consumerGroups": "Consumer Groups",
     "consumers": "Consumers",
     "credentials": "Credentials",
