@@ -31,6 +31,7 @@ import {
   IconSettings,
   IconKey,
   IconCode,
+  IconHome
 } from '@tabler/icons-react';
 
 export type NavRoute = {
@@ -40,6 +41,11 @@ export type NavRoute = {
 };
 
 export const navRoutes: NavRoute[] = [
+  {
+    to: '/overview',
+    label: 'overview',
+    icon: IconHome,
+  },
   {
     to: '/services',
     label: 'services',
