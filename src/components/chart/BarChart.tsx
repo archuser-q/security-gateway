@@ -1,6 +1,6 @@
 import { Column } from '@ant-design/charts';
-import { config } from './config/column';
-import { useChartData } from './config/data';
+import { config } from './config/barConfig/column';
+import { useChartData } from './config/barConfig/data';
 
 const BarChart = () => {
   const data = useChartData();
