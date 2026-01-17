@@ -118,6 +118,10 @@
         "uri": "URI"
       }
     },
+    "overview": {
+      "title": "Luồng hoạt động",
+      "systemOverView": "Tổng quan hệ thống"
+    },
     "services": {
       "enableWebsocket": "Kích Hoạt WebSocket",
       "hosts": "Hosts",

@@ -1,7 +1,10 @@
 import { MindMap, type MindMapOptions } from '@ant-design/graphs';
 import { mindmapData } from './config/mindmapConfig/data';
+import { useTranslation } from 'react-i18next';
 
 const Mindmap = () => {
+  const { t, i18n } = useTranslation();
+  console.log('current language:', i18n.language);
   const data = mindmapData();
   const options: MindMapOptions = {
   autoFit: 'view',
@@ -25,14 +28,14 @@ const Mindmap = () => {
   },
   layout: {
     type: 'mindmap',
-    getHeight: () => 50,
+    getHeight: () => 100,
     getWidth: (d: any) => Math.max(1, d.id.length * 5),
   }
 };
   return(
     <div style={{ padding: '24px' }}>
       <h2 style={{ marginBottom: '24px', fontSize: '20px', fontWeight: 600 }}>
-        Route Direction Overview
+        {t('form.overview.title')}
       </h2>
       <div style={{ height: '400px' }}>
         <MindMap {...options} />

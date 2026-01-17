@@ -118,6 +118,10 @@
         "uri": "URI"
       }
     },
+    "overview": {
+      "title": "Traffic Flow",
+      "systemOverView": "System Overview"
+    },
     "services": {
       "enableWebsocket": "Enable WebSocket",
       "hosts": "Hosts",
