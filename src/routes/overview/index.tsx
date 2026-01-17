@@ -1,3 +1,4 @@
+import BarChart from '@/components/chart/BarChart'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/overview/')({
@@ -5,5 +6,7 @@ export const Route = createFileRoute('/overview/')({
 })
 
 function RouteComponent() {
-  return <div>Hello "/overview/"!</div>
+  return (
+    <BarChart/>
+  )
 }
