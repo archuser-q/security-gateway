@@ -30,7 +30,7 @@ export const mindmapData = () => {
           type: "route",
           children: matchedService ? [
             {
-              id: `service: ${route.value.service_id}`,
+              id: `${matchedService.value.name}`,
               type: "service",
               children: [
                 {
