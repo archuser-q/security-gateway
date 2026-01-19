@@ -6,14 +6,11 @@ import { useTranslation } from 'react-i18next';
 const BarChart = () => {
   const { t } = useTranslation();
   const data = useChartData();
+
   return (
-    <div style={{ padding: '24px' }}>
-      <h2 style={{ marginBottom: '24px', fontSize: '20px', fontWeight: 600 }}>
-        {t('form.overview.systemOverView')}
-      </h2>
-      <div style={{ height: '400px' }}>
-        <Column {...config} data={data}/>
-      </div>
+    <div>
+      <h2>{t('form.overview.systemOverView')}</h2>
+      <Column {...config} data={data} />
     </div>
   );
 };
