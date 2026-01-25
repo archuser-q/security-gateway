@@ -15,6 +15,7 @@ export default function SystemMindMap() {
       },
     },
     animation: false,
+    labelField: (d: any) => d.label
   };
 
   return (

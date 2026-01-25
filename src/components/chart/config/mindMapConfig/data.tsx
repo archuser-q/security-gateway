@@ -20,17 +20,20 @@ const useData = () => {
 
   return {
     id: 'System',
+    label: 'System',
     children:
       routeData?.list?.map((route) => {
         const serviceId = route.value.service_id
         const serviceName = serviceId ? serviceMap[serviceId] : undefined
 
         return {
-          id: route.value.name || route.value.id,
+          id: route.value.id,
+          label: route.value.name || route.value.id,
           children: serviceId
             ? [
                 {
                   id:`${route.value.name}: ${serviceName}`,
+                  label: serviceName
                 },
               ]
             : [],
