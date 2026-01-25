@@ -7,7 +7,19 @@ export default function SystemMindMap() {
   const options: OrganizationChartOptions = {
     autoFit: 'view',
     data,
-    labelField: (d:any) => d.value.title
+    labelField: (d:any) => d.value.title,
+    node: {
+      style: {
+        size: [150, 64], 
+      },
+    },
+    edge: {
+      style: {
+        radius: 16,
+        lineWidth: 3,
+        endArrow: true,
+      },
+    },
   };
   return (
     <>
