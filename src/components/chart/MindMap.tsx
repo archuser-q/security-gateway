@@ -1,28 +1,20 @@
-import { MindMap, type MindMapOptions } from '@ant-design/graphs';
+import { OrganizationChart, type OrganizationChartOptions } from '@ant-design/graphs';
 import useData from './config/mindMapConfig/data';
 import { useTranslation } from 'react-i18next';
-
 export default function SystemMindMap() {
   const { t } = useTranslation();
   const data = useData();
-
-  const options: MindMapOptions = {
+  const options: OrganizationChartOptions = {
     autoFit: 'view',
     data,
-    edge: {
-      style: {
-        endArrow: true,
-      },
-    },
-    animation: false,
+    labelField: (d:any) => d.value.title
   };
-
   return (
     <>
       <h2 className="mb-6 text-[20px] font-semibold">
         {t('form.overview.title')}
       </h2>
-      <MindMap {...options} />
+      <OrganizationChart {...options} />
     </>
   );
 }
