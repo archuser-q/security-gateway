@@ -1,3 +1,4 @@
+// @/types/schema/apisix/admin.ts
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -15,15 +16,14 @@
  * limitations under the License.
  */
 import { z } from 'zod';
-
 import { APISIXCommon } from './common';
 
 const Admin = z.object({
-    name: z.string().min(1),
-    password: z.string().min(6),
-    nationalId: z.string().length(12),
+    username: z.string().min(1).regex(/^[a-zA-Z0-9_]+$/), 
+    status: z.enum(["active", "disabled"]).default("active"), 
+    labels: z.record(z.string()).optional(), 
+    desc: z.string().optional(),  
 }).merge(APISIXCommon.Info);
-
 
 export const APISIXAdmin = {
     Admin,

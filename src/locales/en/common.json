@@ -9,6 +9,9 @@
   "consumers": {
     "singular": "Consumer"
   },
+  "admins": {
+    "singular": "Admins"
+  },
   "credentials": {
     "singular": "Credential"
   },

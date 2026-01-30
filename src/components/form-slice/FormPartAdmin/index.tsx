@@ -5,26 +5,30 @@ import { FormItemTextInput } from "@/components/form/TextInput";
 
 const FormSectionAdminBasic = () => {
     const { control } = useFormContext<AdminPostType>();
-
+    
     return (
         <FormSection legend='Admin'>
             <FormItemTextInput
                 control={control}
-                name="nationalId"
-                label="National ID"
+                name="username" 
+                label="Username"
             />
             <FormItemTextInput
                 control={control}
-                name="password"
-                label="Password"
+                name="status" 
+                label="Status" 
+            />
+            <FormItemTextInput
+                control={control}
+                name="desc"  
+                label="Description"
             />
         </FormSection>
-    )
-}
-
+    );
+};
 
 export const FormPartAdmin = () => {
-    return(
-        <FormSectionAdminBasic/>
-    )
-}
+    return (
+        <FormSectionAdminBasic />
+    );
+};
