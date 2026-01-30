@@ -9,6 +9,9 @@
   "consumers": {
     "singular": "Người Dùng"
   },
+  "admins": {
+    "singular": "Quản trị viên"
+  },
   "credentials": {
     "singular": "Thông Tin Xác Thực"
   },
