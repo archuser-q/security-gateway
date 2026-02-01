@@ -1,4 +1,3 @@
-// @/types/schema/apisix/admin.ts
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -17,23 +16,27 @@
  */
 import { z } from 'zod';
 import { APISIXCommon } from './common';
-import { APISIXPlugins } from './plugins';
 
 const Admin = z
   .object({
+    id: z.string(),
     username: z
       .string()
       .min(1)
-      // ref: https://github.com/apache/apisix/blob/a2482df74d712228a1a6644662d74d2f51a3f5e6/apisix/schema_def.lua#L713
-      .regex(/^[a-zA-Z0-9_-]+$/),
-    plugins: APISIXPlugins.Plugins.optional(),
+      .max(100) // assuming maxLength from rule_name_def
+      .regex(/^[a-zA-Z0-9_]+$/),
+    labels: APISIXCommon.Labels.optional(),
+    desc: z.string().optional(),
   })
-  .merge(APISIXCommon.Basic.omit({ name: true }))
-  .merge(APISIXCommon.Info.omit({ id: true }));
-
+  .merge(APISIXCommon.Info);
 
 export const APISIXAdmin = {
     Admin,
+    AdminPost: Admin.omit({
+      id: true,
+      create_time: true,
+      update_time: true,
+    }),
     AdminPut: Admin.omit({
         create_time: true, 
         update_time: true

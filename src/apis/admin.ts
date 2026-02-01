@@ -1,5 +1,4 @@
 import type { AxiosInstance } from "axios";
-import type { AdminPostType } from "@/components/form-slice/FormPartAdmin/schema";
 import type { APISIXType } from "@/types/schema/apisix";
 import type { PageSearchType } from "@/types/schema/pageSearch";
 import { API_ADMINS, PAGE_SIZE_MAX, PAGE_SIZE_MIN } from "@/config/constant";
@@ -14,14 +13,14 @@ export const getAdminListReq = (
         })
         .then((v) => v.data);
 
-export const getAdminReq = (req: AxiosInstance, username: string) =>
+export const getAdminReq = (req: AxiosInstance, id: string) =>
     req
         .get<unknown, APISIXType['RespAdminDetail']>(
-            `${API_ADMINS}/${username}`  // ← Sử dụng username làm ID
+            `${API_ADMINS}/${id}`  
         )
         .then((v) => v.data);
 
-export const postAdminReq = (req: AxiosInstance, data: AdminPostType) => 
+export const postAdminReq = (req: AxiosInstance, data: APISIXType['AdminPost']) => 
     req.post<unknown, APISIXType['RespAdminDetail']>(
         API_ADMINS,
         data
@@ -29,13 +28,13 @@ export const postAdminReq = (req: AxiosInstance, data: AdminPostType) =>
 
 export const putAdminReq = (req: AxiosInstance, data: APISIXType['AdminPut']) => {
     return req.put<APISIXType['AdminPut'], APISIXType['RespAdminDetail']>(
-        API_ADMINS,
+        `${API_ADMINS}/${data.id}`,
         data
     );
 };
 
-export const deleteAdminReq = (req: AxiosInstance, username: string) => {
-    return req.delete(`${API_ADMINS}/${username}`);  
+export const deleteAdminReq = (req: AxiosInstance, id: string) => {
+    return req.delete(`${API_ADMINS}/${id}`);
 };
 
 export const deleteAllAdmins = async (req: AxiosInstance) => {
@@ -54,7 +53,7 @@ export const deleteAllAdmins = async (req: AxiosInstance) => {
         });
         
         await Promise.all(
-            res.list.map((d) => req.delete(`${API_ADMINS}/${d.value.username}`))  
+            res.list.map((d) => deleteAdminReq(req, d.value.id))
         );
     }
 };

@@ -46,7 +46,7 @@ import { Route as Plugin_configsDetailIdRouteImport } from './routes/plugin_conf
 import { Route as Global_rulesDetailIdRouteImport } from './routes/global_rules/detail.$id'
 import { Route as ConsumersDetailUsernameRouteImport } from './routes/consumers/detail.$username'
 import { Route as Consumer_groupsDetailIdRouteImport } from './routes/consumer_groups/detail.$id'
-import { Route as AdminsDetailUsernameRouteImport } from './routes/admins/detail.$username'
+import { Route as AdminsDetailIdRouteImport } from './routes/admins/detail.$id'
 import { Route as ServicesDetailIdIndexRouteImport } from './routes/services/detail.$id/index'
 import { Route as ConsumersDetailUsernameIndexRouteImport } from './routes/consumers/detail.$username/index'
 import { Route as SecretsDetailManagerIdRouteImport } from './routes/secrets/detail.$manager.$id'
@@ -245,9 +245,9 @@ const Consumer_groupsDetailIdRoute = Consumer_groupsDetailIdRouteImport.update({
   path: '/consumer_groups/detail/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminsDetailUsernameRoute = AdminsDetailUsernameRouteImport.update({
-  id: '/admins/detail/$username',
-  path: '/admins/detail/$username',
+const AdminsDetailIdRoute = AdminsDetailIdRouteImport.update({
+  id: '/admins/detail/$id',
+  path: '/admins/detail/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesDetailIdIndexRoute = ServicesDetailIdIndexRouteImport.update({
@@ -349,7 +349,7 @@ export interface FileRoutesByFullPath {
   '/ssls/': typeof SslsIndexRoute
   '/stream_routes/': typeof Stream_routesIndexRoute
   '/upstreams/': typeof UpstreamsIndexRoute
-  '/admins/detail/$username': typeof AdminsDetailUsernameRoute
+  '/admins/detail/$id': typeof AdminsDetailIdRoute
   '/consumer_groups/detail/$id': typeof Consumer_groupsDetailIdRoute
   '/consumers/detail/$username': typeof ConsumersDetailUsernameRouteWithChildren
   '/global_rules/detail/$id': typeof Global_rulesDetailIdRoute
@@ -401,7 +401,7 @@ export interface FileRoutesByTo {
   '/ssls': typeof SslsIndexRoute
   '/stream_routes': typeof Stream_routesIndexRoute
   '/upstreams': typeof UpstreamsIndexRoute
-  '/admins/detail/$username': typeof AdminsDetailUsernameRoute
+  '/admins/detail/$id': typeof AdminsDetailIdRoute
   '/consumer_groups/detail/$id': typeof Consumer_groupsDetailIdRoute
   '/global_rules/detail/$id': typeof Global_rulesDetailIdRoute
   '/plugin_configs/detail/$id': typeof Plugin_configsDetailIdRoute
@@ -452,7 +452,7 @@ export interface FileRoutesById {
   '/ssls/': typeof SslsIndexRoute
   '/stream_routes/': typeof Stream_routesIndexRoute
   '/upstreams/': typeof UpstreamsIndexRoute
-  '/admins/detail/$username': typeof AdminsDetailUsernameRoute
+  '/admins/detail/$id': typeof AdminsDetailIdRoute
   '/consumer_groups/detail/$id': typeof Consumer_groupsDetailIdRoute
   '/consumers/detail/$username': typeof ConsumersDetailUsernameRouteWithChildren
   '/global_rules/detail/$id': typeof Global_rulesDetailIdRoute
@@ -506,7 +506,7 @@ export interface FileRouteTypes {
     | '/ssls/'
     | '/stream_routes/'
     | '/upstreams/'
-    | '/admins/detail/$username'
+    | '/admins/detail/$id'
     | '/consumer_groups/detail/$id'
     | '/consumers/detail/$username'
     | '/global_rules/detail/$id'
@@ -558,7 +558,7 @@ export interface FileRouteTypes {
     | '/ssls'
     | '/stream_routes'
     | '/upstreams'
-    | '/admins/detail/$username'
+    | '/admins/detail/$id'
     | '/consumer_groups/detail/$id'
     | '/global_rules/detail/$id'
     | '/plugin_configs/detail/$id'
@@ -608,7 +608,7 @@ export interface FileRouteTypes {
     | '/ssls/'
     | '/stream_routes/'
     | '/upstreams/'
-    | '/admins/detail/$username'
+    | '/admins/detail/$id'
     | '/consumer_groups/detail/$id'
     | '/consumers/detail/$username'
     | '/global_rules/detail/$id'
@@ -661,7 +661,7 @@ export interface RootRouteChildren {
   SslsIndexRoute: typeof SslsIndexRoute
   Stream_routesIndexRoute: typeof Stream_routesIndexRoute
   UpstreamsIndexRoute: typeof UpstreamsIndexRoute
-  AdminsDetailUsernameRoute: typeof AdminsDetailUsernameRoute
+  AdminsDetailIdRoute: typeof AdminsDetailIdRoute
   Consumer_groupsDetailIdRoute: typeof Consumer_groupsDetailIdRoute
   ConsumersDetailUsernameRoute: typeof ConsumersDetailUsernameRouteWithChildren
   Global_rulesDetailIdRoute: typeof Global_rulesDetailIdRoute
@@ -936,11 +936,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Consumer_groupsDetailIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admins/detail/$username': {
-      id: '/admins/detail/$username'
-      path: '/admins/detail/$username'
-      fullPath: '/admins/detail/$username'
-      preLoaderRoute: typeof AdminsDetailUsernameRouteImport
+    '/admins/detail/$id': {
+      id: '/admins/detail/$id'
+      path: '/admins/detail/$id'
+      fullPath: '/admins/detail/$id'
+      preLoaderRoute: typeof AdminsDetailIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services/detail/$id/': {
@@ -1107,7 +1107,7 @@ const rootRouteChildren: RootRouteChildren = {
   SslsIndexRoute: SslsIndexRoute,
   Stream_routesIndexRoute: Stream_routesIndexRoute,
   UpstreamsIndexRoute: UpstreamsIndexRoute,
-  AdminsDetailUsernameRoute: AdminsDetailUsernameRoute,
+  AdminsDetailIdRoute: AdminsDetailIdRoute,
   Consumer_groupsDetailIdRoute: Consumer_groupsDetailIdRoute,
   ConsumersDetailUsernameRoute: ConsumersDetailUsernameRouteWithChildren,
   Global_rulesDetailIdRoute: Global_rulesDetailIdRoute,
