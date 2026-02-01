@@ -31,20 +31,26 @@ function RouteComponent() {
 
 function AdminList() {
   const { t } = useTranslation();
-  const { data,isLoading,refetch,pagination } = useAdminList();
-
+  const { data, isLoading, refetch, pagination } = useAdminList();
+  
   const columns = useMemo<
     ProColumns<APISIXType['RespAdminList']['data']['list'][number]>[]
   >(() => {
     return [
       {
+        dataIndex: ['value', 'id'],
+        title: 'ID',
+        key: 'id',
+        valueType: 'text',
+      },
+      {
         dataIndex: ['value', 'username'],
         title: t('form.consumers.username'),
         key: 'username',
-        valueType: 'text'
+        valueType: 'text',
       },
       {
-        dataIndex: ['value', 'description'],
+        dataIndex: ['value', 'desc'],
         title: t('form.basic.desc'),
         key: 'desc',
         valueType: 'text',
@@ -57,7 +63,7 @@ function AdminList() {
         sorter: true,
         renderText: (text) => {
           if (!text) return '-';
-          return new Date(Number(text) * 1000).toISOString();
+          return new Date(Number(text) * 1000).toLocaleString();
         },
       },
       {
@@ -68,26 +74,26 @@ function AdminList() {
           <ToDetailPageBtn
             key="detail"
             to="/admins/detail/$id"
-            params={{id: record.value.username}}
+            params={{ id: record.value.id }}
           />,
           <DeleteResourceBtn
             key="delete"
             name="Delete"
-            target={record.value.username}
-            api={`${API_ADMINS}/${record.value.username}`}
+            target={record.value.id}
+            api={`${API_ADMINS}/${record.value.id}`}
             onSuccess={refetch}
-          />
-        ]
-      }
+          />,
+        ],
+      },
     ];
   }, [t, refetch]);
-
+  
   return(
     <AntdConfigProvider>
       <ProTable
         columns={columns}
         dataSource={data?.list}
-        rowKey="id"
+        rowKey={(record) => record.value.id}
         loading={isLoading}
         search={false}
         options={false}

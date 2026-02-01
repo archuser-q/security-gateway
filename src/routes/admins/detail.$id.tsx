@@ -1,7 +1,7 @@
 import { putAdminReq } from '@/apis/admin';
 import { getAdminQueryOptions } from '@/apis/hooks';
-import { AdminPutSchema, type AdminPutType } from '@/components/form-slice/FormPartAdmin/schema';
 import type { APISIXType } from '@/types/schema/apisix';
+import { APISIX } from '@/types/schema/apisix';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useParams } from '@tanstack/react-router'
@@ -19,37 +19,36 @@ import PageHeader from '@/components/page/PageHeader';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { pipeProduce } from '@/utils/producer';
+import { API_ADMINS } from '@/config/constant';
 
 type AdminFormProps = {
   readOnly: boolean;
   setReadOnly: (v:boolean) => void;
-  username: string;
+  id: string;
 }
 
 const AdminDetailForm = (props: AdminFormProps) => {
-  const { readOnly, setReadOnly, username }= props;
+  const { readOnly, setReadOnly, id } = props;
   const { t } = useTranslation();
-
   const { data: adminData, refetch } = useSuspenseQuery(
-    getAdminQueryOptions(username)
+    getAdminQueryOptions(id)
   );
-
+  
   const form = useForm({
-    resolver: zodResolver(AdminPutSchema),
+    resolver: zodResolver(APISIX.AdminPut),
     shouldUnregister: true,
     shouldFocusError: true,
     mode: 'all',
     disabled: readOnly,
   });
-
+  
   useEffect(() => {
     if (!adminData?.value) return;
-
     form.reset({
       ...adminData.value,
     });
   }, [adminData, form]);
-
+  
   const putAdmin = useMutation({
     mutationFn: (d: APISIXType['AdminPut']) => 
       putAdminReq(req, d),
@@ -62,11 +61,11 @@ const AdminDetailForm = (props: AdminFormProps) => {
       setReadOnly(true);
     }
   })
-
+  
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d)=>putAdmin.mutateAsync(pipeProduce()(d)))}>
-        <FormSectionGeneral showID={false} readOnly/>
+        <FormSectionGeneral showID={true} readOnly/>
         <FormPartAdmin/>
         {!readOnly && (
           <Group>
@@ -81,20 +80,20 @@ const AdminDetailForm = (props: AdminFormProps) => {
   );
 };
 
-type AdminDetailProps = Pick<AdminFormProps, 'username'> & {
+type AdminDetailProps = Pick<AdminFormProps, 'id'> & {
   onDeleteSuccess: () => void;
 }
+
 const AdminDetail = (props: AdminDetailProps) => {
-  const { username, onDeleteSuccess } = props;
+  const { id, onDeleteSuccess } = props;
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
-
+  
   return (
     <>
       <PageHeader 
-        title={t('info.edit.title', {name: t('admins.singular')})}
+        title={t('info.detail.title', { name: t('admins.singular')})}
         {...(readOnly && {
-          title: t('info.detail.title', { name: t('admins.singular')}),
           extra: (
             <Group>
               <Button
@@ -107,10 +106,10 @@ const AdminDetail = (props: AdminDetailProps) => {
               <DeleteResourceBtn
                 mode="detail"
                 name={t('admins.singular')}
-                target={username}
-                api={'${API_ADMINS}/${username}'}
+                target={id}
+                api={`${API_ADMINS}/${id}`}
                 onSuccess={onDeleteSuccess}
-              ></DeleteResourceBtn>
+              />
             </Group>
           )
         })}
@@ -119,23 +118,25 @@ const AdminDetail = (props: AdminDetailProps) => {
         <AdminDetailForm
           readOnly={readOnly}
           setReadOnly={setReadOnly}
-          username={username}  
+          id={id}  
         />
       </FormTOCBox>
     </>
   )
 }
+
 function RouteComponent() {
-  const { username } = useParams({ from: '/admins/detail/$username'});
+  const { id } = useParams({ from: '/admins/detail/$id'});
   const navigate = useNavigate();
+  
   return (
     <AdminDetail 
-      username={username} 
+      id={id} 
       onDeleteSuccess={()=>navigate({ to: '/admins'})}
     />
   )
 }
 
-export const Route = createFileRoute('/admins/detail/$username')({
+export const Route = createFileRoute('/admins/detail/$id')({
   component: RouteComponent,
 })
