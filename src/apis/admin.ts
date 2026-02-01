@@ -29,7 +29,7 @@ export const postAdminReq = (req: AxiosInstance, data: AdminPostType) =>
 
 export const putAdminReq = (req: AxiosInstance, data: APISIXType['AdminPut']) => {
     return req.put<APISIXType['AdminPut'], APISIXType['RespAdminDetail']>(
-        `${API_ADMINS}/${data.username}`, 
+        API_ADMINS,
         data
     );
 };

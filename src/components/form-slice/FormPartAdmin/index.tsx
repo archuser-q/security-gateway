@@ -1,13 +1,12 @@
 import { useFormContext } from "react-hook-form";
-import type { AdminPostType } from "./schema";
+import type { APISIXType } from '@/types/schema/apisix';
 import { FormItemTextInput } from "@/components/form/TextInput";
-import { FormSectionPluginsOnly } from "../FormPartConsumer";
 import { FormPartBasic } from "../FormPartBasic";
 import { useTranslation } from "react-i18next";
 
 const FormSectionAdminBasic = () => {
     const { t } = useTranslation();
-    const { control } = useFormContext<AdminPostType>();
+    const { control } = useFormContext<APISIXType['AdminPut']>();
     
     return (
         <>
@@ -22,7 +21,6 @@ const FormSectionAdminBasic = () => {
                 />
               }
             />
-            <FormSectionPluginsOnly/>
         </>
     );
 };
