@@ -14,7 +14,6 @@ export const getAdminListReq = (
         })
         .then((v) => v.data);
 
-// ← Đổi parameter từ "nationalID" thành "username"
 export const getAdminReq = (req: AxiosInstance, username: string) =>
     req
         .get<unknown, APISIXType['RespAdminDetail']>(
@@ -30,13 +29,13 @@ export const postAdminReq = (req: AxiosInstance, data: AdminPostType) =>
 
 export const putAdminReq = (req: AxiosInstance, data: APISIXType['AdminPut']) => {
     return req.put<APISIXType['AdminPut'], APISIXType['RespAdminDetail']>(
-        `${API_ADMINS}/${data.username}`,  // ← Thêm username vào URL
+        `${API_ADMINS}/${data.username}`, 
         data
     );
 };
 
 export const deleteAdminReq = (req: AxiosInstance, username: string) => {
-    return req.delete(`${API_ADMINS}/${username}`);  // ← Sử dụng username
+    return req.delete(`${API_ADMINS}/${username}`);  
 };
 
 export const deleteAllAdmins = async (req: AxiosInstance) => {
@@ -55,7 +54,7 @@ export const deleteAllAdmins = async (req: AxiosInstance) => {
         });
         
         await Promise.all(
-            res.list.map((d) => req.delete(`${API_ADMINS}/${d.value.username}`))  // ← Đổi từ nationalId thành username
+            res.list.map((d) => req.delete(`${API_ADMINS}/${d.value.username}`))  
         );
     }
 };
