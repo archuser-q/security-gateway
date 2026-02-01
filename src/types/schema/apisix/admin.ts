@@ -17,13 +17,20 @@
  */
 import { z } from 'zod';
 import { APISIXCommon } from './common';
+import { APISIXPlugins } from './plugins';
 
-const Admin = z.object({
-    username: z.string().min(1).regex(/^[a-zA-Z0-9_]+$/), 
-    status: z.enum(["active", "disabled"]).default("active"), 
-    labels: z.record(z.string()).optional(), 
-    desc: z.string().optional(),  
-}).merge(APISIXCommon.Info);
+const Admin = z
+  .object({
+    username: z
+      .string()
+      .min(1)
+      // ref: https://github.com/apache/apisix/blob/a2482df74d712228a1a6644662d74d2f51a3f5e6/apisix/schema_def.lua#L713
+      .regex(/^[a-zA-Z0-9_-]+$/),
+    plugins: APISIXPlugins.Plugins.optional(),
+  })
+  .merge(APISIXCommon.Basic.omit({ name: true }))
+  .merge(APISIXCommon.Info.omit({ id: true }));
+
 
 export const APISIXAdmin = {
     Admin,
