@@ -23,7 +23,7 @@ const Admin = z
     username: z
       .string()
       .min(1)
-      .max(100) // assuming maxLength from rule_name_def
+      .max(100)
       .regex(/^[a-zA-Z0-9_]+$/),
     labels: APISIXCommon.Labels.optional(),
     desc: z.string().optional(),
