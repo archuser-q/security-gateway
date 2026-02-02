@@ -11,6 +11,7 @@ import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import { queryClient } from '@/config/global';
+import { Tag } from 'antd';
 
 export const Route = createFileRoute('/admins/')({
   component: RouteComponent,
@@ -50,10 +51,18 @@ function AdminList() {
         valueType: 'text',
       },
       {
-        dataIndex: ['value', 'desc'],
-        title: t('form.basic.desc'),
-        key: 'desc',
+        dataIndex: ['value', 'status'],
+        title: t('form.basic.status'),
+        key: 'status',
         valueType: 'text',
+        render: (_, record) => {
+          const isActive = record.value.status;
+          return (
+            <Tag color={isActive ? 'success' : 'error'}>
+              {isActive ? 'Active' : 'Inactive'}
+            </Tag>
+          );
+        },
       },
       {
         dataIndex: ['value', 'update_time'],

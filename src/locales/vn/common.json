@@ -47,6 +47,10 @@
       "groupId": "ID Nhóm",
       "username": "Tên Đăng Nhập"
     },
+    "admins": {
+      "username": "Tên đăng nhập",
+      "password": "Mật khẩu"
+    },
     "disabled": "Đã vô hiệu hóa, nhấp vào công tắc để kích hoạt",
     "general": {
       "title": "Chung"
