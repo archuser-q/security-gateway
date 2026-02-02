@@ -47,6 +47,10 @@
       "groupId": "Group ID",
       "username": "Username"
     },
+    "admins": {
+      "username": "Username",
+      "password": "Password"
+    },
     "disabled": "Disabled, click switch to enable",
     "general": {
       "title": "General"

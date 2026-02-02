@@ -29,12 +29,20 @@ const FormSectionAdminBasic = () => {
             <FormPartBasic
               showName={false}
               before={
-                <FormItemTextInput
-                  control={control}
-                  name="username"
-                  label={t('form.consumers.username')}
-                  required
-                />
+                <>
+                    <FormItemTextInput
+                        control={control}
+                        name="username"
+                        label={t('form.admins.username')}
+                        required
+                    />
+                    <FormItemTextInput
+                        control={control}
+                        name="password"
+                        label={t('form.admins.password')}
+                        required
+                    />
+                </>
               }
             />
         </>

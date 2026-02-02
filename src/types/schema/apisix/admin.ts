@@ -25,6 +25,11 @@ const Admin = z
       .min(1)
       .max(100)
       .regex(/^[a-zA-Z0-9_]+$/),
+    password: z
+      .string()
+      .min(1)
+      .max(100),
+    status: z.boolean().default(true),
     labels: APISIXCommon.Labels.optional(),
     desc: z.string().optional(),
   })
