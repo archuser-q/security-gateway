@@ -17,7 +17,7 @@
 import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { createRootRoute, HeadContent, Outlet } from '@tanstack/react-router';
+import { createRootRoute, HeadContent, Outlet, redirect } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { I18nextProvider } from 'react-i18next';
 
@@ -29,6 +29,10 @@ import {
   APPSHELL_NAVBAR_WIDTH,
 } from '@/config/constant';
 import i18n from '@/config/i18n';
+
+export const isAuthenticated = () => {
+  return !!localStorage.getItem('token');
+};
 
 const Root = () => {
   const [opened, { toggle }] = useDisclosure(false);
@@ -59,6 +63,23 @@ const Root = () => {
   );
 };
 
+
 export const Route = createRootRoute({
+  beforeLoad: ({ location }) => {
+    // Cho phép vào trang login
+    if (location.pathname === '/login') {
+      return;
+    }
+
+    // Chưa login → đá về /login
+    if (!isAuthenticated()) {
+      throw redirect({
+        to: '/login',
+        search: {
+          redirect: location.pathname, // optional
+        },
+      });
+    }
+  },
   component: Root,
 });
