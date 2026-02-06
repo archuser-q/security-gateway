@@ -17,7 +17,6 @@
 import type { Resources } from '@/config/i18n';
 import type { FileRouteTypes } from '@/routeTree.gen';
 
-// ✅ Import Tabler icons
 import {
   IconServer,
   IconRoute,
@@ -31,13 +30,14 @@ import {
   IconSettings,
   IconKey,
   IconCode,
-  IconHome
+  IconHome,
+  IconLogout
 } from '@tabler/icons-react';
 
 export type NavRoute = {
   to: FileRouteTypes['to'];
   label: keyof Resources['en']['common']['sources'];
-  icon: React.ElementType; // 👈 add icon type
+  icon: React.ElementType; 
 };
 
 export const navRoutes: NavRoute[] = [
@@ -110,5 +110,10 @@ export const navRoutes: NavRoute[] = [
     to: '/admins',
     label: 'admin',
     icon: IconUsers,
+  },
+  {
+    to: '/login',
+    label: 'logout',
+    icon: IconLogout
   }
 ];

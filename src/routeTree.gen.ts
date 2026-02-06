@@ -20,6 +20,7 @@ import { Route as ProtosIndexRouteImport } from './routes/protos/index'
 import { Route as Plugin_metadataIndexRouteImport } from './routes/plugin_metadata/index'
 import { Route as Plugin_configsIndexRouteImport } from './routes/plugin_configs/index'
 import { Route as OverviewIndexRouteImport } from './routes/overview/index'
+import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as Global_rulesIndexRouteImport } from './routes/global_rules/index'
 import { Route as ConsumersIndexRouteImport } from './routes/consumers/index'
 import { Route as Consumer_groupsIndexRouteImport } from './routes/consumer_groups/index'
@@ -113,6 +114,11 @@ const Plugin_configsIndexRoute = Plugin_configsIndexRouteImport.update({
 const OverviewIndexRoute = OverviewIndexRouteImport.update({
   id: '/overview/',
   path: '/overview/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginIndexRoute = LoginIndexRouteImport.update({
+  id: '/login/',
+  path: '/login/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Global_rulesIndexRoute = Global_rulesIndexRouteImport.update({
@@ -339,6 +345,7 @@ export interface FileRoutesByFullPath {
   '/consumer_groups/': typeof Consumer_groupsIndexRoute
   '/consumers/': typeof ConsumersIndexRoute
   '/global_rules/': typeof Global_rulesIndexRoute
+  '/login/': typeof LoginIndexRoute
   '/overview/': typeof OverviewIndexRoute
   '/plugin_configs/': typeof Plugin_configsIndexRoute
   '/plugin_metadata/': typeof Plugin_metadataIndexRoute
@@ -391,6 +398,7 @@ export interface FileRoutesByTo {
   '/consumer_groups': typeof Consumer_groupsIndexRoute
   '/consumers': typeof ConsumersIndexRoute
   '/global_rules': typeof Global_rulesIndexRoute
+  '/login': typeof LoginIndexRoute
   '/overview': typeof OverviewIndexRoute
   '/plugin_configs': typeof Plugin_configsIndexRoute
   '/plugin_metadata': typeof Plugin_metadataIndexRoute
@@ -442,6 +450,7 @@ export interface FileRoutesById {
   '/consumer_groups/': typeof Consumer_groupsIndexRoute
   '/consumers/': typeof ConsumersIndexRoute
   '/global_rules/': typeof Global_rulesIndexRoute
+  '/login/': typeof LoginIndexRoute
   '/overview/': typeof OverviewIndexRoute
   '/plugin_configs/': typeof Plugin_configsIndexRoute
   '/plugin_metadata/': typeof Plugin_metadataIndexRoute
@@ -496,6 +505,7 @@ export interface FileRouteTypes {
     | '/consumer_groups/'
     | '/consumers/'
     | '/global_rules/'
+    | '/login/'
     | '/overview/'
     | '/plugin_configs/'
     | '/plugin_metadata/'
@@ -548,6 +558,7 @@ export interface FileRouteTypes {
     | '/consumer_groups'
     | '/consumers'
     | '/global_rules'
+    | '/login'
     | '/overview'
     | '/plugin_configs'
     | '/plugin_metadata'
@@ -598,6 +609,7 @@ export interface FileRouteTypes {
     | '/consumer_groups/'
     | '/consumers/'
     | '/global_rules/'
+    | '/login/'
     | '/overview/'
     | '/plugin_configs/'
     | '/plugin_metadata/'
@@ -651,6 +663,7 @@ export interface RootRouteChildren {
   Consumer_groupsIndexRoute: typeof Consumer_groupsIndexRoute
   ConsumersIndexRoute: typeof ConsumersIndexRoute
   Global_rulesIndexRoute: typeof Global_rulesIndexRoute
+  LoginIndexRoute: typeof LoginIndexRoute
   OverviewIndexRoute: typeof OverviewIndexRoute
   Plugin_configsIndexRoute: typeof Plugin_configsIndexRoute
   Plugin_metadataIndexRoute: typeof Plugin_metadataIndexRoute
@@ -752,6 +765,13 @@ declare module '@tanstack/react-router' {
       path: '/overview'
       fullPath: '/overview/'
       preLoaderRoute: typeof OverviewIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login/': {
+      id: '/login/'
+      path: '/login'
+      fullPath: '/login/'
+      preLoaderRoute: typeof LoginIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/global_rules/': {
@@ -1097,6 +1117,7 @@ const rootRouteChildren: RootRouteChildren = {
   Consumer_groupsIndexRoute: Consumer_groupsIndexRoute,
   ConsumersIndexRoute: ConsumersIndexRoute,
   Global_rulesIndexRoute: Global_rulesIndexRoute,
+  LoginIndexRoute: LoginIndexRoute,
   OverviewIndexRoute: OverviewIndexRoute,
   Plugin_configsIndexRoute: Plugin_configsIndexRoute,
   Plugin_metadataIndexRoute: Plugin_metadataIndexRoute,
