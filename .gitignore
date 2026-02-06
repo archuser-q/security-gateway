@@ -33,3 +33,5 @@ dist-ssr
 
 .eslintcache
 package-lock.json
+
+default.etcd
