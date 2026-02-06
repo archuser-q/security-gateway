@@ -361,7 +361,8 @@
     "ssls": "SSLs",
     "streamRoutes": "Tuyến Stream",
     "upstreams": "Upstreams",
-    "admin": "Quản Trị Viên"
+    "admin": "Quản Trị Viên",
+    "logout": "Đăng xuất"
   },
   "ssls": {
     "singular": "SSL"

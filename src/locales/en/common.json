@@ -361,7 +361,8 @@
     "ssls": "SSLs",
     "streamRoutes": "Stream Routes",
     "upstreams": "Upstreams",
-    "admin": "Administrators"
+    "admin": "Administrators",
+    "logout": "Log out"
   },
   "ssls": {
     "singular": "SSL"

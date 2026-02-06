@@ -24,6 +24,7 @@ import { FormItemPlugins } from './FormItemPlugins';
 import { FormPartBasic } from './FormPartBasic';
 import { FormSection } from './FormSection';
 import { observer } from 'mobx-react-lite';
+import { useEffect, useState } from 'react';
 
 export const FormSectionPluginsOnly = observer(() => {
   const { t } = useTranslation();
@@ -36,7 +37,12 @@ export const FormSectionPluginsOnly = observer(() => {
 
 export const FormPartConsumer = () => {
   const { t } = useTranslation();
-  const { control } = useFormContext<APISIXType['ConsumerPut']>();
+  const { control, getValues } = useFormContext<APISIXType['ConsumerPut']>();
+  const [isEditMode, setIsEditMode] = useState(false);
+  useEffect(() => {
+    const initialUsername = getValues('username');
+    setIsEditMode(!!initialUsername);
+  }, []);
 
   return (
     <>
@@ -48,6 +54,7 @@ export const FormPartConsumer = () => {
             name="username"
             label={t('form.consumers.username')}
             required
+            disabled={isEditMode}
           />
         }
       />
