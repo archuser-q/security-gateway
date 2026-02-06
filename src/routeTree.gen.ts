@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UpstreamsIndexRouteImport } from './routes/upstreams/index'
 import { Route as Stream_routesIndexRouteImport } from './routes/stream_routes/index'
@@ -20,7 +21,6 @@ import { Route as ProtosIndexRouteImport } from './routes/protos/index'
 import { Route as Plugin_metadataIndexRouteImport } from './routes/plugin_metadata/index'
 import { Route as Plugin_configsIndexRouteImport } from './routes/plugin_configs/index'
 import { Route as OverviewIndexRouteImport } from './routes/overview/index'
-import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as Global_rulesIndexRouteImport } from './routes/global_rules/index'
 import { Route as ConsumersIndexRouteImport } from './routes/consumers/index'
 import { Route as Consumer_groupsIndexRouteImport } from './routes/consumer_groups/index'
@@ -61,6 +61,11 @@ import { Route as ServicesDetailIdStream_routesDetailRouteIdRouteImport } from '
 import { Route as ServicesDetailIdRoutesDetailRouteIdRouteImport } from './routes/services/detail.$id/routes/detail.$routeId'
 import { Route as ConsumersDetailUsernameCredentialsDetailIdRouteImport } from './routes/consumers/detail.$username/credentials/detail.$id'
 
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -114,11 +119,6 @@ const Plugin_configsIndexRoute = Plugin_configsIndexRouteImport.update({
 const OverviewIndexRoute = OverviewIndexRouteImport.update({
   id: '/overview/',
   path: '/overview/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginIndexRoute = LoginIndexRouteImport.update({
-  id: '/login/',
-  path: '/login/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Global_rulesIndexRoute = Global_rulesIndexRouteImport.update({
@@ -329,6 +329,7 @@ const ConsumersDetailUsernameCredentialsDetailIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/admins/add': typeof AdminsAddRoute
   '/consumer_groups/add': typeof Consumer_groupsAddRoute
   '/consumers/add': typeof ConsumersAddRoute
@@ -345,7 +346,6 @@ export interface FileRoutesByFullPath {
   '/consumer_groups/': typeof Consumer_groupsIndexRoute
   '/consumers/': typeof ConsumersIndexRoute
   '/global_rules/': typeof Global_rulesIndexRoute
-  '/login/': typeof LoginIndexRoute
   '/overview/': typeof OverviewIndexRoute
   '/plugin_configs/': typeof Plugin_configsIndexRoute
   '/plugin_metadata/': typeof Plugin_metadataIndexRoute
@@ -382,6 +382,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/admins/add': typeof AdminsAddRoute
   '/consumer_groups/add': typeof Consumer_groupsAddRoute
   '/consumers/add': typeof ConsumersAddRoute
@@ -398,7 +399,6 @@ export interface FileRoutesByTo {
   '/consumer_groups': typeof Consumer_groupsIndexRoute
   '/consumers': typeof ConsumersIndexRoute
   '/global_rules': typeof Global_rulesIndexRoute
-  '/login': typeof LoginIndexRoute
   '/overview': typeof OverviewIndexRoute
   '/plugin_configs': typeof Plugin_configsIndexRoute
   '/plugin_metadata': typeof Plugin_metadataIndexRoute
@@ -434,6 +434,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/admins/add': typeof AdminsAddRoute
   '/consumer_groups/add': typeof Consumer_groupsAddRoute
   '/consumers/add': typeof ConsumersAddRoute
@@ -450,7 +451,6 @@ export interface FileRoutesById {
   '/consumer_groups/': typeof Consumer_groupsIndexRoute
   '/consumers/': typeof ConsumersIndexRoute
   '/global_rules/': typeof Global_rulesIndexRoute
-  '/login/': typeof LoginIndexRoute
   '/overview/': typeof OverviewIndexRoute
   '/plugin_configs/': typeof Plugin_configsIndexRoute
   '/plugin_metadata/': typeof Plugin_metadataIndexRoute
@@ -489,6 +489,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/login'
     | '/admins/add'
     | '/consumer_groups/add'
     | '/consumers/add'
@@ -505,7 +506,6 @@ export interface FileRouteTypes {
     | '/consumer_groups/'
     | '/consumers/'
     | '/global_rules/'
-    | '/login/'
     | '/overview/'
     | '/plugin_configs/'
     | '/plugin_metadata/'
@@ -542,6 +542,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/login'
     | '/admins/add'
     | '/consumer_groups/add'
     | '/consumers/add'
@@ -558,7 +559,6 @@ export interface FileRouteTypes {
     | '/consumer_groups'
     | '/consumers'
     | '/global_rules'
-    | '/login'
     | '/overview'
     | '/plugin_configs'
     | '/plugin_metadata'
@@ -593,6 +593,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/login'
     | '/admins/add'
     | '/consumer_groups/add'
     | '/consumers/add'
@@ -609,7 +610,6 @@ export interface FileRouteTypes {
     | '/consumer_groups/'
     | '/consumers/'
     | '/global_rules/'
-    | '/login/'
     | '/overview/'
     | '/plugin_configs/'
     | '/plugin_metadata/'
@@ -647,6 +647,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LoginRoute: typeof LoginRoute
   AdminsAddRoute: typeof AdminsAddRoute
   Consumer_groupsAddRoute: typeof Consumer_groupsAddRoute
   ConsumersAddRoute: typeof ConsumersAddRoute
@@ -663,7 +664,6 @@ export interface RootRouteChildren {
   Consumer_groupsIndexRoute: typeof Consumer_groupsIndexRoute
   ConsumersIndexRoute: typeof ConsumersIndexRoute
   Global_rulesIndexRoute: typeof Global_rulesIndexRoute
-  LoginIndexRoute: typeof LoginIndexRoute
   OverviewIndexRoute: typeof OverviewIndexRoute
   Plugin_configsIndexRoute: typeof Plugin_configsIndexRoute
   Plugin_metadataIndexRoute: typeof Plugin_metadataIndexRoute
@@ -690,6 +690,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -765,13 +772,6 @@ declare module '@tanstack/react-router' {
       path: '/overview'
       fullPath: '/overview/'
       preLoaderRoute: typeof OverviewIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login/': {
-      id: '/login/'
-      path: '/login'
-      fullPath: '/login/'
-      preLoaderRoute: typeof LoginIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/global_rules/': {
@@ -1101,6 +1101,7 @@ const ServicesDetailIdRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LoginRoute: LoginRoute,
   AdminsAddRoute: AdminsAddRoute,
   Consumer_groupsAddRoute: Consumer_groupsAddRoute,
   ConsumersAddRoute: ConsumersAddRoute,
@@ -1117,7 +1118,6 @@ const rootRouteChildren: RootRouteChildren = {
   Consumer_groupsIndexRoute: Consumer_groupsIndexRoute,
   ConsumersIndexRoute: ConsumersIndexRoute,
   Global_rulesIndexRoute: Global_rulesIndexRoute,
-  LoginIndexRoute: LoginIndexRoute,
   OverviewIndexRoute: OverviewIndexRoute,
   Plugin_configsIndexRoute: Plugin_configsIndexRoute,
   Plugin_metadataIndexRoute: Plugin_metadataIndexRoute,
