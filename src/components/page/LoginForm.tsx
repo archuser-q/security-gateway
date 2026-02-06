@@ -17,12 +17,12 @@ export default () => {
     <ConfigProvider locale={enUS}>
         <ProConfigProvider hashed={false}>
             <div style={{ 
-  backgroundColor: token.colorBgContainer,
-  minHeight: '80vh',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center'
-}}>
+                backgroundColor: token.colorBgContainer,
+                minHeight: '80vh',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+                }}>
                 <LoginForm
                     title="Login"
                     contentStyle={{
@@ -33,75 +33,78 @@ export default () => {
 
                     if (username === 'admin' && password === '123456') {
                         localStorage.setItem('token', 'fake-jwt-token');
-                        window.location.href = '/';
+
+                        const params = new URLSearchParams(window.location.search);
+                        const redirectTo = params.get('redirect') || '/';
+
+                        window.location.href = redirectTo;
                         return;
                     }
 
                     message.error('Sai tài khoản hoặc mật khẩu');
                 }}
-
                 >
-                <>
-                    <ProFormText
-                    name="username"
-                    fieldProps={{
-                        size: 'large',
-                        prefix: <UserOutlined className={'prefixIcon'} />,
-                    }}
-                    placeholder={'Username'}
-                    rules={[
-                        {
-                        required: true,
-                        message: 'Username is required!',
-                        },
-                    ]}
-                    />
-                    <ProFormText.Password
-                    name="password"
-                    fieldProps={{
-                        size: 'large',
-                        prefix: <LockOutlined className={'prefixIcon'} />,
-                        strengthText:
-                        'Password should contain numbers, letters and special characters, at least 8 characters long.',
-                        statusRender: (value) => {
-                        const getStatus = () => {
-                            if (value && value.length > 12) {
-                            return 'ok';
+                    <>
+                        <ProFormText
+                        name="username"
+                        fieldProps={{
+                            size: 'large',
+                            prefix: <UserOutlined className={'prefixIcon'} />,
+                        }}
+                        placeholder={'Username'}
+                        rules={[
+                            {
+                            required: true,
+                            message: 'Username is required!',
+                            },
+                        ]}
+                        />
+                        <ProFormText.Password
+                        name="password"
+                        fieldProps={{
+                            size: 'large',
+                            prefix: <LockOutlined className={'prefixIcon'} />,
+                            strengthText:
+                            'Password should contain numbers, letters and special characters, at least 8 characters long.',
+                            statusRender: (value) => {
+                            const getStatus = () => {
+                                if (value && value.length > 12) {
+                                return 'ok';
+                                }
+                                if (value && value.length > 6) {
+                                return 'pass';
+                                }
+                                return 'poor';
+                            };
+                            const status = getStatus();
+                            if (status === 'pass') {
+                                return (
+                                <div style={{ color: token.colorWarning }}>
+                                    Strength: Medium
+                                </div>
+                                );
                             }
-                            if (value && value.length > 6) {
-                            return 'pass';
+                            if (status === 'ok') {
+                                return (
+                                <div style={{ color: token.colorSuccess }}>
+                                    Strength: Strong
+                                </div>
+                                );
                             }
-                            return 'poor';
-                        };
-                        const status = getStatus();
-                        if (status === 'pass') {
                             return (
-                            <div style={{ color: token.colorWarning }}>
-                                Strength: Medium
-                            </div>
+                                <div style={{ color: token.colorError }}>Strength: weak</div>
                             );
-                        }
-                        if (status === 'ok') {
-                            return (
-                            <div style={{ color: token.colorSuccess }}>
-                                Strength: Strong
-                            </div>
-                            );
-                        }
-                        return (
-                            <div style={{ color: token.colorError }}>Strength: weak</div>
-                        );
-                        },
-                    }}
-                    placeholder={'Password'}
-                    rules={[
-                        {
-                        required: true,
-                        message: 'Password is required！',
-                        },
-                    ]}
-                    />
-                </>
+                            },
+                        }}
+                        placeholder={'Password'}
+                        rules={[
+                            {
+                            required: true,
+                            message: 'Password is required！',
+                            },
+                        ]}
+                        />
+                    </>
                 </LoginForm>
             </div>
         </ProConfigProvider>
