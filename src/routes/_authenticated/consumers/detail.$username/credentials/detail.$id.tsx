@@ -50,7 +50,7 @@ const CredentialDetailForm = (props: CredentialFormProps) => {
   const { readOnly, setReadOnly } = props;
   const { t } = useTranslation();
   const { username, id } = useParams({
-    from: '/consumers/detail/$username/credentials/detail/$id',
+    from: '/_authenticated/consumers/detail/$username/credentials/detail/$id',
   });
 
   const {

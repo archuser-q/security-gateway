@@ -151,7 +151,7 @@ export const StreamRouteDetail = (props: StreamRouteDetailProps) => {
 };
 
 function RouteComponent() {
-  const { id } = useParams({ from: '/stream_routes/detail/$id' });
+  const { id } = useParams({ from: '/_authenticated/stream_routes/detail/$id' });
   const navigate = useNavigate();
   return (
     <StreamRouteDetail

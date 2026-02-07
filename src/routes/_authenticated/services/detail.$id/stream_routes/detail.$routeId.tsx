@@ -21,12 +21,12 @@ import {
 } from '@tanstack/react-router';
 
 import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
-import { StreamRouteDetail } from '@/routes/authenticated/stream_routes/detail.$id';
+import { StreamRouteDetail } from '@/routes/_authenticated/stream_routes/detail.$id';
 import { CommonFormContext } from '@/utils/form-context';
 
 function RouteComponent() {
   const { id, routeId } = useParams({
-    from: '/services/detail/$id/stream_routes/detail/$routeId',
+    from: '/_authenticated/services/detail/$id/stream_routes/detail/$routeId',
   });
   const navigate = useNavigate();
   return (

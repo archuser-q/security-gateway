@@ -67,8 +67,8 @@ export const DetailTabs = () => {
         navigate({
           to:
             v === defaultTab
-              ? '/services/detail/$id/'
-              : `/services/detail/$id/${v}`,
+              ? '/_authenticated/services/detail/$id/'
+              : `/_authenticated/services/detail/$id/${v}`,
           params: { id: id as string },
         });
       }}

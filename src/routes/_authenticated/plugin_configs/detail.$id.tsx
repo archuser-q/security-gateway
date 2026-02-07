@@ -101,7 +101,7 @@ const PluginConfigDetailForm = (props: Props) => {
 };
 
 function RouteComponent() {
-  const { id } = useParams({ from: '/plugin_configs/detail/$id' });
+  const { id } = useParams({ from: '/_authenticated/plugin_configs/detail/$id' });
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
   const navigate = useNavigate();

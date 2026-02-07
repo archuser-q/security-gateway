@@ -123,7 +123,7 @@ const UpstreamDetailForm = (
 
 function RouteComponent() {
   const { t } = useTranslation();
-  const { id } = useParams({ from: '/upstreams/detail/$id' });
+  const { id } = useParams({ from: '/_authenticated/upstreams/detail/$id' });
   const [readOnly, setReadOnly] = useBoolean(true);
   const navigate = useNavigate();
 

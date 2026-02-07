@@ -104,7 +104,7 @@ const ProtoDetailForm = ({ id, readOnly, setReadOnly }: ProtoFormProps) => {
 };
 
 function RouteComponent() {
-  const { id } = useParams({ from: '/protos/detail/$id' });
+  const { id } = useParams({ from: '/_authenticated/protos/detail/$id' });
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
   const navigate = useNavigate();
