@@ -35,7 +35,7 @@ import type { APISIXType } from '@/types/schema/apisix';
 function CredentialsList() {
   const { t } = useTranslation();
   const { username } = useParams({
-    from: '/consumers/detail/$username/credentials/',
+    from: '/_authenticated/consumers/detail/$username/credentials/',
   });
   const { data, isLoading, refetch } = useCredentialsList(username);
 

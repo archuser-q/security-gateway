@@ -50,7 +50,7 @@ type Props = {
 const ServiceDetailForm = (props: Props) => {
   const { readOnly, setReadOnly } = props;
   const { t } = useTranslation();
-  const { id } = useParams({ from: '/services/detail/$id' });
+  const { id } = useParams({ from: '/_authenticated/services/detail/$id' });
 
   const serviceQuery = useSuspenseQuery(getServiceQueryOptions(id));
   const { data: serviceData, isLoading, refetch } = serviceQuery;
@@ -110,7 +110,7 @@ const ServiceDetailForm = (props: Props) => {
 function RouteComponent() {
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
-  const { id } = useParams({ from: '/services/detail/$id' });
+  const { id } = useParams({ from: '/_authenticated/services/detail/$id' });
   const navigate = useNavigate();
 
   return (
