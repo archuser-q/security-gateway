@@ -116,7 +116,7 @@ export const RouteList = (props: RouteListProps) => {
                     label={t('info.add.title', {
                       name: t('routes.singular'),
                     })}
-                    to={`${routeKey}add`}
+                    to="/routes/add"
                   />
                 ),
               },
@@ -134,7 +134,7 @@ function RouteComponent() {
     <>
       <PageHeader title={t('sources.routes')} />
       <RouteList
-        routeKey="/routes/"
+        routeKey="/_authenticated/routes/"
         ToDetailBtn={({ record }) => (
           <ToDetailPageBtn
             key="detail"

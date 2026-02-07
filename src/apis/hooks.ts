@@ -112,7 +112,7 @@ export const getUpstreamListQueryOptions = genListQueryOptions(
   getUpstreamListReq
 );
 export const useUpstreamList = genUseList(
-  '/upstreams/',
+  '/_authenticated/upstreams/',
   getUpstreamListQueryOptions
 );
 
@@ -121,7 +121,7 @@ export const getRouteListQueryOptions = genListQueryOptions(
   'routes',
   getRouteListReq
 );
-export const useRouteList = genUseList('/routes/', getRouteListQueryOptions);
+export const useRouteList = genUseList('/_authenticated/routes/', getRouteListQueryOptions);
 
 export const getConsumerGroupQueryOptions = genDetailQueryOptions(
   'consumer_group',
@@ -132,7 +132,7 @@ export const getConsumerGroupListQueryOptions = genListQueryOptions(
   getConsumerGroupListReq
 );
 export const useConsumerGroupList = genUseList(
-  '/consumer_groups/',
+  '/_authenticated/consumer_groups/',
   getConsumerGroupListQueryOptions
 );
 
@@ -158,7 +158,7 @@ export const getServiceListQueryOptions = genListQueryOptions(
   getServiceListReq
 );
 export const useServiceList = genUseList(
-  '/services/',
+  '/_authenticated/services/',
   getServiceListQueryOptions
 );
 
@@ -171,7 +171,7 @@ export const getGlobalRuleListQueryOptions = genListQueryOptions(
   getGlobalRuleListReq
 );
 export const useGlobalRuleList = genUseList(
-  '/global_rules/',
+  '/_authenticated/global_rules/',
   getGlobalRuleListQueryOptions
 );
 
@@ -184,13 +184,13 @@ export const getPluginConfigListQueryOptions = genListQueryOptions(
   getPluginConfigListReq
 );
 export const usePluginConfigList = genUseList(
-  '/plugin_configs/',
+  '/_authenticated/plugin_configs/',
   getPluginConfigListQueryOptions
 );
 
 export const getSSLQueryOptions = genDetailQueryOptions('ssl', getSSLReq);
 export const getSSLListQueryOptions = genListQueryOptions('ssls', getSSLListReq);
-export const useSSLList = genUseList('/ssls/', getSSLListQueryOptions);
+export const useSSLList = genUseList('/_authenticated/ssls/', getSSLListQueryOptions);
 
 export const getConsumerQueryOptions = genDetailQueryOptions(
   'consumer',
@@ -201,7 +201,7 @@ export const getConsumerListQueryOptions = genListQueryOptions(
   getConsumerListReq
 );
 export const useConsumerList = genUseList(
-  '/consumers/',
+  '/_authenticated/consumers/',
   getConsumerListQueryOptions
 );
 
@@ -225,11 +225,11 @@ export const useCredentialsList = (username: string) => {
 
 export const getProtoQueryOptions = genDetailQueryOptions('proto', getProtoReq);
 export const getProtoListQueryOptions = genListQueryOptions('protos', getProtoListReq);
-export const useProtoList = genUseList('/protos/', getProtoListQueryOptions);
+export const useProtoList = genUseList('/_authenticated/protos/', getProtoListQueryOptions);
 
 export const getAdminQueryOptions = genDetailQueryOptions('admins', getAdminReq);
 export const getAdminListQueryOptions = genListQueryOptions('admins', getAdminListReq);
-export const useAdminList = genUseList('/admins/', getAdminListQueryOptions);
+export const useAdminList = genUseList('/_authenticated/admins/', getAdminListQueryOptions);
 
 export const getSecretQueryOptions = genDetailQueryOptions(
   'secret',
@@ -239,4 +239,4 @@ export const getSecretListQueryOptions = genListQueryOptions(
   'secrets',
   getSecretListReq
 );
-export const useSecretList = genUseList('/secrets/', getSecretListQueryOptions);
+export const useSecretList = genUseList('/_authenticated/secrets/', getSecretListQueryOptions);

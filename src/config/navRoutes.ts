@@ -16,6 +16,7 @@
  */
 import type { Resources } from '@/config/i18n';
 import type { FileRouteTypes } from '@/routeTree.gen';
+import { logout } from '@/utils/auth';
 
 import {
   IconServer,
@@ -35,9 +36,10 @@ import {
 } from '@tabler/icons-react';
 
 export type NavRoute = {
-  to: FileRouteTypes['to'];
+  to?: FileRouteTypes['to'];
   label: keyof Resources['en']['common']['sources'];
   icon: React.ElementType; 
+  onClick?: () => void;
 };
 
 export const navRoutes: NavRoute[] = [
@@ -112,8 +114,11 @@ export const navRoutes: NavRoute[] = [
     icon: IconUsers,
   },
   {
-    to: '/login',
     label: 'logout',
-    icon: IconLogout
+    icon: IconLogout,
+    onClick: () => {
+      logout();
+      window.location.href = '/login';
+    }
   }
 ];
