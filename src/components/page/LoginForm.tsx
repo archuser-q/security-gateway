@@ -1,3 +1,5 @@
+import { useAuth } from '@/context/AuthContext';
+import { handleAdminLogin, type LoginParams } from '@/utils/auth';
 import {
   LockOutlined,
   UserOutlined,
@@ -7,11 +9,23 @@ import {
   ProConfigProvider,
   ProFormText,
 } from '@ant-design/pro-components';
-import { ConfigProvider, message, theme } from 'antd'
+import { useNavigate } from '@tanstack/react-router';
+import { ConfigProvider, theme } from 'antd'
 import enUS from 'antd/locale/en_US';
+import { useEffect } from 'react';
 
 export default () => {
   const { token } = theme.useToken();
+  const auth = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (auth.isAuthenticated) {
+        const params = new URLSearchParams(window.location.search)
+        const redirectTo = params.get('redirect') || '/'
+        navigate({ to: redirectTo, replace: true })
+    }
+  }, [auth.isAuthenticated])
 
   return (
     <ConfigProvider locale={enUS}>
@@ -23,48 +37,15 @@ export default () => {
                 alignItems: 'center',
                 justifyContent: 'center'
                 }}>
-                <LoginForm
+                <LoginForm<LoginParams>
                     title="Login"
-                    contentStyle={{
-                        marginTop: 24,
-                }}
-                onFinish={async (values) => {
-                    const { username, password } = values;
-                    const encodedPassword = btoa(password);
-                    const admins = [
-                        {
-                        username: 'hello',
-                        password: 'MTIzNA==',
-                        status: true,
-                        },
-                        {
-                        username: 'eee',
-                        password: 'ZWVlMTIz',
-                        status: true,
-                        },
-                    ];
-                    const matchedAdmin = admins.find(
-                        (admin) =>
-                        admin.username === username &&
-                        admin.password === encodedPassword &&
-                        admin.status === true
-                    );
-
-                    if (matchedAdmin) {
-                        localStorage.setItem('token', 'fake-jwt-token');
-                        localStorage.setItem('user', JSON.stringify(matchedAdmin));
-
-                        const params = new URLSearchParams(window.location.search);
-                        const redirectTo = params.get('redirect') || '/';
-
-                        window.location.href = redirectTo;
-                        return;
-                    }
-
-                    message.error('Sai tài khoản hoặc mật khẩu');
-                }}
+                    onFinish={async (values) => {
+                        await handleAdminLogin(values, auth.login);
+                    }}
                 >
-                    <>
+                    <div
+                    
+                    style={{ paddingTop: 15 }}>
                         <ProFormText
                         name="username"
                         fieldProps={{
@@ -93,7 +74,7 @@ export default () => {
                             },
                         ]}
                         />
-                    </>
+                    </div>
                 </LoginForm>
             </div>
         </ProConfigProvider>

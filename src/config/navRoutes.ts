@@ -16,7 +16,6 @@
  */
 import type { Resources } from '@/config/i18n';
 import type { FileRouteTypes } from '@/routeTree.gen';
-import { logout } from '@/utils/auth';
 
 import {
   IconServer,
@@ -117,7 +116,6 @@ export const navRoutes: NavRoute[] = [
     label: 'logout',
     icon: IconLogout,
     onClick: () => {
-      logout();
       window.location.href = '/login';
     }
   }

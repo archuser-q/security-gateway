@@ -27,8 +27,15 @@ import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 
 import { queryClient, router } from './config/global';
+import { AuthProvider, useAuth } from './context/AuthContext';
 
 const theme = createTheme({});
+
+const AppRouter = () => {
+  const auth = useAuth()
+
+  return <RouterProvider router={router} context={{ auth }} />
+}
 
 // Render the app
 const rootElement = document.getElementById('root')!;
@@ -36,14 +43,16 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-      <MantineProvider theme={theme}>
-        <Notifications position="top-right" autoClose={5000} limit={5} />
-        <QueryClientProvider client={queryClient}>
-          <ModalsProvider>
-            <RouterProvider router={router} />
-          </ModalsProvider>
-        </QueryClientProvider>
-      </MantineProvider>
+      <AuthProvider>
+        <MantineProvider theme={theme}>
+          <Notifications />
+          <QueryClientProvider client={queryClient}>
+            <ModalsProvider>
+              <AppRouter />
+            </ModalsProvider>
+          </QueryClientProvider>
+        </MantineProvider>
+      </AuthProvider>
     </StrictMode>
-  );
+  )
 }
