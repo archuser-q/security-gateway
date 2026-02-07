@@ -16,6 +16,7 @@ export const useChartData = () => {
     { key: 'pluginConfigs', queryFn: hooks.getPluginConfigListQueryOptions, label: t('sources.pluginConfigs') },
     { key: 'secrets', queryFn: hooks.getSecretListQueryOptions, label: t('sources.secrets') },
     { key: 'protos', queryFn: hooks.getProtoListQueryOptions, label: t('sources.protos') },
+    { key: 'admins', queryFn: hooks.getAdminListQueryOptions, label: t('sources.admin') },
   ];
 
   const results = useQueries({
