@@ -96,7 +96,7 @@ const GlobalRuleDetailForm = (props: Props) => {
 };
 
 function RouteComponent() {
-  const { id } = useParams({ from: '/global_rules/detail/$id' });
+  const { id } = useParams({ from: '/_authenticated/global_rules/detail/$id' });
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
   const navigate = useNavigate();
