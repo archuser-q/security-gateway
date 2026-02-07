@@ -41,19 +41,35 @@ export const NavbarLink: FC<NavbarLinkProps> = (props) => {
 
 export const Navbar = () => {
   const { t } = useTranslation();
+
   return (
     <AppShellNavbar>
       {navRoutes.map((route) => {
-        const Icon = route.icon; 
-        return (
-          <NavbarLink
-            to={route.to}
-            key={route.to}
-            label={t(`sources.${route.label}`)}
-            leftSection={<Icon size={18} stroke={1.5} />} 
-          />
-        );
+        const Icon = route.icon;
+        if (!route.to && route.onClick) {
+          return (
+            <NavLink
+              key={route.label}
+              label={t(`sources.${route.label}`)}
+              leftSection={<Icon size={18} stroke={1.5} />}
+              onClick={route.onClick}
+            />
+          );
+        }
+        if (route.to) {
+          return (
+            <NavbarLink
+              key={route.to}
+              to={route.to}
+              label={t(`sources.${route.label}`)}
+              leftSection={<Icon size={18} stroke={1.5} />}
+            />
+          );
+        }
+
+        return null;
       })}
     </AppShellNavbar>
   );
 };
+
