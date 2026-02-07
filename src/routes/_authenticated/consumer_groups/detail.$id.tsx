@@ -103,7 +103,7 @@ const ConsumerGroupDetailForm = (props: Props) => {
 };
 
 function RouteComponent() {
-  const { id } = useParams({ from: '/consumer_groups/detail/$id' });
+  const { id } = useParams({ from: '/_authenticated/consumer_groups/detail/$id' });
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
   const navigate = useNavigate();

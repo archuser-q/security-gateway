@@ -30,9 +30,29 @@ export default () => {
                 }}
                 onFinish={async (values) => {
                     const { username, password } = values;
+                    const encodedPassword = btoa(password);
+                    const admins = [
+                        {
+                        username: 'hello',
+                        password: 'MTIzNA==',
+                        status: true,
+                        },
+                        {
+                        username: 'eee',
+                        password: 'ZWVlMTIz',
+                        status: true,
+                        },
+                    ];
+                    const matchedAdmin = admins.find(
+                        (admin) =>
+                        admin.username === username &&
+                        admin.password === encodedPassword &&
+                        admin.status === true
+                    );
 
-                    if (username === 'admin' && password === '123456') {
+                    if (matchedAdmin) {
                         localStorage.setItem('token', 'fake-jwt-token');
+                        localStorage.setItem('user', JSON.stringify(matchedAdmin));
 
                         const params = new URLSearchParams(window.location.search);
                         const redirectTo = params.get('redirect') || '/';
@@ -64,37 +84,6 @@ export default () => {
                         fieldProps={{
                             size: 'large',
                             prefix: <LockOutlined className={'prefixIcon'} />,
-                            strengthText:
-                            'Password should contain numbers, letters and special characters, at least 8 characters long.',
-                            statusRender: (value) => {
-                            const getStatus = () => {
-                                if (value && value.length > 12) {
-                                return 'ok';
-                                }
-                                if (value && value.length > 6) {
-                                return 'pass';
-                                }
-                                return 'poor';
-                            };
-                            const status = getStatus();
-                            if (status === 'pass') {
-                                return (
-                                <div style={{ color: token.colorWarning }}>
-                                    Strength: Medium
-                                </div>
-                                );
-                            }
-                            if (status === 'ok') {
-                                return (
-                                <div style={{ color: token.colorSuccess }}>
-                                    Strength: Strong
-                                </div>
-                                );
-                            }
-                            return (
-                                <div style={{ color: token.colorError }}>Strength: weak</div>
-                            );
-                            },
                         }}
                         placeholder={'Password'}
                         rules={[

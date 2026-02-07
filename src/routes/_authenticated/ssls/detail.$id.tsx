@@ -117,7 +117,7 @@ const SSLDetailForm = (props: Props & { id: string }) => {
 
 function RouteComponent() {
   const { t } = useTranslation();
-  const { id } = useParams({ from: '/ssls/detail/$id' });
+  const { id } = useParams({ from: '/_authenticated/ssls/detail/$id' });
   const [readOnly, setReadOnly] = useBoolean(true);
   const navigate = useNavigate();
 

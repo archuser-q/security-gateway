@@ -49,7 +49,7 @@ type Props = {
 const SecretDetailForm = (props: Props) => {
   const { readOnly, setReadOnly } = props;
   const { t } = useTranslation();
-  const { manager, id } = useParams({ from: '/secrets/detail/$manager/$id' });
+  const { manager, id } = useParams({ from: '/_authenticated/secrets/detail/$manager/$id' });
 
   const secretQuery = useQuery(
     getSecretQueryOptions({
@@ -112,7 +112,7 @@ const SecretDetailForm = (props: Props) => {
 function RouteComponent() {
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
-  const { manager, id } = useParams({ from: '/secrets/detail/$manager/$id' });
+  const { manager, id } = useParams({ from: '/_authenticated/secrets/detail/$manager/$id' });
   const navigate = useNavigate();
 
   return (

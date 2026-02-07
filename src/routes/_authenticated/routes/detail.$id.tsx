@@ -161,7 +161,7 @@ export const RouteDetail = (props: RouteDetailProps) => {
 };
 
 function RouteComponent() {
-  const { id } = useParams({ from: '/routes/detail/$id' });
+  const { id } = useParams({ from: '/_authenticated/routes/detail/$id' });
   const navigate = useNavigate();
   return (
     <RouteDetail id={id} onDeleteSuccess={() => navigate({ to: '/routes' })} />

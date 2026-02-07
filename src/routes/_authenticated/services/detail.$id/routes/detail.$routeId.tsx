@@ -20,12 +20,12 @@ import {
   useParams,
 } from '@tanstack/react-router';
 
-import { RouteDetail } from '@/routes/authenticated/routes/detail.$id';
+import { RouteDetail } from '@/routes/_authenticated/routes/detail.$id';
 import { CommonFormContext } from '@/utils/form-context';
 
 function RouteComponent() {
   const { id, routeId } = useParams({
-    from: '/services/detail/$id/routes/detail/$routeId',
+    from: '/_authenticated/services/detail/$id/routes/detail/$routeId',
   });
   const navigate = useNavigate();
   return (

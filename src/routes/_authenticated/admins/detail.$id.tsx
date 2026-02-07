@@ -126,7 +126,7 @@ const AdminDetail = (props: AdminDetailProps) => {
 }
 
 function RouteComponent() {
-  const { id } = useParams({ from: '/admins/detail/$id'});
+  const { id } = useParams({ from: '/_authenticated/admins/detail/$id'});
   const navigate = useNavigate();
   
   return (

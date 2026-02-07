@@ -47,7 +47,7 @@ type Props = {
 const GlobalRuleDetailForm = (props: Props) => {
   const { readOnly, setReadOnly } = props;
   const { t } = useTranslation();
-  const { id } = useParams({ from: '/global_rules/detail/$id' });
+  const { id } = useParams({ from: '/_authenticated/global_rules/detail/$id' });
   const detailReq = useSuspenseQuery(getGlobalRuleQueryOptions(id));
 
   const form = useForm({
