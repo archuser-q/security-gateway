@@ -22,6 +22,8 @@ import apisixLogo from '@/assets/apisix-logo.svg';
 
 import { LanguageMenu } from './LanguageMenu';
 import { SettingModalBtn } from './SettingModalBtn';
+import { SettingsModal } from '../page/SettingsModal';
+import { Link } from '@tanstack/react-router';
 
 const Logo = () => {
   const { t } = useTranslation();
@@ -38,18 +40,23 @@ export const Header: FC<HeaderProps> = (props) => {
   const { opened, toggle } = props;
   const { t } = useTranslation();
   return (
-    <AppShell.Header>
-      <Group h="100%" px="md" justify="space-between">
-        <Group h="100%" gap="sm">
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <Logo />
-          <div>{t('apisix.dashboard')}</div>
+    <>
+      <AppShell.Header>
+        <Group h="100%" px="md" justify="space-between">
+          <Group h="100%" gap="sm">
+            <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+            <Link to='/'>
+              <Logo/>
+            </Link>
+            <div>{t('apisix.dashboard')}</div>
+          </Group>
+          <Group h="100%" gap="sm">
+            <SettingModalBtn />
+            <LanguageMenu />
+          </Group>
         </Group>
-        <Group h="100%" gap="sm">
-          <SettingModalBtn />
-          <LanguageMenu />
-        </Group>
-      </Group>
-    </AppShell.Header>
+      </AppShell.Header>
+      <SettingsModal />
+    </>
   );
 };
