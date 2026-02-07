@@ -49,7 +49,7 @@ type Props = {
 const ConsumerDetailForm = (props: Props) => {
   const { readOnly, setReadOnly } = props;
   const { t } = useTranslation();
-  const { username } = useParams({ from: '/consumers/detail/$username' });
+  const { username } = useParams({ from: '/_authenticated/consumers/detail/$username' });
 
   const consumerQuery = useSuspenseQuery(getConsumerQueryOptions(username));
   const { data: consumerData, isLoading, refetch } = consumerQuery;
@@ -109,7 +109,7 @@ const ConsumerDetailForm = (props: Props) => {
 const ConsumerDetailTab = () => {
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
-  const { username } = useParams({ from: '/consumers/detail/$username' });
+  const { username } = useParams({ from: '/_authenticated/consumers/detail/$username' });
   const navigate = useNavigate();
 
   return (

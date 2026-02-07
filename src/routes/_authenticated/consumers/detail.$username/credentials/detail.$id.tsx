@@ -112,7 +112,7 @@ function RouteComponent() {
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
   const { username, id } = useParams({
-    from: '/consumers/detail/$username/credentials/detail/$id',
+    from: '/_authenticated/consumers/detail/$username/credentials/detail/$id',
   });
   const navigate = useNavigate();
 
