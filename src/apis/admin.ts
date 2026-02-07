@@ -19,6 +19,23 @@ import type { APISIXType } from "@/types/schema/apisix";
 import type { PageSearchType } from "@/types/schema/pageSearch";
 import { API_ADMINS, PAGE_SIZE_MAX, PAGE_SIZE_MIN } from "@/config/constant";
 
+export const verifyAdminReq = async (
+  req: AxiosInstance,
+  username: string,
+  password: string
+): Promise<boolean> => {
+  const res = await getAdminListReq(req, {
+    page: 1,
+    page_size: PAGE_SIZE_MAX,
+  });
+
+  return res.list.some(({ value }) =>
+    value.username === username &&
+    value.password === password &&
+    value.status === true
+  );
+};
+
 export const getAdminListReq = (
     req: AxiosInstance,
     params: PageSearchType

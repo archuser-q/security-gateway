@@ -14,9 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createRootRoute, HeadContent, Outlet } from '@tanstack/react-router';
+import { createRootRouteWithContext, HeadContent, Outlet } from '@tanstack/react-router';
 import { I18nextProvider } from 'react-i18next';
 import i18n from '@/config/i18n';
+import { useAuth } from '@/context/AuthContext';
+
+type routeContext = {
+  auth: ReturnType<typeof useAuth>
+}
 
 const Root = () => {
   return (
@@ -27,6 +32,6 @@ const Root = () => {
   )
 }
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<routeContext>()({
   component: Root,
 });
