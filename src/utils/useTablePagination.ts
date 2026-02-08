@@ -27,7 +27,7 @@ import {
 
 import type { UseSearchParams } from './useSearchParams';
 
-export type ListPageKeys = `${keyof FilterKeys<FileRoutesByTo, 's'>}/`;
+export type ListPageKeys = `/_authenticated${keyof FilterKeys<FileRoutesByTo, 's'>}/`;
 type Props<T, P extends PageSearchType> = {
   data: APISIXListResponse<T>;
   /** if params is from useSearchParams, refetch is not needed */

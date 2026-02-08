@@ -33,7 +33,7 @@ import { pageSearchSchema } from '@/types/schema/pageSearch';
 import type { ListPageKeys } from '@/utils/useTablePagination';
 
 export type RouteListProps = {
-  routeKey: Extract<ListPageKeys, '/routes/' | '/services/detail/$id/routes/'>;
+  routeKey: Extract<ListPageKeys, '/_authenticated/routes/' | '/_authenticated/services/detail/$id/routes/'>;
   defaultParams?: Partial<WithServiceIdFilter>;
   ToDetailBtn: (props: {
     record: APISIXType['RespRouteItem'];
