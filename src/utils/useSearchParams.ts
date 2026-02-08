@@ -20,37 +20,43 @@ import {
   type RouteIds,
   useNavigate,
 } from '@tanstack/react-router';
-import { useCallback } from 'react';
+import type { ListPageKeys } from './useTablePagination';
 
 
 
 export type RouteTreeIds = RouteIds<RegisteredRouter['routeTree']>;
 
-export const useSearchParams = <T extends RouteTreeIds, P extends object>(
+export const useSearchParams = <
+  T extends RouteTreeIds | ListPageKeys,
+  P extends object
+>(
   routeId: T
 ) => {
-  const { useSearch } = getRouteApi<T>(routeId);
-  const navigate = useNavigate();
-  const params = useSearch() as P;
+  if ((routeId as string).startsWith('/_authenticated')) {
+    const { useSearch } = getRouteApi<RouteTreeIds>(routeId as RouteTreeIds);
+    const navigate = useNavigate();
+    const params = useSearch() as P;
 
-  const setParams = useCallback(
-    (props: Partial<P>) => {
-      return navigate({
-        to: '.',
-        search: (prev) => ({ ...prev, ...props }),
-      });
-    },
-    [navigate]
-  );
-  const resetParams = useCallback(
-    () => navigate({ to: '.', search: {}, replace: true }),
-    [navigate]
-  );
+    const setParams = (props: Partial<P>) =>
+      navigate({ to: '.', search: (prev) => ({ ...prev, ...props }) });
+
+    const resetParams = () =>
+      navigate({ to: '.', search: {}, replace: true });
+
+    return { params, setParams, resetParams } as const;
+  }
+
+  const navigate = useNavigate();
+  const params = {} as P;
+  const setParams = (props: Partial<P>) =>
+    navigate({ to: '.', search: (prev) => ({ ...prev, ...props }) });
+  const resetParams = () =>
+    navigate({ to: '.', search: {}, replace: true });
 
   return { params, setParams, resetParams } as const;
 };
 
 export type UseSearchParams<
-  T extends RouteTreeIds,
+  T extends RouteTreeIds | ListPageKeys,
   P extends object
 > = ReturnType<typeof useSearchParams<T, P>>;
