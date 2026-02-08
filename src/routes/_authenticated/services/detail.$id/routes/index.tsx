@@ -21,17 +21,17 @@ import { getRouteListQueryOptions } from '@/apis/hooks';
 import PageHeader from '@/components/page/PageHeader';
 import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { queryClient } from '@/config/global';
-import { RouteList } from '@/routes/authenticated/routes';
+import { RouteList } from '@/routes/_authenticated/routes';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 
 function RouteComponent() {
   const { t } = useTranslation();
-  const { id } = useParams({ from: '/services/detail/$id/routes/' });
+  const { id } = useParams({ from: '/_authenticated/services/detail/$id/routes/' });
   return (
     <>
       <PageHeader title={t('sources.routes')} />
       <RouteList
-        routeKey="/services/detail/$id/routes/"
+        routeKey="/_authenticated/services/detail/$id/routes/"
         defaultParams={{
           filter: {
             service_id: id,

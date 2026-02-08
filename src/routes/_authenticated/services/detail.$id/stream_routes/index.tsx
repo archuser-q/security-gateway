@@ -22,12 +22,12 @@ import PageHeader from '@/components/page/PageHeader';
 import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
 import { queryClient } from '@/config/global';
-import { StreamRouteList } from '@/routes/authenticated/stream_routes';
+import { StreamRouteList } from '@/routes/_authenticated/stream_routes';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 
 function StreamRouteComponent() {
   const { t } = useTranslation();
-  const { id } = useParams({ from: '/services/detail/$id/stream_routes/' });
+  const { id } = useParams({ from: '/_authenticated/services/detail/$id/stream_routes/' });
   return (
     <>
       <PageHeader title={t('sources.streamRoutes')} />
