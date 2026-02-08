@@ -41,7 +41,9 @@
       "edit": "Edit",
       "save": "Save",
       "upload": "Upload",
-      "view": "View"
+      "view": "View",
+      "disable": "Locked",
+      "enable": "Unlocked"
     },
     "consumers": {
       "groupId": "Group ID",
@@ -302,6 +304,13 @@
     "add": {
       "success": "Add {{name}} Successfully",
       "title": "Add {{name}}"
+    },
+    "update": {
+      "success": "Update Successfully"
+    },
+    "status": {
+      "active": "Đang hoạt động",
+      "inactive": "Ngừng hoạt động"
     },
     "delete": {
       "content": "Do you want to delete the {{name}}",

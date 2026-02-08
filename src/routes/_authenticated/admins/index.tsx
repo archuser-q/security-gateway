@@ -12,6 +12,7 @@ import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import { queryClient } from '@/config/global';
 import { Tag } from 'antd';
+import { UpdateAdminStatusBtn } from '@/components/page/UpdateStatusAdminBtn';
 
 export const Route = createFileRoute('/_authenticated/admins/')({
   component: RouteComponent,
@@ -59,7 +60,7 @@ function AdminList() {
           const isActive = record.value.status;
           return (
             <Tag color={isActive ? 'success' : 'error'}>
-              {isActive ? 'Active' : 'Inactive'}
+              {isActive ? t('info.status.active') : t('info.status.inactive')}
             </Tag>
           );
         },
@@ -92,6 +93,11 @@ function AdminList() {
             api={`${API_ADMINS}/${record.value.id}`}
             onSuccess={refetch}
           />,
+          <UpdateAdminStatusBtn
+            key="status"
+            id={record.value.id}
+            status={record.value.status}
+          />
         ],
       },
     ];

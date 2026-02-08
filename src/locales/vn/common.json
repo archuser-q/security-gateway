@@ -41,7 +41,9 @@
       "edit": "Sửa",
       "save": "Lưu",
       "upload": "Tải Lên",
-      "view": "Xem"
+      "view": "Xem",
+      "disable": "Khóa",
+      "enable": "Mở"
     },
     "consumers": {
       "groupId": "ID Nhóm",
@@ -302,6 +304,13 @@
     "add": {
       "success": "Thêm {{name}} Thành Công",
       "title": "Thêm {{name}}"
+    },
+    "update": {
+      "success": "Cập nhật thành công"
+    },
+    "status": {
+      "active": "Đang hoạt động",
+      "inactive": "Ngừng hoạt động"
     },
     "delete": {
       "content": "Bạn có muốn xóa {{name}}",
