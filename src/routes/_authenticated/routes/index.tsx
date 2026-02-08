@@ -30,8 +30,10 @@ import { API_ROUTES } from '@/config/constant';
 import { queryClient } from '@/config/global';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
+import type { ListPageKeys } from '@/utils/useTablePagination';
 
 export type RouteListProps = {
+  routeKey: Extract<ListPageKeys, '/routes/' | '/services/detail/$id/routes/'>;
   defaultParams?: Partial<WithServiceIdFilter>;
   ToDetailBtn: (props: {
     record: APISIXType['RespRouteItem'];
@@ -39,9 +41,14 @@ export type RouteListProps = {
 };
 
 export const RouteList = (props: RouteListProps) => {
-  const { ToDetailBtn } = props;
-  const { data, isLoading, refetch, pagination } = useRouteList();
+  const { routeKey, ToDetailBtn, defaultParams } = props;
+  const { data, isLoading, refetch, pagination } = useRouteList(routeKey, defaultParams);
   const { t } = useTranslation();
+
+  const serviceId = defaultParams?.filter?.service_id;
+  const addRoute = serviceId 
+    ? `/services/detail/${serviceId}/routes/add`
+    : '/routes/add';
 
   const columns = useMemo<ProColumns<APISIXType['RespRouteItem']>[]>(() => {
     return [
@@ -111,7 +118,7 @@ export const RouteList = (props: RouteListProps) => {
                     label={t('info.add.title', {
                       name: t('routes.singular'),
                     })}
-                    to="/routes/add"
+                    to={addRoute as any}
                   />
                 ),
               },
@@ -129,6 +136,7 @@ function RouteComponent() {
     <>
       <PageHeader title={t('sources.routes')} />
       <RouteList
+        routeKey="/_authenticated/routes/"
         ToDetailBtn={({ record }) => (
           <ToDetailPageBtn
             key="detail"
