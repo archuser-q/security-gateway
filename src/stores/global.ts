@@ -20,7 +20,7 @@ import { atomWithStorage } from 'jotai/utils';
 // Admin key with persistent storage
 export const adminKeyAtom = atomWithStorage<string>(
   'settings:adminKey',
-  '',
+  'edd1c9f034335f136f87ad84b625c8f1',
   undefined,
   {
     getOnInit: true,
