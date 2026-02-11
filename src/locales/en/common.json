@@ -51,7 +51,9 @@
     },
     "admins": {
       "username": "Username",
-      "password": "Password"
+      "password": "Password",
+      "fullname": "Full name",
+      "dob": "Date Of Birth"
     },
     "disabled": "Disabled, click switch to enable",
     "general": {

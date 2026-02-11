@@ -51,7 +51,9 @@
     },
     "admins": {
       "username": "Tên đăng nhập",
-      "password": "Mật khẩu"
+      "password": "Mật khẩu",
+      "fullname": "Họ và tên",
+      "dob": "Ngày sinh"
     },
     "disabled": "Đã vô hiệu hóa, nhấp vào công tắc để kích hoạt",
     "general": {

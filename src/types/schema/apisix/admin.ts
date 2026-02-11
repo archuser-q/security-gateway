@@ -29,6 +29,19 @@ const Admin = z
       .string()
       .min(1)
       .max(100),
+    dob: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/)
+      .refine((date) => {
+        const input = new Date(date);
+        const today = new Date();
+        return input <= today;
+      }, "DOB cannot be in the future"),
+    fullname: z
+      .string()
+      .min(1)
+      .max(100)
+      .regex(/^[\p{L} ]+$/u),
     status: z.boolean().default(true),
     labels: APISIXCommon.Labels.optional(),
     desc: z.string().optional(),

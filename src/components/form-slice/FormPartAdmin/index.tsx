@@ -19,6 +19,7 @@ import type { APISIXType } from '@/types/schema/apisix';
 import { FormItemTextInput } from "@/components/form/TextInput";
 import { FormPartBasic } from "../FormPartBasic";
 import { useTranslation } from "react-i18next";
+import { FormItemDatePicker } from "@/components/form/FormItemDatePicker";
 
 const FormSectionAdminBasic = () => {
     const { t } = useTranslation();
@@ -28,8 +29,22 @@ const FormSectionAdminBasic = () => {
         <>
             <FormPartBasic
               showName={false}
+              showDesc={false}
+              showLabels={false}
               before={
                 <>
+                    <FormItemTextInput
+                        control={control}
+                        name="fullname"
+                        label={t('form.admins.fullname')}
+                        required
+                    />
+                    <FormItemDatePicker
+                        control={control}
+                        name="dob"
+                        label={t('form.admins.dob')}
+                        required
+                    />
                     <FormItemTextInput
                         control={control}
                         name="username"
