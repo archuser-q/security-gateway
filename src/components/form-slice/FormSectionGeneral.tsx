@@ -29,6 +29,8 @@ const DisplayDate = () => {
   const { t } = useTranslation();
   const createTime = useWatch({ control, name: 'create_time' });
   const updateTime = useWatch({ control, name: 'update_time' });
+  console.log(createTime);
+  console.log(updateTime);
   return (
     <>
       <FormDisplayDate date={createTime} label={t('form.info.create_time')} />

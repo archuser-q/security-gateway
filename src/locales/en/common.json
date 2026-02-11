@@ -297,6 +297,10 @@
       "upstreamHost": "Upstream Host",
       "upstreamHostDesc": "Set this when `pass_host` is `rewrite`",
       "upstreamId": "Upstream ID"
+    },
+    "adminStatus":{
+      "disable": "Lock admin",
+      "enable": "Unlock admin"
     }
   },
   "globalRules": {
@@ -308,6 +312,12 @@
       "title": "Add {{name}}"
     },
     "update": {
+      "disable":{
+        "content": "Do you sure to lock user"
+      },
+      "enable":{
+        "content": "Do you sure to unlock user"
+      },
       "success": "Update Successfully"
     },
     "status": {

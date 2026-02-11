@@ -86,6 +86,7 @@ function AdminList() {
           />,
           <UpdateAdminStatusBtn
             key="status"
+            name={record.value.username}
             id={record.value.id}
             status={record.value.status}
           />

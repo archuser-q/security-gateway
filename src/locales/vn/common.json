@@ -297,6 +297,10 @@
       "upstreamHost": "Upstream Host",
       "upstreamHostDesc": "Đặt giá trị này khi `pass_host` là `rewrite`",
       "upstreamId": "ID Upstream"
+    },
+    "adminStatus":{
+      "disable": "Lock admin",
+      "enable": "Unlock admin"
     }
   },
   "globalRules": {
@@ -308,6 +312,12 @@
       "title": "Thêm {{name}}"
     },
     "update": {
+      "disable":{
+        "content": "Bạn có chắc muốn khóa người dùng"
+      },
+      "enable":{
+        "content": "Bạn có chắc muốn mở khóa người dùng"
+      },
       "success": "Cập nhật thành công"
     },
     "status": {

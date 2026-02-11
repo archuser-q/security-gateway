@@ -145,7 +145,7 @@ export const getStreamRouteListQueryOptions = genListQueryOptions(
   getStreamRouteListReq
 );
 export const useStreamRouteList = genUseList(
-  '/stream_routes/',
+  '/_authenticated/stream_routes/',
   getStreamRouteListQueryOptions
 );
 

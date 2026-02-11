@@ -17,7 +17,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Group,Skeleton } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import {
   createFileRoute,
   useNavigate,
@@ -49,53 +49,46 @@ type Props = {
 const SecretDetailForm = (props: Props) => {
   const { readOnly, setReadOnly } = props;
   const { t } = useTranslation();
-  const { manager, id } = useParams({ from: '/_authenticated/secrets/detail/$manager/$id' });
+  const { manager, id } = useParams({
+    from: '/_authenticated/secrets/detail/$manager/$id',
+  });
 
-  const secretQuery = useQuery(
+  const { data: secretData, refetch } = useSuspenseQuery(
     getSecretQueryOptions({
       id,
       manager: manager as APISIXType['Secret']['manager'],
     })
   );
-  const { data: secretData, isLoading, refetch } = secretQuery;
 
-  const form = useForm({
+  const form = useForm<APISIXType['Secret']>({
     resolver: zodResolver(APISIX.Secret),
-    shouldUnregister: true,
-    shouldFocusError: true,
+    defaultValues: secretData.value as APISIXType['Secret'],
     mode: 'all',
     disabled: readOnly,
   });
-
-  useEffect(() => {
-    if (secretData?.value && !isLoading) {
-      form.reset(secretData.value);
-    }
-    // readonly is used as a dep to ensure that it can be reset correctly when switching states.
-  }, [secretData, form, isLoading, readOnly]);
 
   const putSecret = useMutation({
     mutationFn: (d: APISIXType['Secret']) =>
       putSecretReq(req, pipeProduce()(d)),
     async onSuccess() {
       notifications.show({
-        message: t('info.edit.success', { name: t('secrets.singular') }),
+        message: t('info.edit.success', {
+          name: t('secrets.singular'),
+        }),
         color: 'green',
       });
+
       await refetch();
       setReadOnly(true);
     },
   });
-
-  if (isLoading) {
-    return <Skeleton height={400} />;
-  }
 
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putSecret.mutateAsync(d))}>
         <FormSectionGeneral readOnly />
         <FormPartSecret readOnlyManager />
+
         {!readOnly && (
           <Group>
             <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
