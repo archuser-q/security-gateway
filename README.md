@@ -1,9 +1,13 @@
+Dựa trên thông tin từ repository GitHub, tôi có thể thấy cấu trúc thư mục thực tế. Đây là README đã được cập nhật với cấu trúc project chính xác:
+
+---
+
 # Security Gateway
 
 ## Requirements
 
 * Node.js >= 16
-* npm
+* npm hoặc pnpm
 * Apache APISIX (running)
 * Access to the APISIX Admin API
 
@@ -22,6 +26,8 @@ cd security-gateway
 
 ```bash
 npm install
+# hoặc
+pnpm install
 ```
 
 ---
@@ -72,20 +78,37 @@ After building, the `dist/` directory will be generated. Deploy the contents of 
 
 ```
 .
-├── .github/           # CI/CD configuration
-├── docs/              # Project documentation
-├── public/            # Static assets
-├── src/               # Application source code
-│   ├── assets/
-│   ├── components/
-│   ├── pages/
-│   ├── services/
-│   ├── store/
-│   └── main.ts
-├── .env               # Environment configuration
-├── package.json
-├── vite.config.ts
-└── README.md
+├── .actions/              # GitHub Actions workflows
+├── .devcontainer/         # Dev container configuration
+├── .github/               # GitHub configuration
+├── .vscode/               # VSCode settings
+├── docs/                  # Project documentation
+│   └── en/                # English documentation
+├── e2e/                   # End-to-end tests
+├── src/                   # Application source code
+├── .asf.yaml              # Apache Software Foundation config
+├── .dockerignore          # Docker ignore file
+├── .gitignore             # Git ignore file
+├── .gitmodules            # Git submodules
+├── .licenserc.yaml        # License check configuration
+├── .markdownlint.yml      # Markdown linting rules
+├── .yamllint              # YAML linting rules
+├── CODE_OF_CONDUCT.md     # Code of conduct
+├── CONTRIBUTING.md        # Contributing guidelines
+├── LICENSE                # Apache License 2.0
+├── NOTICE                 # License notices
+├── README.md              # Project README
+├── eslint.config.ts       # ESLint configuration
+├── index.html             # Main HTML entry point
+├── netlify.toml           # Netlify deployment config
+├── package.json           # NPM dependencies and scripts
+├── playwright.config.ts   # Playwright test configuration
+├── pnpm-lock.yaml         # PNPM lock file
+├── tsconfig.app.json      # TypeScript app configuration
+├── tsconfig.json          # TypeScript base configuration
+├── tsconfig.node.json     # TypeScript Node configuration
+├── vite-plugin-i18n-progress.ts  # Custom Vite plugin for i18n
+└── vite.config.ts         # Vite build configuration
 ```
 
 ---
@@ -98,7 +121,3 @@ After building, the `dist/` directory will be generated. Deploy the contents of 
 * Can be deployed behind a reverse proxy (e.g., Nginx) in production environments.
 
 ---
-
-## License
-
-Licensed under the Apache License 2.0.
