@@ -1,31 +1,104 @@
-# Apache APISIX Dashboard
+# Security Gateway
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/apache/apisix-dashboard/blob/master/LICENSE)
-[![Slack](https://badgen.net/badge/Slack/Join%20Apache%20APISIX?icon=slack)](https://apisix.apache.org/slack)
+## Requirements
 
-<p align="center">
-  <a href="https://apisix.apache.org/">Website</a> •
-  <a href="https://github.com/apache/apisix/tree/master/docs">Docs</a> •
-  <a href="https://twitter.com/apacheapisix">Twitter</a>
-</p>
+* Node.js >= 16
+* npm
+* Apache APISIX (running)
+* Access to the APISIX Admin API
 
-- The master version should be used with Apache APISIX master version.
-- The project will not be released independently but will use a fixed git tag for each APISIX release.
+---
 
-## What's Apache APISIX Dashboard
+## Installation
 
-The Apache APISIX Dashboard is designed to make it as easy as possible for users to operate [Apache APISIX](https://github.com/apache/apisix) through a frontend interface.
+### 1. Clone the repository
 
-## Development
+```bash
+git clone https://github.com/archuser-q/security-gateway.git
+cd security-gateway
+```
 
-Pull requests are encouraged and always welcome. [Pick an issue](https://github.com/apache/apisix-dashboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) and help us out!
+### 2. Install dependencies
 
-Please refer to the [Development Guide](./docs/en/development.md).
+```bash
+npm install
+```
 
-## Contributing
+---
 
-Please refer to the [Contribution Guide](./CONTRIBUTING.md) for a more detailed information.
+## Configuration
+
+Create a `.env` file in the project root (if it does not exist) and configure the Admin API endpoint:
+
+```
+VITE_APISIX_ADMIN_API_URL=http://<host>:<port>
+```
+
+Example:
+
+```
+VITE_APISIX_ADMIN_API_URL=http://127.0.0.1:9180
+```
+
+Make sure APISIX is running and the Admin API is accessible from the machine running the dashboard.
+
+---
+
+## Run in Development Mode
+
+```bash
+npm run dev
+```
+
+By default, the application will be available at:
+
+```
+http://localhost:5173
+```
+
+---
+
+## Build for Production
+
+```bash
+npm run build
+```
+
+After building, the `dist/` directory will be generated. Deploy the contents of this directory to a web server (e.g., Nginx, Apache, or any static file server).
+
+---
+
+## Project Structure
+
+```
+.
+├── .github/           # CI/CD configuration
+├── docs/              # Project documentation
+├── public/            # Static assets
+├── src/               # Application source code
+│   ├── assets/
+│   ├── components/
+│   ├── pages/
+│   ├── services/
+│   ├── store/
+│   └── main.ts
+├── .env               # Environment configuration
+├── package.json
+├── vite.config.ts
+└── README.md
+```
+
+---
+
+## Compatibility
+
+* Compatible with modern versions of Apache APISIX (2.x, 3.x) via the Admin API.
+* Functions as a frontend dashboard and does not modify APISIX core behavior.
+* Can run on Linux, macOS, or Windows.
+* Can be deployed behind a reverse proxy (e.g., Nginx) in production environments.
+
+---
 
 ## License
 
-[Apache License 2.0](./LICENSE)
+Licensed under the Apache License 2.0.
