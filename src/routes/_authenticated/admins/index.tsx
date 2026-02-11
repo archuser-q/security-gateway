@@ -1,7 +1,5 @@
 import { getAdminListQueryOptions, useAdminList } from '@/apis/hooks';
-import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import { useMemo } from 'react';
-import { API_ADMINS } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
 import { ProTable, type ProColumns } from '@ant-design/pro-components';
 import PageHeader from '@/components/page/PageHeader';
