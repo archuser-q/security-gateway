@@ -86,13 +86,6 @@ function AdminList() {
             to="/admins/detail/$id"
             params={{ id: record.value.id }}
           />,
-          <DeleteResourceBtn
-            key="delete"
-            name="Delete"
-            target={record.value.id}
-            api={`${API_ADMINS}/${record.value.id}`}
-            onSuccess={refetch}
-          />,
           <UpdateAdminStatusBtn
             key="status"
             id={record.value.id}

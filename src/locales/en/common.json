@@ -309,8 +309,8 @@
       "success": "Update Successfully"
     },
     "status": {
-      "active": "Đang hoạt động",
-      "inactive": "Ngừng hoạt động"
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "delete": {
       "content": "Do you want to delete the {{name}}",

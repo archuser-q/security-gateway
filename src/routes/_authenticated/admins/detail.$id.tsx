@@ -16,10 +16,8 @@ import { FormPartAdmin } from '@/components/form-slice/FormPartAdmin';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { useBoolean } from 'react-use';
 import PageHeader from '@/components/page/PageHeader';
-import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { pipeProduce } from '@/utils/producer';
-import { API_ADMINS } from '@/config/constant';
 
 type AdminFormProps = {
   readOnly: boolean;
@@ -85,7 +83,7 @@ type AdminDetailProps = Pick<AdminFormProps, 'id'> & {
 }
 
 const AdminDetail = (props: AdminDetailProps) => {
-  const { id, onDeleteSuccess } = props;
+  const { id } = props;
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
   
@@ -103,13 +101,6 @@ const AdminDetail = (props: AdminDetailProps) => {
               >
                 {t('form.btn.edit')}
               </Button>
-              <DeleteResourceBtn
-                mode="detail"
-                name={t('admins.singular')}
-                target={id}
-                api={`${API_ADMINS}/${id}`}
-                onSuccess={onDeleteSuccess}
-              />
             </Group>
           )
         })}
