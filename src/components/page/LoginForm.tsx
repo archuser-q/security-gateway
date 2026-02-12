@@ -1,5 +1,5 @@
 import { useAuth } from '@/context/AuthContext';
-import { handleAdminLogin, type LoginParams } from '@/utils/auth';
+import { handleAdminLogin } from '@/utils/auth';
 import {
   LockOutlined,
   UserOutlined,
@@ -13,6 +13,11 @@ import { useNavigate } from '@tanstack/react-router';
 import { ConfigProvider, theme } from 'antd'
 import enUS from 'antd/locale/en_US';
 import { useEffect } from 'react';
+
+type LoginParams = {
+    username: string;
+    password: string;
+}
 
 export default () => {
   const { token } = theme.useToken();
@@ -40,7 +45,8 @@ export default () => {
                 <LoginForm<LoginParams>
                     title="Login"
                     onFinish={async (values) => {
-                        await handleAdminLogin(values, auth.login);
+                        const { username, password } = values;
+                        await handleAdminLogin(username, password, auth.login);
                     }}
                 >
                     <div

@@ -1,27 +1,21 @@
-import { verifyAdminReq } from "@/apis/admin";
+import { verifyAdminReq, type LoginResponse } from "@/apis/admin";
 import { req } from "@/config/req";
 import { message } from "antd";
 
-export type LoginParams = {
-  username: string,
-  password: string
-}
-
 export const handleAdminLogin = async (
-  values: LoginParams,
-  login: (user: { username: string }) => void
+  username: string,
+  password: string,
+  login: (username: string, password: string, res: LoginResponse) => Promise<void>
 ): Promise<boolean> => {
-  const { username, password } = values;
-  const encodedPassword = btoa(password);
+  try{
+    const encodedPassword = btoa(password);
+    const res = await verifyAdminReq(req, username, encodedPassword);
 
-  const isValid = await verifyAdminReq(req, username, encodedPassword);
-
-  if (!isValid) {
-    message.error('Sai tài khoản hoặc mật khẩu');
+    await login(username, encodedPassword, res);
+    message.success("Login successfully");
+    return true;
+  } catch(err){
+    message.error("Wrong username or password");
     return false;
   }
-
-  message.success('Đăng nhập thành công');
-  login({ username }); 
-  return true;
 };

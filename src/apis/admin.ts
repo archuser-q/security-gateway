@@ -19,22 +19,23 @@ import type { APISIXType } from "@/types/schema/apisix";
 import type { PageSearchType } from "@/types/schema/pageSearch";
 import { API_ADMINS, PAGE_SIZE_MAX, PAGE_SIZE_MIN } from "@/config/constant";
 
+export type LoginResponse = {
+    access_token: string;
+    refresh_token: string;
+    expires_in: string;
+    token_type: string;
+}
+
 export const verifyAdminReq = async (
   req: AxiosInstance,
   username: string,
   password: string
-): Promise<boolean> => {
-  const res = await getAdminListReq(req, {
-    page: 1,
-    page_size: PAGE_SIZE_MAX,
-  });
-
-  return res.list.some(({ value }) =>
-    value.username === username &&
-    value.password === password &&
-    value.status === true
-  );
-};
+): Promise<LoginResponse> => {
+    const res = await req.post<LoginResponse>('/admins/login', {
+        username, password
+    });
+    return res.data;
+}
 
 export const getAdminListReq = (
     req: AxiosInstance,
