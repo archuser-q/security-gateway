@@ -5,13 +5,12 @@ import { APISIX } from '@/types/schema/apisix';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useParams } from '@tanstack/react-router'
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { req } from '@/config/req';
 import { notifications } from '@mantine/notifications';
 import { Button, Group } from '@mantine/core';
-import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { FormPartAdmin } from '@/components/form-slice/FormPartAdmin';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { useBoolean } from 'react-use';

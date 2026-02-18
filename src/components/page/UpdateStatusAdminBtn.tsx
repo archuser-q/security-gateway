@@ -2,8 +2,6 @@ import { Button, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
 import { useTranslation } from 'react-i18next';
-
-import { queryClient } from '@/config/global';
 import { req } from '@/config/req';
 
 export type UpdateAdminStatusBtnProps = {
