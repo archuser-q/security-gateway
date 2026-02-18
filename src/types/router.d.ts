@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { router } from '@/config/global';
+import { router } from '@/config/queryClient';
 
 declare module '@tanstack/react-router' {
   interface Register {

@@ -24,7 +24,7 @@ import {
 import { useAtom } from 'jotai';
 import { useTranslation } from 'react-i18next';
 
-import { queryClient } from '@/config/global';
+import { queryClient } from '@/config/queryClient';
 import { adminKeyAtom, isSettingsOpenAtom } from '@/stores/global';
 import { sha } from '~build/git';
 

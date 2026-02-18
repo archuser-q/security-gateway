@@ -33,7 +33,7 @@ import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
-import { queryClient } from '@/config/global';
+import { queryClient } from '@/config/queryClient';
 import { getRouteQueryOptions } from '@/apis/hooks';
 
 type Props = {

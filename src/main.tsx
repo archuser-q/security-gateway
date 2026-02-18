@@ -27,7 +27,8 @@ import { RouterProvider } from '@tanstack/react-router';
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 
-import { queryClient, router } from './config/global';
+import { queryClient } from '@/config/queryClient'
+import { router } from './config/global';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 const theme = createTheme({});

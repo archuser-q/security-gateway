@@ -21,7 +21,7 @@ import { notifications } from '@mantine/notifications';
 import type { AxiosResponse } from 'axios';
 import { useTranslation } from 'react-i18next';
 
-import { queryClient } from '@/config/global';
+import { queryClient } from '@/config/queryClient';
 import { req } from '@/config/req';
 
 type DeleteResourceProps = {

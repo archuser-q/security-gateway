@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { getRouteListQueryOptions } from '@/apis/hooks';
 import PageHeader from '@/components/page/PageHeader';
 import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
-import { queryClient } from '@/config/global';
+import { queryClient } from '@/config/queryClient';
 import { RouteList } from '@/routes/_authenticated/routes';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 

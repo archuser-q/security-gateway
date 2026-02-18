@@ -1,4 +1,4 @@
-import { queryClient } from "@/config/global";
+import { queryClient } from "@/config/queryClient";
 import { req } from "@/config/req";
 import { Button, TextInput } from "@mantine/core";
 import { modals } from "@mantine/modals";

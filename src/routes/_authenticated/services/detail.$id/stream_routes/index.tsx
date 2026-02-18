@@ -21,7 +21,7 @@ import { getStreamRouteListQueryOptions } from '@/apis/hooks';
 import PageHeader from '@/components/page/PageHeader';
 import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
-import { queryClient } from '@/config/global';
+import { queryClient } from '@/config/queryClient';
 import { StreamRouteList } from '@/routes/_authenticated/stream_routes';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 

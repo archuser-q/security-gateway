@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
-import { queryClient } from '@/config/global';
+import { queryClient } from '@/config/queryClient';
 import { Tag } from 'antd';
 import { UpdateAdminStatusBtn } from '@/components/page/UpdateStatusAdminBtn';
 
