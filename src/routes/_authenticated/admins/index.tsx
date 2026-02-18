@@ -89,6 +89,7 @@ function AdminList() {
             name={record.value.username}
             id={record.value.id}
             status={record.value.status}
+            refetch={refetch}
           />
         ],
       },

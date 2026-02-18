@@ -31,7 +31,12 @@
         "0": "Disabled",
         "1": "Enabled"
       },
-      "title": "Basic Infomation"
+      "title": "Basic Infomation",
+      "field": {
+        "oldPassword": "Old Password",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm Password"
+      }
     },
     "btn": {
       "add": "Add",
@@ -43,7 +48,8 @@
       "upload": "Upload",
       "view": "View",
       "disable": "Locked",
-      "enable": "Unlocked"
+      "enable": "Unlocked",
+      "changePassword": "Change Password"
     },
     "consumers": {
       "groupId": "Group ID",
@@ -53,7 +59,8 @@
       "username": "Username",
       "password": "Password",
       "fullname": "Full name",
-      "dob": "Date Of Birth"
+      "dob": "Date Of Birth",
+      "title": "Change password"
     },
     "disabled": "Disabled, click switch to enable",
     "general": {

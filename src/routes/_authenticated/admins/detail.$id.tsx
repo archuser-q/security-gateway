@@ -5,7 +5,7 @@ import { APISIX } from '@/types/schema/apisix';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useParams } from '@tanstack/react-router'
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { req } from '@/config/req';
@@ -18,6 +18,7 @@ import { useBoolean } from 'react-use';
 import PageHeader from '@/components/page/PageHeader';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { pipeProduce } from '@/utils/producer';
+import { ChangePasswordBtn } from '@/components/page/ChangePasswordBtn';
 
 type AdminFormProps = {
   readOnly: boolean;
@@ -34,7 +35,7 @@ const AdminDetailForm = (props: AdminFormProps) => {
   
   const form = useForm({
     resolver: zodResolver(APISIX.AdminPut),
-    shouldUnregister: true,
+    shouldUnregister: false,
     shouldFocusError: true,
     mode: 'all',
     disabled: readOnly,
@@ -63,8 +64,7 @@ const AdminDetailForm = (props: AdminFormProps) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d)=>putAdmin.mutateAsync(pipeProduce()(d)))}>
-        <FormSectionGeneral showID={true} readOnly/>
-        <FormPartAdmin/>
+        <FormPartAdmin showPassword={false}/>
         {!readOnly && (
           <Group>
             <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
@@ -94,6 +94,9 @@ const AdminDetail = (props: AdminDetailProps) => {
         {...(readOnly && {
           extra: (
             <Group>
+              <ChangePasswordBtn
+                id={id}
+              />
               <Button
                 onClick={()=>setReadOnly(false)}
                 size="compact-sm"

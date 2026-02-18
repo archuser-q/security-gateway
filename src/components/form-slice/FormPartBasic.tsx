@@ -61,6 +61,7 @@ export type FormPartBasicProps = Omit<FormSectionProps, 'form'> &
     showName?: boolean;
     showDesc?: boolean;
     showLabels?: boolean;
+    showPassword?: boolean;
   };
 
 export const FormPartBasic = (props: FormPartBasicProps) => {
@@ -71,6 +72,7 @@ export const FormPartBasic = (props: FormPartBasicProps) => {
     showName = true,
     showDesc = true,
     showLabels = true,
+    showPassword = true,
     ...restProps
   } = props;
   const { control } = useFormContext<APISIXType['Basic']>();

@@ -21,7 +21,7 @@ import { FormPartBasic } from "../FormPartBasic";
 import { useTranslation } from "react-i18next";
 import { FormItemDatePicker } from "@/components/form/FormItemDatePicker";
 
-const FormSectionAdminBasic = () => {
+const FormSectionAdminBasic = ({showPassword = true}) => {
     const { t } = useTranslation();
     const { control } = useFormContext<APISIXType['AdminPut']>();
     
@@ -51,12 +51,14 @@ const FormSectionAdminBasic = () => {
                         label={t('form.admins.username')}
                         required
                     />
-                    <FormItemTextInput
-                        control={control}
-                        name="password"
-                        label={t('form.admins.password')}
-                        required
-                    />
+                    {showPassword && (
+                        <FormItemTextInput
+                            control={control}
+                            name="password"
+                            label={t('form.admins.password')}
+                            required={showPassword}
+                        /> 
+                    )}
                 </>
               }
             />
@@ -64,8 +66,8 @@ const FormSectionAdminBasic = () => {
     );
 };
 
-export const FormPartAdmin = () => {
+export const FormPartAdmin = ({showPassword = true}) => {
     return (
-        <FormSectionAdminBasic />
+        <FormSectionAdminBasic showPassword={showPassword}/>
     );
 };

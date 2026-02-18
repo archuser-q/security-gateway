@@ -1,5 +1,5 @@
 // src/routes/authenticated.tsx
-import { createFileRoute, redirect, Outlet } from '@tanstack/react-router'
+import { createFileRoute, redirect, Outlet, isRedirect } from '@tanstack/react-router'
 import { AppShell } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 
@@ -34,7 +34,15 @@ const AuthenticatedLayout = () => {
 
 export const Route = createFileRoute('/_authenticated')({
   beforeLoad: async ({ context, location }) => {
-    if (!context.auth.isAuthenticated) {
+    try{
+      if (!context.auth.isAuthenticated) {
+        throw redirect({
+          to: '/login',
+          search: { redirect: location.href },
+        })
+      }
+    } catch(error){
+      if (isRedirect(error)) throw error
       throw redirect({
         to: '/login',
         search: { redirect: location.href },

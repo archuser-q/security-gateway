@@ -1,37 +1,42 @@
 {
   "apisix": {
-    "dashboard": "Cổng Bảo Mật",
+    "dashboard": "Cổng bảo mật",
     "logo": "Logo APISIX"
   },
   "consumerGroups": {
-    "singular": "Nhóm Người Dùng"
+    "singular": "Nhóm người dùng"
   },
   "consumers": {
-    "singular": "Người Dùng"
+    "singular": "Người dùng"
   },
   "admins": {
     "singular": "Quản trị viên"
   },
   "credentials": {
-    "singular": "Thông Tin Xác Thực"
+    "singular": "Thông tin xác thực"
   },
   "form": {
     "basic": {
-      "desc": "Mô Tả",
+      "desc": "Mô tả",
       "labels": {
         "errorFormat": "Định dạng nhãn không đúng, phải là `key:value`",
         "key": "Khóa",
         "placeholder": "Nhập văn bản dạng `key:value`, sau đó nhấn enter hoặc blur",
         "title": "Nhãn",
-        "value": "Giá Trị"
+        "value": "Giá trị"
       },
       "name": "Tên",
-      "status": "Trạng Thái",
+      "status": "Trạng thái",
       "statusOption": {
-        "0": "Vô Hiệu Hóa",
-        "1": "Kích Hoạt"
+        "0": "Vô hiệu hóa",
+        "1": "Kích hoạt"
       },
-      "title": "Thông Tin Cơ Bản"
+      "title": "Thông tin cơ bản",
+      "field": {
+        "oldPassword": "Mật khẩu cũ",
+        "newPassword": "Mật khẩu mới",
+        "confirmPassword": "Xác nhận mật khẩu"
+      }
     },
     "btn": {
       "add": "Thêm",
@@ -40,282 +45,86 @@
       "delete": "Xóa",
       "edit": "Sửa",
       "save": "Lưu",
-      "upload": "Tải Lên",
+      "upload": "Tải lên",
       "view": "Xem",
       "disable": "Khóa",
-      "enable": "Mở"
+      "enable": "Mở",
+      "changePassword": "Đổi mật khẩu"
     },
     "consumers": {
-      "groupId": "ID Nhóm",
-      "username": "Tên Đăng Nhập"
+      "groupId": "ID nhóm",
+      "username": "Tên đăng nhập"
     },
     "admins": {
       "username": "Tên đăng nhập",
       "password": "Mật khẩu",
       "fullname": "Họ và tên",
-      "dob": "Ngày sinh"
+      "dob": "Ngày sinh",
+      "title": "Đổi mật khẩu"
     },
     "disabled": "Đã vô hiệu hóa, nhấp vào công tắc để kích hoạt",
     "general": {
       "title": "Chung"
     },
     "info": {
-      "create_time": "Được Tạo Lúc",
+      "create_time": "Được tạo lúc",
       "id": "ID",
-      "title": "Thông Tin",
-      "update_time": "Được Cập Nhật Lúc"
+      "title": "Thông tin",
+      "update_time": "Được cập nhật lúc"
     },
     "json": {
       "parseError": "Định dạng JSON không hợp lệ"
     },
     "plugins": {
-      "addPlugin": "Thêm Plugin",
-      "configId": "ID Cấu Hình Plugin",
-      "editPlugin": "Sửa Plugin",
+      "addPlugin": "Thêm plugin",
+      "configId": "ID cấu hình plugin",
+      "editPlugin": "Sửa plugin",
       "label": "Plugins",
-      "searchForSelectedPlugins": "Tìm Kiếm Plugin Đã Chọn",
+      "searchForSelectedPlugins": "Tìm kiếm plugin đã chọn",
       "selectPlugins": {
-        "title": "Chọn Plugins"
+        "title": "Chọn plugins"
       },
-      "viewPlugin": "Xem Plugin"
+      "viewPlugin": "Xem plugin"
     },
     "protos": {
-      "content": "Nội Dung",
+      "content": "Nội dung",
       "contentPlaceholder": "Dán hoặc tải lên tệp {{fileTypes}}"
     },
     "routes": {
-      "enableWebsocket": "Kích Hoạt WebSocket",
-      "filterFunc": "Hàm Lọc",
+      "enableWebsocket": "Kích hoạt websocket",
+      "filterFunc": "Hàm lọc",
       "host": "Host",
       "hosts": "Hosts",
-      "matchRules": "Quy Tắc Khớp",
-      "methods": "Phương Thức HTTP",
-      "priority": "Ưu Tiên",
-      "remoteAddr": "Địa Chỉ Từ Xa",
-      "remoteAddrs": "Địa Chỉ Từ Xa",
-      "service": "Dịch Vụ",
+      "matchRules": "Quy tắc khớp",
+      "methods": "Phương thức HTTP",
+      "priority": "Ưu tiên",
+      "remoteAddr": "Địa chỉ từ xa",
+      "remoteAddrs": "Địa chỉ từ xa",
+      "service": "Dịch vụ",
       "uri": "URI",
       "uris": "URIs",
       "vars": "Biến"
     },
-    "search": "Tìm Kiếm",
+    "search": "Tìm kiếm",
     "secrets": {
-      "aws": {
-        "access_key_id": "Access Key ID",
-        "endpoint_url": "Endpoint URL",
-        "region": "Vùng",
-        "secret_access_key": "Secret Access Key",
-        "session_token": "Session Token"
-      },
-      "gcp": {
-        "auth": "Xác Thực",
-        "auth_config": "Cấu Hình Xác Thực",
-        "auth_file": "Tệp Xác Thực",
-        "client_email": "Email Khách Hàng",
-        "entries_uri": "Entries URI",
-        "private_key": "Khóa Riêng",
-        "project_id": "ID Dự Án",
-        "scope": "Phạm Vi",
-        "ssl_verify": "Xác Minh SSL",
-        "token_uri": "Token URI"
-      },
-      "manager": "Trình Quản Lý Bí Mật",
-      "managerConfig": "Cấu Hình Trình Quản Lý",
-      "title": "Cấu Hình Bí Mật",
-      "vault": {
-        "namespace": "Namespace",
-        "prefix": "Tiền Tố",
-        "token": "Token",
-        "uri": "URI"
-      }
-    },
-    "overview": {
-      "title": "Luồng hoạt động",
-      "systemOverView": "Tổng quan hệ thống"
-    },
-    "services": {
-      "enableWebsocket": "Kích Hoạt WebSocket",
-      "hosts": "Hosts",
-      "script": "Script",
-      "settings": "Cài Đặt Dịch Vụ"
-    },
-    "ssls": {
-      "cert": "Chứng Chỉ",
-      "cert_key_list": {
-        "add": "Thêm một cặp",
-        "delete": "Xóa cặp",
-        "title": "Cặp Chứng Chỉ và Khóa"
-      },
-      "client": {
-        "ca": "Chứng Chỉ CA Khách Hàng",
-        "depth": "Độ Sâu Xác Minh",
-        "skipMtlsUriRegex": "Bỏ Qua mTLS URI Regex",
-        "title": "Khách Hàng"
-      },
-      "key": "Khóa Riêng",
-      "sni": "SNI",
-      "snis": "SNIs",
-      "ssl_protocols": "Giao Thức SSL",
-      "type": "Loại Chứng Chỉ"
-    },
-    "streamRoutes": {
-      "protocol": {
-        "conf": "Cấu Hình",
-        "logger": "Logger",
-        "name": "Tên Giao Thức",
-        "superiorId": "ID Cấp Trên",
-        "title": "Thông Tin Giao Thức"
-      },
-      "remoteAddr": "Địa Chỉ Từ Xa",
-      "server": "Máy Chủ",
-      "serverAddr": "Địa Chỉ Máy Chủ",
-      "serverPort": "Cổng Máy Chủ",
-      "sni": "SNI"
-    },
-    "tagsInput": {
-      "placeholder": "Nhập văn bản, sau đó nhấn enter hoặc blur"
-    },
-    "upload": {
-      "fileOverSize": "kích thước tệp quá lớn",
-      "readError": "lỗi đọc tệp:"
-    },
-    "upstreams": {
-      "checks": {
-        "active": {
-          "concurrency": "Đồng Thời",
-          "healthy": {
-            "http_statuses": "Trạng Thái HTTP",
-            "interval": "Khoảng Thời Gian",
-            "successes": "Thành Công",
-            "title": "Khỏe Mạnh"
-          },
-          "host": "Host",
-          "http_path": "Đường Dẫn HTTP",
-          "http_request_headers": "HTTP Request Headers",
-          "https_verify_certificate": "Xác Minh Chứng Chỉ Https",
-          "port": "Cổng",
-          "timeout": "Hết Thời Gian",
-          "title": "Chủ Động",
-          "type": "Loại",
-          "unhealthy": {
-            "http_failures": "Lỗi HTTP",
-            "http_statuses": "Trạng Thái HTTP",
-            "interval": "Khoảng Thời Gian",
-            "tcp_failures": "Lỗi TCP",
-            "timeouts": "Hết Thời Gian",
-            "title": "Không Khỏe Mạnh"
-          }
-        },
-        "passive": {
-          "healthy": {
-            "http_statuses": "Trạng Thái HTTP",
-            "successes": "Thành Công",
-            "title": "Khỏe Mạnh"
-          },
-          "title": "Thụ Động",
-          "type": "Loại",
-          "unhealthy": {
-            "http_failures": "Lỗi HTTP",
-            "http_statuses": "Trạng Thái HTTP",
-            "tcp_failures": "Lỗi TCP",
-            "timeouts": "Hết Thời Gian",
-            "title": "Không Khỏe Mạnh"
-          }
-        },
-        "title": "Kiểm Tra Sức Khỏe"
-      },
-      "connectionConfiguration": "Cấu Hình Kết Nối",
-      "discoveryArgs": {
-        "title": "Tham Số Khám Phá"
-      },
-      "discoveryType": {
-        "title": "Loại Khám Phá"
-      },
-      "findUpstreamFrom": "Tìm Upstream Từ",
-      "hashOn": "Hash Trên",
-      "hashOnDesc": "Điều này sẽ có hiệu lực khi `type` là `chash`",
-      "identifier": "Mã Định Danh Upstream",
-      "inline": "Cấu Hình Upstream Nội Tuyến",
-      "keepalivePool": {
-        "idleTimeout": "IDLE Timeout",
-        "requests": "Yêu Cầu",
-        "size": "Kích Thước",
-        "title": "Keepalive Pool"
-      },
-      "key": "Khóa",
-      "keyDesc": "Điều này sẽ có hiệu lực khi `type` là `chash`",
-      "loadBalancing": "Cân Bằng Tải",
-      "nodes": {
-        "action": {
-          "title": "Hành Động"
-        },
-        "add": "Thêm một Node",
-        "host": {
-          "title": "Host"
-        },
-        "port": {
-          "title": "Cổng"
-        },
-        "priority": {
-          "title": "Ưu Tiên"
-        },
-        "title": "Nodes",
-        "weight": {
-          "title": "Trọng Số"
-        }
-      },
-      "passHost": "Pass Host",
-      "retries": "Thử Lại",
-      "retry": "Thử Lại",
-      "retryTimeout": "Thời Gian Chờ Thử Lại",
-      "scheme": "Scheme",
-      "serviceDiscovery": {
-        "serviceName": "Tên Dịch Vụ",
-        "title": "Khám Phá Dịch Vụ"
-      },
-      "serviceId": "ID Dịch Vụ",
-      "serviceName": {
-        "title": "Tên Dịch Vụ"
-      },
-      "timeout": {
-        "connect": "Kết Nối",
-        "read": "Đọc",
-        "send": "Gửi",
-        "title": "Thời Gian Chờ"
-      },
-      "title": "Upstream",
-      "tls": {
-        "clientCert": "Chứng Chỉ Khách Hàng",
-        "clientCertId": "ID Chứng Chỉ Khách Hàng",
-        "clientCertKeyPair": "Cặp Khóa Chứng Chỉ Khách Hàng",
-        "clientKey": "Khóa Khách Hàng",
-        "title": "TLS",
-        "verify": "Xác Minh"
-      },
-      "type": "Loại",
-      "updateTime": "Thời Gian Cập Nhật",
-      "upstreamHost": "Upstream Host",
-      "upstreamHostDesc": "Đặt giá trị này khi `pass_host` là `rewrite`",
-      "upstreamId": "ID Upstream"
-    },
-    "adminStatus":{
-      "disable": "Lock admin",
-      "enable": "Unlock admin"
+      "manager": "Trình quản lý bí mật",
+      "managerConfig": "Cấu hình trình quản lý",
+      "title": "Cấu hình bí mật"
     }
   },
   "globalRules": {
-    "singular": "Quy Tắc Toàn Cục"
+    "singular": "Quy tắc toàn cục"
   },
   "info": {
     "add": {
-      "success": "Thêm {{name}} Thành Công",
+      "success": "Thêm {{name}} thành công",
       "title": "Thêm {{name}}"
     },
     "update": {
-      "disable":{
+      "disable": {
         "content": "Bạn có chắc muốn khóa người dùng"
       },
-      "enable":{
+      "enable": {
         "content": "Bạn có chắc muốn mở khóa người dùng"
       },
       "success": "Cập nhật thành công"
@@ -326,28 +135,28 @@
     },
     "delete": {
       "content": "Bạn có muốn xóa {{name}}",
-      "success": "Xóa {{name}} Thành Công",
+      "success": "Xóa {{name}} thành công",
       "title": "Xóa {{name}}"
     },
     "detail": {
-      "title": "Chi Tiết {{name}}"
+      "title": "Chi tiết {{name}}"
     },
     "edit": {
-      "success": "Sửa {{name}} Thành Công",
+      "success": "Sửa {{name}} thành công",
       "title": "Sửa {{name}}"
     }
   },
   "mark": {
     "question": "?"
   },
-  "noData": "Không Có Dữ Liệu",
-  "or": "HOẶC",
+  "noData": "Không có dữ liệu",
+  "or": "Hoặc",
   "pluginConfigs": {
-    "singular": "Cấu Hình Plugin"
+    "singular": "Cấu hình plugin"
   },
   "pluginMetadata": {
-    "search": "Tìm Kiếm Plugin Metadata",
-    "singular": "Plugin Metadata"
+    "search": "Tìm kiếm plugin metadata",
+    "singular": "Plugin metadata"
   },
   "protos": {
     "singular": "Proto"
@@ -357,44 +166,44 @@
   },
   "seconds": "Giây",
   "secrets": {
-    "singular": "Bí Mật"
+    "singular": "Bí mật"
   },
   "services": {
-    "singular": "Dịch Vụ"
+    "singular": "Dịch vụ"
   },
   "settings": {
-    "adminKey": "Khóa Quản Trị",
-    "title": "Cài Đặt",
-    "ui-commit-sha": "UI Commit SHA"
+    "adminKey": "Khóa quản trị",
+    "title": "Cài đặt",
+    "ui-commit-sha": "UI commit sha"
   },
   "sources": {
     "overview": "Tổng quan",
-    "consumerGroups": "Nhóm Người Dùng",
-    "consumers": "Người Dùng",
-    "credentials": "Thông Tin Xác Thực",
-    "globalRules": "Quy Tắc Toàn Cục",
-    "pluginConfigs": "Cấu Hình Plugin",
-    "pluginMetadata": "Plugin Metadata",
+    "consumerGroups": "Nhóm người dùng",
+    "consumers": "Người dùng",
+    "credentials": "Thông tin xác thực",
+    "globalRules": "Quy tắc toàn cục",
+    "pluginConfigs": "Cấu hình plugin",
+    "pluginMetadata": "Plugin metadata",
     "protos": "Protos",
     "routes": "Tuyến",
-    "secrets": "Bí Mật",
-    "services": "Dịch Vụ",
+    "secrets": "Bí mật",
+    "services": "Dịch vụ",
     "ssls": "SSLs",
-    "streamRoutes": "Tuyến Stream",
+    "streamRoutes": "Tuyến stream",
     "upstreams": "Upstreams",
-    "admin": "Quản Trị Viên",
+    "admin": "Quản trị viên",
     "logout": "Đăng xuất"
   },
   "ssls": {
     "singular": "SSL"
   },
   "streamRoutes": {
-    "singular": "Tuyến Stream"
+    "singular": "Tuyến stream"
   },
   "table": {
-    "actions": "Hành Động",
-    "disabled": "Đã Vô Hiệu Hóa",
-    "enabled": "Đã Kích Hoạt"
+    "actions": "Hành động",
+    "disabled": "Đã vô hiệu hóa",
+    "enabled": "Đã kích hoạt"
   },
   "upstreams": {
     "singular": "Upstream"

@@ -10,18 +10,25 @@ export type UpdateAdminStatusBtnProps = {
   id: string;
   status: boolean;
   name: string;
+  refetch: ()=>void;
 };
 
 export const UpdateAdminStatusBtn = ({
   id,
   status,
   name,
+  refetch
 }: UpdateAdminStatusBtnProps) => {
   const { t } = useTranslation();
 
   const openConfirm = () => {
     modals.openConfirmModal({
       centered: true,
+      cancelProps: {
+        style: {
+          display: 'none'
+        }
+      },
       confirmProps: { color: status ? 'red' : 'green' },
       title: status
         ? t('form.adminStatus.disable')
@@ -51,14 +58,11 @@ export const UpdateAdminStatusBtn = ({
         cancel: t('form.btn.cancel'),
       },
       onConfirm: async () => {
-        await req.patch(`/admins/${id}/status`, {
+        await req.patch(`/admins/${id}`, {
           status: !status,
         });
 
-        await queryClient.invalidateQueries({ 
-          queryKey: ['admins'], 
-          exact: false 
-        });
+        await refetch();
 
         notifications.show({
           color: 'green',
