@@ -1,7 +1,3 @@
-Dựa trên thông tin từ repository GitHub, tôi có thể thấy cấu trúc thư mục thực tế. Đây là README đã được cập nhật với cấu trúc project chính xác:
-
----
-
 # Security Gateway
 
 ## Requirements
