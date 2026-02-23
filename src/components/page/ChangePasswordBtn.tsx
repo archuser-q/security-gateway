@@ -5,10 +5,11 @@ import { ChangePasswordForm } from "../form/ChangePasswordForm";
 
 export type ChangePasswordBtnProps = {
     id: string;
+    password: string;
 };
 
 export const ChangePasswordBtn = ({
-  id
+  id, password
 }: ChangePasswordBtnProps) => {
     const { t } = useTranslation();
 
@@ -16,7 +17,7 @@ export const ChangePasswordBtn = ({
         modals.open({
             title: t('form.admins.title'),
             centered:true,
-            children: <ChangePasswordForm id={id}/>
+            children: <ChangePasswordForm id={id} password={password}/>
         })
     }
 

@@ -85,6 +85,9 @@ const AdminDetail = (props: AdminDetailProps) => {
   const { id } = props;
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
+  const { data: adminData } = useSuspenseQuery(
+    getAdminQueryOptions(id)
+  );
   
   return (
     <>
@@ -95,6 +98,7 @@ const AdminDetail = (props: AdminDetailProps) => {
             <Group>
               <ChangePasswordBtn
                 id={id}
+                password={adminData?.value?.password}
               />
               <Button
                 onClick={()=>setReadOnly(false)}

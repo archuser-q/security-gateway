@@ -7,12 +7,13 @@ import {
 
 type User = {
     username: string,
+    role: string
 }
 type AuthContextProps = {
     user: User | null,
     login: (user: User) => void;
     logout: () => void,
-    isAuthenticated: true,
+    isAuthenticated: boolean,
 }
 
 export const AuthContext = createContext<AuthContextProps | null>(null);
@@ -31,7 +32,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return (
         <AuthContext.Provider
             value = {{
-                user, login, logout, isAuthenticated: true
+                user, login, logout, isAuthenticated: Boolean(user)
             }}
         >
             {children}

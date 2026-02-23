@@ -6,13 +6,27 @@ import { notifications } from "@mantine/notifications";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-export const ChangePasswordForm = ({id}:{id:string}) => {
+type ChangePasswordFormProps = {
+    id: string;
+    password: string;
+}
+
+export const ChangePasswordForm = ({id, password}: ChangePasswordFormProps) => {
     const {t} = useTranslation();
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
     const handleSubmit = async() => {
+        const decoded = password ? atob(password) : "";
+
+        if (oldPassword != decoded){
+            notifications.show({
+                color: 'red',
+                message: 'Invalid password'
+            });
+            return;
+        }
         if (newPassword != confirmPassword){
             notifications.show({
                 color: 'red',
