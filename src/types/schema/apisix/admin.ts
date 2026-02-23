@@ -45,6 +45,7 @@ const Admin = z
     status: z.boolean().default(true),
     labels: APISIXCommon.Labels.optional(),
     desc: z.string().optional(),
+    role: z.string().min(1),
   })
   .merge(APISIXCommon.Info);
 
@@ -54,6 +55,7 @@ export const APISIXAdmin = {
       id: true,
       create_time: true,
       update_time: true,
+      role: true,
     }),
     AdminPut: Admin.omit({
         create_time: true, 

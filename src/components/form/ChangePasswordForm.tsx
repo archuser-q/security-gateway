@@ -1,5 +1,6 @@
 import { queryClient } from "@/config/queryClient";
 import { req } from "@/config/req";
+import { useAuth } from "@/context/AuthContext";
 import { Button, TextInput } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
@@ -13,19 +14,22 @@ type ChangePasswordFormProps = {
 
 export const ChangePasswordForm = ({id, password}: ChangePasswordFormProps) => {
     const {t} = useTranslation();
+    const auth = useAuth();
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
     const handleSubmit = async() => {
-        const decoded = password ? atob(password) : "";
+        if (auth.user?.role==="admin"){
+            const decoded = password ? atob(password) : "";
 
-        if (oldPassword != decoded){
-            notifications.show({
-                color: 'red',
-                message: 'Invalid password'
-            });
-            return;
+            if (oldPassword != decoded){
+                notifications.show({
+                    color: 'red',
+                    message: 'Invalid password'
+                });
+                return;
+            }
         }
         if (newPassword != confirmPassword){
             notifications.show({
@@ -48,12 +52,14 @@ export const ChangePasswordForm = ({id, password}: ChangePasswordFormProps) => {
     };
     return(
         <>
-            <TextInput 
-                label={t('form.basic.field.oldPassword')}
-                value={oldPassword}
-                onChange={(e)=>setOldPassword(e.currentTarget.value)}
-                data-autofocus
-            />
+            {auth.user?.role==="admin" && (
+                <TextInput 
+                    label={t('form.basic.field.oldPassword')}
+                    value={oldPassword}
+                    onChange={(e)=>setOldPassword(e.currentTarget.value)}
+                    data-autofocus
+                />
+            )}
             <TextInput 
                 label={t('form.basic.field.newPassword')}
                 value={newPassword}

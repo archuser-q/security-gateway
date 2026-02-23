@@ -4,12 +4,12 @@ import { message } from "antd";
 
 export type LoginParams = {
   username: string,
-  password: string
+  password: string,
 }
 
 export const handleAdminLogin = async (
   values: LoginParams,
-  login: (user: { username: string }) => void
+  login: (user: { username: string, role:string }) => void
 ): Promise<boolean> => {
   const { username, password } = values;
   const encodedPassword = btoa(password);
@@ -22,6 +22,6 @@ export const handleAdminLogin = async (
   }
 
   message.success('Đăng nhập thành công');
-  login({ username }); 
+  login(isValid); 
   return true;
 };

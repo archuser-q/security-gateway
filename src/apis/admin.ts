@@ -23,17 +23,19 @@ export const verifyAdminReq = async (
   req: AxiosInstance,
   username: string,
   password: string
-): Promise<boolean> => {
+): Promise<{username: string, role:string} | null> => {
   const res = await getAdminListReq(req, {
     page: 1,
     page_size: PAGE_SIZE_MAX,
   });
 
-  return res.list.some(({ value }) =>
+  const admin = res.list.find(({ value }) =>
     value.username === username &&
     value.password === password &&
     value.status === true
   );
+
+  return admin ? {username: admin.value.username, role: admin.value.role} : null;
 };
 
 export const getAdminListReq = (
