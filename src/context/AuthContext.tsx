@@ -7,7 +7,8 @@ import {
 
 type User = {
     username: string,
-    role: string
+    role: string,
+    id: string
 }
 type AuthContextProps = {
     user: User | null,

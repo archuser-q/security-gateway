@@ -11,6 +11,7 @@ import { pageSearchSchema } from '@/types/schema/pageSearch';
 import { queryClient } from '@/config/queryClient';
 import { Tag } from 'antd';
 import { UpdateAdminStatusBtn } from '@/components/page/UpdateStatusAdminBtn';
+import { useAuth } from '@/context/AuthContext';
 
 export const Route = createFileRoute('/_authenticated/admins/')({
   component: RouteComponent,
@@ -32,6 +33,13 @@ function RouteComponent() {
 function AdminList() {
   const { t } = useTranslation();
   const { data, isLoading, refetch, pagination } = useAdminList();
+  const auth = useAuth();
+
+  const filteredData = useMemo(() => { 
+    if (auth?.user?.id && auth?.user?.role==="super_admin") return data?.list; 
+    return data?.list?.filter(
+      item => item.value.id === auth.user?.id); 
+    }, [data?.list, auth?.user?.id]);
   
   const columns = useMemo<
     ProColumns<APISIXType['RespAdminList']['data']['list'][number]>[]
@@ -100,7 +108,7 @@ function AdminList() {
     <AntdConfigProvider>
       <ProTable
         columns={columns}
-        dataSource={data?.list}
+        dataSource={filteredData}
         rowKey={(record) => record.value.id}
         loading={isLoading}
         search={false}

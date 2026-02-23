@@ -9,7 +9,7 @@ export type LoginParams = {
 
 export const handleAdminLogin = async (
   values: LoginParams,
-  login: (user: { username: string, role:string }) => void
+  login: (user: { username: string, role:string, id:string }) => void
 ): Promise<boolean> => {
   const { username, password } = values;
   const encodedPassword = btoa(password);
