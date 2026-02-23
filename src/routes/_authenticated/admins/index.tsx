@@ -11,6 +11,7 @@ import { pageSearchSchema } from '@/types/schema/pageSearch';
 import { queryClient } from '@/config/queryClient';
 import { Tag } from 'antd';
 import { UpdateAdminStatusBtn } from '@/components/page/UpdateStatusAdminBtn';
+import { ToLogHistoryBtn } from '@/components/page/ToLogHistoryBtn';
 
 export const Route = createFileRoute('/_authenticated/admins/')({
   component: RouteComponent,
@@ -90,7 +91,8 @@ function AdminList() {
             id={record.value.id}
             status={record.value.status}
             refetch={refetch}
-          />
+          />,
+          <ToLogHistoryBtn/>
         ],
       },
     ];

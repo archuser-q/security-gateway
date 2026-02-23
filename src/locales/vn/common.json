@@ -49,7 +49,8 @@
       "view": "Xem",
       "disable": "Khóa",
       "enable": "Mở",
-      "changePassword": "Đổi mật khẩu"
+      "changePassword": "Đổi mật khẩu",
+      "loginHistory": "Lịch sử đăng nhập"
     },
     "consumers": {
       "groupId": "ID nhóm",

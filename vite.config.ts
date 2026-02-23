@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
+import tanstackRouter from '@tanstack/router-plugin/vite';
 import react from '@vitejs/plugin-react-swc';
 import postcssPresetMantine from 'postcss-preset-mantine';
 import postcssSimpleVars from 'postcss-simple-vars';
@@ -37,29 +37,16 @@ if (inDevContainer) {
 export default defineConfig({
   base: BASE_PATH,
   server: {
-    // as an example, if you want to use the e2e server as the api server,
     proxy: {
       [API_PREFIX]: {
         target: 'http://localhost:9180',
         changeOrigin: true,
       },
+      '/logs': {
+        target: 'http://localhost:9180',
+        changeOrigin: true,
+      },
     },
-    ...(inDevContainer && {
-      host: '0.0.0.0',
-      port: 5173,
-      strictPort: true,
-      hmr: {
-        protocol: 'ws',
-        host: '127.0.0.1',
-        port: 5174,
-      },
-      proxy: {
-        [API_PREFIX]: {
-          target: 'http://apisix:9180',
-          changeOrigin: true,
-        },
-      },
-    }),
   },
   build: {
     rollupOptions: {
@@ -84,7 +71,7 @@ export default defineConfig({
       jsx: 'react',
     }),
     UnpluginInfo(),
-    TanStackRouterVite({
+    tanstackRouter({
       target: 'react',
       autoCodeSplitting: true,
       semicolons: false,
