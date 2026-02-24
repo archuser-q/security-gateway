@@ -49,7 +49,8 @@
       "view": "View",
       "disable": "Locked",
       "enable": "Unlocked",
-      "changePassword": "Change Password"
+      "changePassword": "Change Password",
+      "loginHistory": "Login History"
     },
     "consumers": {
       "groupId": "Group ID",
@@ -60,7 +61,10 @@
       "password": "Password",
       "fullname": "Full name",
       "dob": "Date Of Birth",
-      "title": "Change password"
+      "title": "Change password",
+      "ipAddress": "IP Address",
+      "loginTimestamp": "Login at",
+      "status": "Status"
     },
     "disabled": "Disabled, click switch to enable",
     "general": {

@@ -49,7 +49,8 @@
       "view": "Xem",
       "disable": "Khóa",
       "enable": "Mở",
-      "changePassword": "Đổi mật khẩu"
+      "changePassword": "Đổi mật khẩu",
+      "loginHistory": "Lịch sử đăng nhập"
     },
     "consumers": {
       "groupId": "ID nhóm",
@@ -60,7 +61,10 @@
       "password": "Mật khẩu",
       "fullname": "Họ và tên",
       "dob": "Ngày sinh",
-      "title": "Đổi mật khẩu"
+      "title": "Đổi mật khẩu",
+      "ipAddress": "Địa chỉ IP",
+      "loginTimestamp": "Đăng nhập lúc",
+      "status": "Trạng thái"
     },
     "disabled": "Đã vô hiệu hóa, nhấp vào công tắc để kích hoạt",
     "general": {

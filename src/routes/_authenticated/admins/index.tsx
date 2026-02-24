@@ -12,6 +12,7 @@ import { queryClient } from '@/config/queryClient';
 import { Tag } from 'antd';
 import { UpdateAdminStatusBtn } from '@/components/page/UpdateStatusAdminBtn';
 import { useAuth } from '@/context/AuthContext';
+import { LoginHistoryBtn } from '@/components/page/LoginHistoryBtn';
 
 export const Route = createFileRoute('/_authenticated/admins/')({
   component: RouteComponent,
@@ -92,13 +93,14 @@ function AdminList() {
             to="/admins/detail/$id"
             params={{ id: record.value.id }}
           />,
-          <UpdateAdminStatusBtn
+          auth.user?.role === 'super_admin' && <UpdateAdminStatusBtn
             key="status"
             name={record.value.username}
             id={record.value.id}
             status={record.value.status}
             refetch={refetch}
-          />
+          />,
+          auth.user?.role === 'super_admin' && <LoginHistoryBtn username={record.value.username}/>
         ],
       },
     ];
@@ -116,23 +118,25 @@ function AdminList() {
         pagination={pagination}
         cardProps={{ bodyStyle: { padding: 0 } }}
         toolbar={{
-          menu:{
-            type: 'inline',
-            items: [
-              {
-                key:'add',
-                label: (
-                  <ToAddPageBtn
-                    key='add'
-                    to='/admins/add'
-                    label={t('info.add.title', {
-                      name: t('admins.singular'),
-                    })}
-                  />
-                )
+          menu: auth.user?.role === 'super_admin'
+            ? {
+                type: 'inline',
+                items: [
+                  {
+                    key: 'add',
+                    label: (
+                      <ToAddPageBtn
+                        key="add"
+                        to="/admins/add"
+                        label={t('info.add.title', {
+                          name: t('admins.singular'),
+                        })}
+                      />
+                    )
+                  }
+                ]
               }
-            ]
-          }
+            : undefined
         }}
       />
     </AntdConfigProvider>

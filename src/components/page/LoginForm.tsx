@@ -18,14 +18,16 @@ export default () => {
   const { token } = theme.useToken();
   const auth = useAuth();
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (auth.isAuthenticated) {
-        const params = new URLSearchParams(window.location.search)
-        const redirectTo = params.get('redirect') || '/'
-        navigate({ to: redirectTo, replace: true })
+        navigate({
+        to: new URLSearchParams(window.location.search).get('redirect') || '/',
+        replace: true,
+        });
     }
-  }, [auth.isAuthenticated])
+  }, [auth.isAuthenticated]);
 
   return (
     <ConfigProvider locale={enUS}>
@@ -40,12 +42,21 @@ export default () => {
                 <LoginForm<LoginParams>
                     title="Login"
                     onFinish={async (values) => {
-                        await handleAdminLogin(values, auth.login);
+                        const result = await handleAdminLogin(values, auth.login);
+
+                        const status = result ? 'success' : 'fail';
+
+                        await fetch(`${API_URL}/login-history`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                username: values.username,
+                                status,
+                            }),
+                        });
                     }}
                 >
-                    <div
-                    
-                    style={{ paddingTop: 15 }}>
+                    <div style={{ paddingTop: 15 }}>
                         <ProFormText
                         name="username"
                         fieldProps={{
