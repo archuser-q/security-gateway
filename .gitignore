@@ -35,3 +35,4 @@ dist-ssr
 package-lock.json
 
 default.etcd
+.env
