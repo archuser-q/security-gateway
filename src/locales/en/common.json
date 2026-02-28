@@ -64,7 +64,8 @@
       "title": "Change password",
       "ipAddress": "IP Address",
       "loginTimestamp": "Login at",
-      "status": "Status"
+      "status": "Status",
+      "count": "Login times"
     },
     "disabled": "Disabled, click switch to enable",
     "general": {
@@ -142,7 +143,8 @@
     },
     "overview": {
       "title": "Traffic Flow",
-      "systemOverView": "System Overview"
+      "systemOverView": "System Overview",
+      "loginCountOverview": "User Login Activity"
     },
     "services": {
       "enableWebsocket": "Enable WebSocket",

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Flex, Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
 
 interface DataType {
   key: string;
@@ -49,20 +50,23 @@ const App: React.FC<HistoryRecordFormProps> = ({username}) => {
     },
   ];
 
-  useEffect(() => {
-    fetch(`${API_URL}/login-history?username=${username}`)
-      .then((res) => res.json())
-      .then((json) => {
-        const mapped = json.map((item: any) => ({
-          ip: item.ip,
-          timestamp: new Date(item.timestamp).toLocaleString(),
-          tags: [item.status],
-          username: item.username
-        }));
-        setData(mapped);
-      })
-      .catch((err) => console.error('Fetch error:', err));
-  }, [username]);
+  useEffect(()=>{
+    axios.get(`${API_URL}/login-history`,{
+      params: { username }
+    })
+    .then((response)=>{
+      const mapped = response.data.map((item:any)=>({
+        ip: item.ip,
+        timestamp: new Date(item.timestamp).toLocaleString(),
+        tags: [item.status],
+        username: item.username
+      }));
+      setData(mapped);
+    })
+    .catch(error=>{
+      console.error('API Error: ',error.message);
+    });
+  }, [username, API_URL])
 
   return <Table<DataType> 
     columns={columns} 

@@ -16,6 +16,11 @@
     "singular": "Thông tin xác thực"
   },
   "form": {
+    "overview": {
+      "title": "Luồng hoạt động",
+      "systemOverView": "Tổng quan hệ thống",
+      "loginCountOverview": "Lịch sử hoạt động người dùng"
+    },
     "basic": {
       "desc": "Mô tả",
       "labels": {
@@ -64,7 +69,8 @@
       "title": "Đổi mật khẩu",
       "ipAddress": "Địa chỉ IP",
       "loginTimestamp": "Đăng nhập lúc",
-      "status": "Trạng thái"
+      "status": "Trạng thái",
+      "count": "Số lần đăng nhập"
     },
     "disabled": "Đã vô hiệu hóa, nhấp vào công tắc để kích hoạt",
     "general": {

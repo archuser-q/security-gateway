@@ -1,9 +1,9 @@
 import { Column } from '@ant-design/charts';
-import { config } from './config/barConfig/column';
-import { useChartData } from './config/barConfig/data';
+import { config } from './config/columnConfig/overview/column';
+import { useChartData } from './config/columnConfig/overview/data';
 import { useTranslation } from 'react-i18next';
 
-const BarChart = () => {
+const OverViewColumnChart = () => {
   const { t } = useTranslation();
   const data = useChartData();
 
@@ -15,4 +15,4 @@ const BarChart = () => {
   );
 };
 
-export default BarChart;
+export default OverViewColumnChart;
