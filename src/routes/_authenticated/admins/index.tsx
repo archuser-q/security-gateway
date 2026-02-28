@@ -118,8 +118,7 @@ function AdminList() {
         pagination={pagination}
         cardProps={{ bodyStyle: { padding: 0 } }}
         toolbar={{
-          menu: auth.user?.role === 'super_admin'
-            ? {
+          menu: {
                 type: 'inline',
                 items: [
                   {
@@ -136,7 +135,6 @@ function AdminList() {
                   }
                 ]
               }
-            : undefined
         }}
       />
     </AntdConfigProvider>

@@ -29,7 +29,7 @@ const FormSectionAdminBasic = ({showPassword = true}) => {
         <>
             <FormPartBasic
               showName={false}
-              showDesc={false}
+              showDesc={true}
               showLabels={false}
               before={
                 <>
