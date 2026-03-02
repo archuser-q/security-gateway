@@ -22,6 +22,7 @@ import UnpluginIcons from 'unplugin-icons/vite';
 import UnpluginInfo from 'unplugin-info/vite';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import tailwindcss from '@tailwindcss/vite'
 
 import { API_PREFIX, BASE_PATH } from './src/config/constant';
 import i18nProgress from './vite-plugin-i18n-progress';
@@ -61,6 +62,7 @@ export default defineConfig({
     },
   },
   plugins: [
+    tailwindcss(),
     tsconfigPaths(),
     UnpluginIcons({
       autoInstall: true,

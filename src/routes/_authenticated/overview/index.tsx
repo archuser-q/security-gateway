@@ -9,10 +9,17 @@ export const Route = createFileRoute('/_authenticated/overview/')({
 
 function RouteComponent() {
   return (
-    <div>
+    <div className="p-4 space-y-6">
       <SystemMindMap />
-      <OverViewColumnChart />
-      <LoginCountColumnChart />
+
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex-1">
+          <LoginCountColumnChart />
+        </div>
+        <div className="flex-1">
+          <OverViewColumnChart />
+        </div>
+      </div>
     </div>
   )
 }
