@@ -12,7 +12,6 @@ import { queryClient } from '@/config/queryClient';
 import { Tag } from 'antd';
 import { UpdateAdminStatusBtn } from '@/components/page/UpdateStatusAdminBtn';
 import { useAuth } from '@/context/AuthContext';
-import { LoginHistoryBtn } from '@/components/page/LoginHistoryBtn';
 
 export const Route = createFileRoute('/_authenticated/admins/')({
   component: RouteComponent,
@@ -100,7 +99,6 @@ function AdminList() {
             status={record.value.status}
             refetch={refetch}
           />,
-          auth.user?.role === 'super_admin' && <LoginHistoryBtn username={record.value.username}/>
         ],
       },
     ];
