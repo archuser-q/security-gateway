@@ -44,6 +44,10 @@ export default defineConfig({
         target: 'http://localhost:9180',
         changeOrigin: true,
       },
+      '/logs': {
+        target: 'http://localhost:9180',
+        changeOrigin: true,
+      },
     },
   },
   build: {

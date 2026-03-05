@@ -31,7 +31,8 @@ import {
   IconKey,
   IconCode,
   IconHome,
-  IconLogout
+  IconLogout,
+  IconListSearch
 } from '@tabler/icons-react';
 
 export type NavRoute = {
@@ -113,10 +114,15 @@ export const navRoutes: NavRoute[] = [
     icon: IconUsers,
   },
   {
+    to:'/log',
+    label: 'log',
+    icon: IconListSearch,
+  },
+  {
     label: 'logout',
     icon: IconLogout,
     onClick: () => {
       window.location.href = '/login';
     }
-  }
+  },
 ];

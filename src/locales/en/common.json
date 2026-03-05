@@ -396,6 +396,7 @@
     "streamRoutes": "Stream Routes",
     "upstreams": "Upstreams",
     "admin": "Administrators",
+    "log": "Log",
     "logout": "Log out"
   },
   "ssls": {
