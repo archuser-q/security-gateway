@@ -10,7 +10,6 @@ import { useEffect } from 'react';
 export default () => {
   const auth = useAuth();
   const navigate = useNavigate();
-  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (auth.isAuthenticated) {
@@ -24,26 +23,14 @@ export default () => {
   return (
     <ConfigProvider locale={enUS}>
       <ProConfigProvider hashed={false}>
-        {/* Replaced manual styles with Tailwind Flexbox and sizing */}
         <div className="min-h-[80vh] flex items-center justify-center bg-white">
           
           <LoginForm<LoginParams>
             title="Login"
             onFinish={async (values) => {
-              const result = await handleAdminLogin(values, auth.login);
-              const status = result ? 'success' : 'fail';
-
-              await fetch(`${API_URL}/login-history`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  username: values.username,
-                  status,
-                }),
-              });
+              await handleAdminLogin(values, auth.login);
             }}
           >
-            {/* Replaced style={{paddingTop: 15}} with pt-4 */}
             <div className="pt-4">
               <ProFormText
                 name="username"
