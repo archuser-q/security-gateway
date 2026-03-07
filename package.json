@@ -26,7 +26,7 @@
     "@monaco-editor/react": "^4.7.0",
     "@tabler/icons-react": "^3.36.0",
     "@tailwindcss/vite": "^4.2.1",
-    "@tanstack/react-query": "^5.74.4",
+    "@tanstack/react-query": "^5.90.21",
     "@tanstack/react-router": "^1.116.0",
     "antd": "^5.24.8",
     "axios": "^1.11.0",
