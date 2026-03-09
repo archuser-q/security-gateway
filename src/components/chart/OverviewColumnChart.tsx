@@ -2,6 +2,7 @@ import { Column } from '@ant-design/charts';
 import { config } from './config/columnConfig/overview/column';
 import { useChartData } from './config/columnConfig/overview/data';
 import { useTranslation } from 'react-i18next';
+import PageHeader from '../page/PageHeader';
 
 const OverViewColumnChart = () => {
   const { t } = useTranslation();
@@ -9,7 +10,7 @@ const OverViewColumnChart = () => {
 
   return (
     <div>
-      <h1 className="mb-6 font-semibold">{t('form.overview.systemOverView')}</h1>
+      <PageHeader title={t('form.overview.systemOverView')}/>
       <Column {...config} data={data} />
     </div>
   );

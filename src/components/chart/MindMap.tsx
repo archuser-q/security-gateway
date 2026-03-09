@@ -1,6 +1,7 @@
 import { MindMap, type MindMapOptions } from '@ant-design/graphs';
 import useData from './config/mindMapConfig/data';
 import { useTranslation } from 'react-i18next';
+import PageHeader from '../page/PageHeader';
 
 export default function SystemMindMap() {
   const { t } = useTranslation();
@@ -20,9 +21,7 @@ export default function SystemMindMap() {
 
   return (
     <>
-      <h1 className="mb-6 font-semibold">
-        {t('form.overview.title')}
-      </h1>
+      <PageHeader title={t('form.overview.title')}/>
       <MindMap {...options} />
     </>
   );
