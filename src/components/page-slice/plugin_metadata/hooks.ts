@@ -40,7 +40,7 @@ export const usePluginMetadataList = () => {
       ? names.map((pluginName) => ({
           ...getPluginMetadataQueryOptions(pluginName, {
             // skip show 500 error toast
-            [SKIP_INTERCEPTOR_HEADER]: ['500'],
+            [SKIP_INTERCEPTOR_HEADER]: ['404','500'],
           }),
           retry: false,
         }))
