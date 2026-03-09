@@ -54,7 +54,7 @@ export const FormPartConsumer = () => {
             name="username"
             label={t('form.consumers.username')}
             required
-            disabled={isEditMode}
+            readOnly={isEditMode}
           />
         }
       />
