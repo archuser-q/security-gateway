@@ -20,9 +20,9 @@ export default function SystemMindMap() {
 
   return (
     <>
-      <h2 className="mb-6 text-[20px] font-semibold">
+      <h1 className="mb-6 font-semibold">
         {t('form.overview.title')}
-      </h2>
+      </h1>
       <MindMap {...options} />
     </>
   );

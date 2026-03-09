@@ -9,7 +9,7 @@ const OverViewColumnChart = () => {
 
   return (
     <div>
-      <h2 className="mb-6 text-[20px] font-semibold">{t('form.overview.systemOverView')}</h2>
+      <h1 className="mb-6 font-semibold">{t('form.overview.systemOverView')}</h1>
       <Column {...config} data={data} />
     </div>
   );
