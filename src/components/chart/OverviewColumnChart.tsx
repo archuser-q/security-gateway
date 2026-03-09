@@ -1,4 +1,4 @@
-import { Bar } from '@ant-design/charts';
+import { Column } from '@ant-design/charts';
 import { config } from './config/columnConfig/overview/column';
 import { useChartData } from './config/columnConfig/overview/data';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +10,7 @@ const OverViewColumnChart = () => {
   return (
     <div>
       <h2>{t('form.overview.systemOverView')}</h2>
-      <Bar {...config} data={data} />
+      <Column {...config} data={data} />
     </div>
   );
 };
