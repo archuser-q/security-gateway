@@ -1,7 +1,7 @@
 import { queryClient } from "@/config/queryClient";
 import { req } from "@/config/req";
 import { useAuth } from "@/context/AuthContext";
-import { Button, TextInput } from "@mantine/core";
+import { Button, PasswordInput } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import { useState } from "react";
@@ -53,20 +53,20 @@ export const ChangePasswordForm = ({id, password}: ChangePasswordFormProps) => {
     return(
         <>
             {auth.user?.role==="admin" && (
-                <TextInput 
+                <PasswordInput 
                     label={t('form.basic.field.oldPassword')}
                     value={oldPassword}
                     onChange={(e)=>setOldPassword(e.currentTarget.value)}
                     data-autofocus
                 />
             )}
-            <TextInput 
+            <PasswordInput 
                 label={t('form.basic.field.newPassword')}
                 value={newPassword}
                 onChange={(e)=>setNewPassword(e.currentTarget.value)}
                 data-autofocus
             />
-            <TextInput 
+            <PasswordInput 
                 label={t('form.basic.field.confirmPassword')}
                 value={confirmPassword}
                 onChange={(e)=>setConfirmPassword(e.currentTarget.value)}
