@@ -31,6 +31,7 @@ import { queryClient } from '@/config/queryClient';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import type { ListPageKeys } from '@/utils/useTablePagination';
+import { useAuth } from '@/context/AuthContext';
 
 export type RouteListProps = {
   routeKey: Extract<ListPageKeys, '/_authenticated/routes/' | '/_authenticated/services/detail/$id/routes/'>;
@@ -44,6 +45,13 @@ export const RouteList = (props: RouteListProps) => {
   const { routeKey, ToDetailBtn, defaultParams } = props;
   const { data, isLoading, refetch, pagination } = useRouteList(routeKey, defaultParams);
   const { t } = useTranslation();
+  const auth = useAuth();
+  const filteredData = useMemo(()=>{
+    if (auth.user?.role === 'super_admin') return data?.list
+    return data?.list?.filter(
+      item => item.value.user_id === auth.user?.id
+    );
+  },[data?.list, auth?.user?.id])
 
   const serviceId = defaultParams?.filter?.service_id;
   const addRoute = serviceId 
@@ -77,6 +85,24 @@ export const RouteList = (props: RouteListProps) => {
         valueType: 'text',
       },
       {
+        dataIndex: ['value', 'create_time'],
+        title: t('form.routes.createTime'),
+        key: 'create_time',
+        valueType: 'dateTime',
+        renderText: (text) => {
+          if (!text) return '-';
+          return new Date(Number(text) * 1000).toISOString();
+        },
+      },
+      ...(auth.user?.role === 'super_admin'
+      ? [{
+          dataIndex: ['value', 'created_by'],
+          title: t('form.basic.created_by'),
+          key: 'created_by',
+          valueType: 'text'
+        }]
+      : []),
+      {
         title: t('table.actions'),
         valueType: 'option',
         key: 'option',
@@ -99,7 +125,7 @@ export const RouteList = (props: RouteListProps) => {
     <AntdConfigProvider>
       <ProTable
         columns={columns}
-        dataSource={data.list}
+        dataSource={filteredData}
         rowKey="id"
         loading={isLoading}
         search={false}

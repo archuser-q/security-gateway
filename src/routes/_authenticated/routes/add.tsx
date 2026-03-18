@@ -35,6 +35,7 @@ import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
 import { queryClient } from '@/config/queryClient';
 import { getRouteQueryOptions } from '@/apis/hooks';
+import { useAuth } from '@/context/AuthContext';
 
 type Props = {
   navigate: (res: APISIXType['RespRouteDetail']) => Promise<void>;
@@ -44,9 +45,15 @@ type Props = {
 export const RouteAddForm = (props: Props) => {
   const { navigate, defaultValues } = props;
   const { t } = useTranslation();
+  const auth = useAuth();
 
   const postRoute = useMutation({
-    mutationFn: (d: RoutePostType) => postRouteReq(req, produceRoute(d)),
+    mutationFn: (d: RoutePostType) => 
+      postRouteReq(req, produceRoute({
+        ...d,
+        user_id: auth.user?.id,
+        created_by: auth.user?.username
+      })),
     async onSuccess(res) {
       const routeId = res.data.value.id;
       

@@ -39,8 +39,8 @@ const useData = () => {
   }, [upstreamData])
 
   return {
-    id: 'Consumer',
-    label: 'Consumer',
+    id: 'Request',
+    label: 'Request',
     children:
       routeData?.list?.map((route) => {
         const serviceId = route.value.service_id

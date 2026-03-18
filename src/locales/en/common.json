@@ -36,7 +36,8 @@
         "oldPassword": "Old Password",
         "newPassword": "New Password",
         "confirmPassword": "Confirm Password"
-      }
+      },
+      "created_by": "Created By"
     },
     "btn": {
       "add": "Add",
@@ -108,7 +109,9 @@
       "service": "Service",
       "uri": "URI",
       "uris": "URIs",
-      "vars": "Vars"
+      "vars": "Vars",
+      "createTime": "Create Time",
+      "updateTime": "Update Time"
     },
     "search": "Search",
     "secrets": {
@@ -306,6 +309,7 @@
         "verify": "Verify"
       },
       "type": "Type",
+      "createTime": "Create Time",
       "updateTime": "Update Time",
       "upstreamHost": "Upstream Host",
       "upstreamHostDesc": "Set this when `pass_host` is `rewrite`",

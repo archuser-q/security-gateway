@@ -42,6 +42,8 @@ const Route = z
     enable_websocket: z.boolean(),
     priority: z.number().default(0),
     status: APISIXCommon.Status,
+    user_id: z.string(),
+    created_by: z.string()
   })
   .partial()
   .merge(APISIXCommon.Basic)
