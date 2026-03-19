@@ -94,14 +94,12 @@ export const RouteList = (props: RouteListProps) => {
           return new Date(Number(text) * 1000).toISOString();
         },
       },
-      ...(auth.user?.role === 'super_admin'
-      ? [{
-          dataIndex: ['value', 'created_by'],
-          title: t('form.basic.created_by'),
-          key: 'created_by',
-          valueType: 'text'
-        }]
-      : []),
+      {
+        dataIndex: ['value', 'created_by'],
+        title: t('form.basic.created_by'),
+        key: 'created_by',
+        valueType: 'text'
+      },
       {
         title: t('table.actions'),
         valueType: 'option',
