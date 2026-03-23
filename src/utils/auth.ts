@@ -15,6 +15,20 @@ export const handleAdminLogin = async (
   const encodedPassword = btoa(password);
 
   const isValid = await verifyAdminReq(req, username, encodedPassword);
+  
+  try {
+    fetch('http://localhost:9080/api/internal/log-event', {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Log-Event': 'AdminLogin',
+        'X-Log-User': username,
+        'X-Log-Status': isValid ? 'Success' : 'Failure'
+      },
+      body: JSON.stringify({})
+    }).catch(() => {});
+  } catch (e) {}
 
   if (!isValid) {
     message.error('Sai tài khoản hoặc mật khẩu');

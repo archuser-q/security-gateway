@@ -22,6 +22,7 @@ import { Route as AuthenticatedProtosIndexRouteImport } from './routes/_authenti
 import { Route as AuthenticatedPlugin_metadataIndexRouteImport } from './routes/_authenticated/plugin_metadata/index'
 import { Route as AuthenticatedPlugin_configsIndexRouteImport } from './routes/_authenticated/plugin_configs/index'
 import { Route as AuthenticatedOverviewIndexRouteImport } from './routes/_authenticated/overview/index'
+import { Route as AuthenticatedLog_historiesIndexRouteImport } from './routes/_authenticated/log_histories/index'
 import { Route as AuthenticatedGlobal_rulesIndexRouteImport } from './routes/_authenticated/global_rules/index'
 import { Route as AuthenticatedConsumersIndexRouteImport } from './routes/_authenticated/consumers/index'
 import { Route as AuthenticatedConsumer_groupsIndexRouteImport } from './routes/_authenticated/consumer_groups/index'
@@ -133,6 +134,12 @@ const AuthenticatedOverviewIndexRoute =
   AuthenticatedOverviewIndexRouteImport.update({
     id: '/overview/',
     path: '/overview/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedLog_historiesIndexRoute =
+  AuthenticatedLog_historiesIndexRouteImport.update({
+    id: '/log_histories/',
+    path: '/log_histories/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedGlobal_rulesIndexRoute =
@@ -384,6 +391,7 @@ export interface FileRoutesByFullPath {
   '/consumer_groups/': typeof AuthenticatedConsumer_groupsIndexRoute
   '/consumers/': typeof AuthenticatedConsumersIndexRoute
   '/global_rules/': typeof AuthenticatedGlobal_rulesIndexRoute
+  '/log_histories/': typeof AuthenticatedLog_historiesIndexRoute
   '/overview/': typeof AuthenticatedOverviewIndexRoute
   '/plugin_configs/': typeof AuthenticatedPlugin_configsIndexRoute
   '/plugin_metadata/': typeof AuthenticatedPlugin_metadataIndexRoute
@@ -437,6 +445,7 @@ export interface FileRoutesByTo {
   '/consumer_groups': typeof AuthenticatedConsumer_groupsIndexRoute
   '/consumers': typeof AuthenticatedConsumersIndexRoute
   '/global_rules': typeof AuthenticatedGlobal_rulesIndexRoute
+  '/log_histories': typeof AuthenticatedLog_historiesIndexRoute
   '/overview': typeof AuthenticatedOverviewIndexRoute
   '/plugin_configs': typeof AuthenticatedPlugin_configsIndexRoute
   '/plugin_metadata': typeof AuthenticatedPlugin_metadataIndexRoute
@@ -490,6 +499,7 @@ export interface FileRoutesById {
   '/_authenticated/consumer_groups/': typeof AuthenticatedConsumer_groupsIndexRoute
   '/_authenticated/consumers/': typeof AuthenticatedConsumersIndexRoute
   '/_authenticated/global_rules/': typeof AuthenticatedGlobal_rulesIndexRoute
+  '/_authenticated/log_histories/': typeof AuthenticatedLog_historiesIndexRoute
   '/_authenticated/overview/': typeof AuthenticatedOverviewIndexRoute
   '/_authenticated/plugin_configs/': typeof AuthenticatedPlugin_configsIndexRoute
   '/_authenticated/plugin_metadata/': typeof AuthenticatedPlugin_metadataIndexRoute
@@ -545,6 +555,7 @@ export interface FileRouteTypes {
     | '/consumer_groups/'
     | '/consumers/'
     | '/global_rules/'
+    | '/log_histories/'
     | '/overview/'
     | '/plugin_configs/'
     | '/plugin_metadata/'
@@ -598,6 +609,7 @@ export interface FileRouteTypes {
     | '/consumer_groups'
     | '/consumers'
     | '/global_rules'
+    | '/log_histories'
     | '/overview'
     | '/plugin_configs'
     | '/plugin_metadata'
@@ -650,6 +662,7 @@ export interface FileRouteTypes {
     | '/_authenticated/consumer_groups/'
     | '/_authenticated/consumers/'
     | '/_authenticated/global_rules/'
+    | '/_authenticated/log_histories/'
     | '/_authenticated/overview/'
     | '/_authenticated/plugin_configs/'
     | '/_authenticated/plugin_metadata/'
@@ -782,6 +795,13 @@ declare module '@tanstack/react-router' {
       path: '/overview'
       fullPath: '/overview/'
       preLoaderRoute: typeof AuthenticatedOverviewIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/log_histories/': {
+      id: '/_authenticated/log_histories/'
+      path: '/log_histories'
+      fullPath: '/log_histories/'
+      preLoaderRoute: typeof AuthenticatedLog_historiesIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/global_rules/': {
@@ -1134,6 +1154,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedConsumer_groupsIndexRoute: typeof AuthenticatedConsumer_groupsIndexRoute
   AuthenticatedConsumersIndexRoute: typeof AuthenticatedConsumersIndexRoute
   AuthenticatedGlobal_rulesIndexRoute: typeof AuthenticatedGlobal_rulesIndexRoute
+  AuthenticatedLog_historiesIndexRoute: typeof AuthenticatedLog_historiesIndexRoute
   AuthenticatedOverviewIndexRoute: typeof AuthenticatedOverviewIndexRoute
   AuthenticatedPlugin_configsIndexRoute: typeof AuthenticatedPlugin_configsIndexRoute
   AuthenticatedPlugin_metadataIndexRoute: typeof AuthenticatedPlugin_metadataIndexRoute
@@ -1176,6 +1197,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
     AuthenticatedConsumer_groupsIndexRoute,
   AuthenticatedConsumersIndexRoute: AuthenticatedConsumersIndexRoute,
   AuthenticatedGlobal_rulesIndexRoute: AuthenticatedGlobal_rulesIndexRoute,
+  AuthenticatedLog_historiesIndexRoute: AuthenticatedLog_historiesIndexRoute,
   AuthenticatedOverviewIndexRoute: AuthenticatedOverviewIndexRoute,
   AuthenticatedPlugin_configsIndexRoute: AuthenticatedPlugin_configsIndexRoute,
   AuthenticatedPlugin_metadataIndexRoute:

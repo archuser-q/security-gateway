@@ -400,6 +400,7 @@
     "streamRoutes": "Tuyến Đường Luồng",
     "upstreams": "Upstreams",
     "admin": "Quản Trị Viên",
+    "log": "Nhật ký hoạt động",
     "logout": "Đăng Xuất"
   },
   "ssls": {
