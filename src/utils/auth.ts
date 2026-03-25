@@ -15,9 +15,10 @@ export const handleAdminLogin = async (
   const encodedPassword = btoa(password);
 
   const isValid = await verifyAdminReq(req, username, encodedPassword);
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
   
   try {
-    fetch('http://localhost:9080/api/internal/log-event', {
+    fetch(`${baseUrl}/api/internal/log-event`, {
       method: 'POST',
       mode: 'cors',
       headers: {
