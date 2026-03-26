@@ -29,3 +29,8 @@ export const adminKeyAtom = atomWithStorage<string>(
 
 // Settings modal visibility state
 export const isSettingsOpenAtom = atom<boolean>(false);
+
+export const userAtom = atom<{
+  id: string;
+  username: string;
+} | null>(null);

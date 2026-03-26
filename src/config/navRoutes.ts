@@ -111,12 +111,5 @@ export const navRoutes: NavRoute[] = [
     to: '/admins',
     label: 'admin',
     icon: IconUsers,
-  },
-  {
-    label: 'logout',
-    icon: IconLogout,
-    onClick: () => {
-      window.location.href = '/login';
-    }
   }
 ];

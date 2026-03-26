@@ -25,24 +25,31 @@ import {
   API_PREFIX,
   SKIP_INTERCEPTOR_HEADER,
 } from '@/config/constant';
-import { adminKeyAtom, isSettingsOpenAtom } from '@/stores/global';
+import { adminKeyAtom, isSettingsOpenAtom, userAtom } from '@/stores/global';
 
 export const req = axios.create();
 
 req.interceptors.request.use((conf) => {
+  // serialize filter params
   conf.paramsSerializer = (p) => {
-    // from { filter: { service_id: 1 } }
-    // to `filter=service_id%3D1`
     if (p.filter) {
       p.filter = stringify(p.filter);
     }
-    return stringify(p, {
-      arrayFormat: 'repeat',
-    });
+    return stringify(p, { arrayFormat: 'repeat' });
   };
+
   conf.baseURL = API_PREFIX;
-  const adminKey = getDefaultStore().get(adminKeyAtom);
+
+  const store = getDefaultStore();
+
+  const adminKey = store.get(adminKeyAtom);
   conf.headers.set(API_HEADER_KEY, adminKey);
+
+  const user = store.get(userAtom);
+  if (user?.id) {
+    conf.headers.set('X-User-Id', user.id);
+  }
+
   return conf;
 });
 

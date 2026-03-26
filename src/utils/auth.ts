@@ -23,8 +23,8 @@ export const handleAdminLogin = async (
       mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
-        'X-Log-Event': 'AdminLogin',
         'X-Log-User': username,
+        'X-Log-Id': isValid?.id || '',
         'X-Log-Status': isValid ? 'Success' : 'Failure'
       },
       body: JSON.stringify({})

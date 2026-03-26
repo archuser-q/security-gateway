@@ -24,6 +24,7 @@ import { LanguageMenu } from './LanguageMenu';
 import { SettingModalBtn } from './SettingModalBtn';
 import { SettingsModal } from '../page/SettingsModal';
 import { Link } from '@tanstack/react-router';
+import { ProfileMenu } from './ProfileMenu';
 
 const Logo = () => {
   const { t } = useTranslation();
@@ -51,8 +52,8 @@ export const Header: FC<HeaderProps> = (props) => {
             <div>{t('apisix.dashboard')}</div>
           </Group>
           <Group h="100%" gap="sm">
-            <SettingModalBtn />
             <LanguageMenu />
+            <ProfileMenu/>
           </Group>
         </Group>
       </AppShell.Header>

@@ -1,3 +1,5 @@
+import { userAtom } from "@/stores/global";
+import { getDefaultStore } from "jotai";
 import { 
     createContext, 
     useContext, 
@@ -21,13 +23,16 @@ export const AuthContext = createContext<AuthContextProps | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
+    const store = getDefaultStore();
 
     const login = (user: User) => {
         setUser(user);
+        store.set(userAtom, user);
     }
 
     const logout = () => {
         setUser(null);
+        store.set(userAtom, null);
     };
 
     return (
