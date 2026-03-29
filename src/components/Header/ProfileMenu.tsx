@@ -44,6 +44,7 @@ export const ProfileMenu = () => {
       });
     }
     if (key === 'setting') {
+      if (auth.user?.role !== 'super_admin') return;
       setIsSettingsOpen(true); 
     }
     if (key === 'logOut') {
@@ -61,11 +62,17 @@ export const ProfileMenu = () => {
       </Menu.Target>
 
       <Menu.Dropdown>
-        {Object.entries(ProfileMap).map(([key, label]) => (
-          <Menu.Item key={key} onClick={() => handleClick(key)}>
-            {label}
-          </Menu.Item>
-        ))}
+        {Object.entries(ProfileMap).map(([key, label]) => {
+          if (key === 'setting' && auth.user?.role !== 'super_admin') {
+            return null;
+          }
+
+          return (
+            <Menu.Item key={key} onClick={() => handleClick(key)}>
+              {label}
+            </Menu.Item>
+          );
+        })}
       </Menu.Dropdown>
     </Menu>
   );

@@ -1,7 +1,6 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { getAdminQueryOptions } from '@/apis/hooks';
-import { Avatar, Box, Button, Group, Stack, Text, SimpleGrid } from '@mantine/core';
-import { IconEdit } from '@tabler/icons-react';
+import { Avatar, Box, Stack, Text, SimpleGrid } from '@mantine/core';
 
 type Props = {
   id: string;
@@ -19,7 +18,7 @@ export const ProfileViewModal = ({ id }: Props) => {
         <Text fw={700} size="xl">{v?.username}</Text>
       </Stack>
 
-      {/* Label-value 2 cột */}
+      {/* Label-value */}
       <SimpleGrid cols={2} spacing="sm">
         <LabelValue label="Full name" value={v?.fullname} />
         <LabelValue label="Username" value={v?.username} />

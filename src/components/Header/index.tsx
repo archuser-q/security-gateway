@@ -21,7 +21,6 @@ import { useTranslation } from 'react-i18next';
 import apisixLogo from '@/assets/apisix-logo.svg';
 
 import { LanguageMenu } from './LanguageMenu';
-import { SettingModalBtn } from './SettingModalBtn';
 import { SettingsModal } from '../page/SettingsModal';
 import { Link } from '@tanstack/react-router';
 import { ProfileMenu } from './ProfileMenu';
