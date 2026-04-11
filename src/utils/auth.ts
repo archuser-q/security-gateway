@@ -24,8 +24,7 @@ export const handleAdminLogin = async (
       headers: {
         'Content-Type': 'application/json',
         'X-Log-User': username,
-        'X-Log-Id': isValid?.id || '',
-        'X-Log-Status': isValid ? 'Success' : 'Failure'
+        'X-Log-Id': isValid?.id || ''
       },
       body: JSON.stringify({})
     }).catch(() => {});

@@ -31,7 +31,7 @@ import {
   IconKey,
   IconCode,
   IconHome,
-  IconLogout
+  IconServerBolt
 } from '@tabler/icons-react';
 
 export type NavRoute = {
@@ -111,5 +111,10 @@ export const navRoutes: NavRoute[] = [
     to: '/admins',
     label: 'admin',
     icon: IconUsers,
+  },
+  {
+    to: '/log_histories',
+    label: 'log',
+    icon: IconServerBolt
   }
 ];
