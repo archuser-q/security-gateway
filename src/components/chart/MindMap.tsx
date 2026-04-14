@@ -1,28 +1,25 @@
-import { MindMap, type MindMapOptions } from '@ant-design/graphs';
+import { FlowGraph, type FlowGraphOptions } from '@ant-design/graphs';
 import useData from './config/mindMapConfig/data';
-import { useTranslation } from 'react-i18next';
 import PageHeader from '../page/PageHeader';
+import { useTranslation } from 'react-i18next';
 
-export default function SystemMindMap() {
-  const { t } = useTranslation();
+interface type {
+  title: string
+}
+
+export default () => {
   const data = useData();
-
-  const options: MindMapOptions = {
+  const {t} = useTranslation();
+  const options: FlowGraphOptions = {
     autoFit: 'view',
     data,
-    edge: {
-      style: {
-        endArrow: true,
-      },
-    },
-    animation: false,
-    labelField: (d: any) => d.label
+    labelField: (d) => (d.value as type).title,
   };
 
   return (
-    <>
-      <PageHeader title={t('form.overview.title')}/>
-      <MindMap {...options} />
-    </>
-  );
-}
+      <div>
+        <PageHeader title={t('form.overview.title')}/>
+        <FlowGraph {...options} />
+      </div>
+    );
+};
