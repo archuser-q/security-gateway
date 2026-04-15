@@ -18,6 +18,12 @@ interface Edge {
   value?: string
 }
 
+const getParentDomain = (host: string): string | null => {
+  const parts = host.split('.')
+  if (parts.length <= 2) return null
+  return parts.slice(1).join('.')
+}
+
 const useData = () => {
   const [
     { data: routeData },
@@ -77,6 +83,13 @@ const useData = () => {
       value: { title: 'Routes', items: [] },
     })
 
+    const allHosts = new Set<string>()
+    for (const route of routeData?.list ?? []) {
+      const { host, hosts } = route.value
+      const hostList: string[] = [...(hosts ?? []), ...(host ? [host] : [])]
+      for (const h of hostList) allHosts.add(h)
+    }
+
     for (const route of routeData?.list ?? []) {
       const {
         id: routeId,
@@ -87,11 +100,7 @@ const useData = () => {
         service_id: serviceId,
       } = route.value
 
-      // Normalize: hỗ trợ cả `host` (string) lẫn `hosts` (string[])
-      const hostList: string[] = [
-        ...(hosts ?? []),
-        ...(host ? [host] : []),
-      ]
+      const hostList: string[] = [...(hosts ?? []), ...(host ? [host] : [])]
 
       for (const h of hostList) {
         const hostNodeId = `host-${h}`
@@ -99,7 +108,20 @@ const useData = () => {
           id: hostNodeId,
           value: { title: h, items: [{ text: 'Host' }] },
         })
-        addEdge({ source: hostNodeId, target: 'routes', value: routeName || routeId })
+
+        const parentDomain = getParentDomain(h)
+
+        if (parentDomain && allHosts.has(parentDomain)) {
+          const parentNodeId = `host-${parentDomain}`
+          addNode({
+            id: parentNodeId,
+            value: { title: parentDomain, items: [{ text: 'Host' }] },
+          })
+          addEdge({ source: hostNodeId, target: parentNodeId })
+          addEdge({ source: parentNodeId, target: 'routes', value: routeName || routeId })
+        } else {
+          addEdge({ source: hostNodeId, target: 'routes', value: routeName || routeId })
+        }
       }
 
       if (serviceId) {
