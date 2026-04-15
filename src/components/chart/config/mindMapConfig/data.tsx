@@ -8,11 +8,13 @@ interface NodeValue {
 }
 
 interface Node {
+  [key: string]: any
   id: string
   value: NodeValue
 }
 
 interface Edge {
+  [key: string]: any
   source: string
   target: string
   value?: string
