@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { ProTable, type ProColumns } from '@ant-design/pro-components'
-import { Select, Input, Tag, Button } from 'antd'
+import { Select, Input, Tag, Button, Tooltip } from 'antd'
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons'
 import { useState, useMemo } from 'react'
 import PageHeader from '@/components/page/PageHeader'
@@ -37,63 +37,113 @@ function RouteComponent() {
 }
 
 function TimelineBar({ logs }: { logs: LogEntry[] }) {
-  const BUCKETS = 24
-  const now = Date.now()
-  const windowMs = 24 * 60 * 60 * 1000
-  const bucketMs = windowMs / BUCKETS
+  const DAYS = 7
 
-  const counts = useMemo(() => {
-    const arr = Array(BUCKETS).fill(0)
-    logs.forEach(l => {
-      const age = now - new Date(l.timestamp).getTime()
-      if (age >= 0 && age < windowMs) {
-        const idx = BUCKETS - 1 - Math.floor(age / bucketMs)
-        if (idx >= 0 && idx < BUCKETS) arr[idx]++
-      }
+  const days = useMemo(() => {
+    return Array.from({ length: DAYS }, (_, i) => {
+      const d = new Date()
+      d.setDate(d.getDate() - (DAYS - 1 - i))
+      d.setHours(0, 0, 0, 0)
+      return d
     })
-    return arr
-  }, [logs])
+  }, [])
 
-  const max = Math.max(...counts, 1)
+  const buckets = useMemo(() => {
+    const map: Record<string, { success: number; failure: number }> = {}
+    days.forEach(d => {
+      map[d.toDateString()] = { success: 0, failure: 0 }
+    })
 
-  const hours = Array.from({ length: BUCKETS + 1 }, (_, i) => {
-    const d = new Date(now - windowMs + i * bucketMs)
-    return d.getHours().toString().padStart(2, '0') + ':00'
-  })
+    logs.forEach(l => {
+      const date = new Date(l.timestamp)
+      const key = date.toDateString()
+      if (!map[key]) return
+      let parsed: ParsedLog = {}
+      try { parsed = JSON.parse(l.raw) } catch { /* ignore */ }
+
+      const isSuccess = (parsed as { log_status?: string }).log_status === 'success'
+      if (isSuccess) map[key].success++
+      else map[key].failure++
+    })
+
+    return days.map(d => ({
+      label: `${d.getDate()}/${d.getMonth() + 1}`,
+      fullLabel: d.toLocaleDateString('vi-VN', { weekday: 'short', day: '2-digit', month: '2-digit' }),
+      ...map[d.toDateString()],
+    }))
+  }, [logs, days])
+
+  const max = Math.max(...buckets.flatMap(b => [b.success + b.failure]), 1)
+  const BAR_HEIGHT = 64
 
   return (
     <div style={{
       background: '#fff',
       border: '1px solid #e8e8e8',
       borderRadius: 6,
-      padding: '12px 16px 8px',
+      padding: '12px 16px 10px',
       marginBottom: 12,
     }}>
-      <div style={{ color: '#8c8c8c', fontSize: 12, marginBottom: 8, textAlign: 'center' }}>
+      <div style={{ color: '#8c8c8c', fontSize: 12, marginBottom: 10, textAlign: 'center' }}>
         Timeline
       </div>
-      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2, height: 48 }}>
-        {counts.map((c, i) => (
-          <div
-            key={i}
-            title={`${hours[i]} — ${c} logs`}
-            style={{
-              flex: 1,
-              height: c === 0 ? 2 : `${Math.max(4, (c / max) * 48)}px`,
-              background: c === 0 ? '#f0f0f0' : '#1677ff',
-              borderRadius: 2,
-              transition: 'height 0.3s',
-              cursor: 'default',
-            }}
-          />
+
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, height: BAR_HEIGHT, paddingBottom: 0 }}>
+        {buckets.map((b, i) => {
+          const total = b.success + b.failure
+          const successH = total === 0 ? 0 : Math.max(4, (b.success / max) * BAR_HEIGHT)
+          const failureH = total === 0 ? 0 : Math.max(b.failure > 0 ? 4 : 0, (b.failure / max) * BAR_HEIGHT)
+          return (
+            <Tooltip
+              key={i}
+              title={
+                <div style={{ fontSize: 12 }}>
+                  <div><b>{b.fullLabel}</b></div>
+                  <div style={{ color: '#52c41a' }}>✓ Thành công: {b.success}</div>
+                  <div style={{ color: '#ff4d4f' }}>✗ Thất bại: {b.failure}</div>
+                </div>
+              }
+            >
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, cursor: 'default', height: BAR_HEIGHT, justifyContent: 'flex-end' }}>
+                <div style={{ width: '100%', display: 'flex', alignItems: 'flex-end', gap: 2, height: BAR_HEIGHT, justifyContent: 'center' }}>                
+                  <div style={{
+                    flex: 1,
+                    height: successH === 0 ? 2 : successH,
+                    background: successH === 0 ? '#f0f0f0' : '#52c41a',
+                    borderRadius: '2px 2px 0 0',
+                    transition: 'height 0.3s',
+                  }} />
+                  <div style={{
+                    flex: 1,
+                    height: failureH === 0 ? 2 : failureH,
+                    background: failureH === 0 ? '#f0f0f0' : '#ff4d4f',
+                    borderRadius: '2px 2px 0 0',
+                    transition: 'height 0.3s',
+                  }} />
+                </div>
+              </div>
+            </Tooltip>
+          )
+        })}
+      </div>
+
+      <div style={{ display: 'flex', gap: 12, marginTop: 6 }}>
+        {buckets.map((b, i) => (
+          <div key={i} style={{ flex: 1, textAlign: 'center', color: '#8c8c8c', fontSize: 10 }}>
+            {b.label}
+          </div>
         ))}
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
-        {[0, 6, 12, 18, 24].map(i => (
-          <span key={i} style={{ color: '#bfbfbf', fontSize: 10 }}>
-            {hours[i * (BUCKETS / 24)]}
-          </span>
-        ))}
+
+      <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginTop: 8 }}>
+        <span style={{ fontSize: 11, color: '#595959', display: 'flex', alignItems: 'center', gap: 4 }}>
+          <span style={{ width: 10, height: 10, background: '#52c41a', borderRadius: 2, display: 'inline-block' }} />
+          Thành công
+        </span>
+        <span style={{ fontSize: 11, color: '#595959', display: 'flex', alignItems: 'center', gap: 4 }}>
+          <span style={{ width: 10, height: 10, background: '#ff4d4f', borderRadius: 2, display: 'inline-block' }} />
+          Thất bại
+        </span>
       </div>
     </div>
   )
@@ -110,26 +160,22 @@ function LevelBadge({ level }: { level?: string }) {
   }
   const s = map[l] ?? map.info
   return (
-    <Tag
-      style={{
-        background: s.bg,
-        border: `1px solid ${s.border}`,
-        color: s.color,
-        fontFamily: 'monospace',
-        fontSize: 11,
-        padding: '0 6px',
-        margin: 0,
-      }}
-    >
+    <Tag style={{
+      background: s.bg,
+      border: `1px solid ${s.border}`,
+      color: s.color,
+      fontFamily: 'monospace',
+      fontSize: 11,
+      padding: '0 6px',
+      margin: 0,
+    }}>
       {l}
     </Tag>
   )
 }
 
 function FilterBar({
-  search, setSearch,
-  level, setLevel,
-  onRefresh,
+  search, setSearch, level, setLevel, onRefresh,
 }: {
   search: string
   setSearch: (v: string) => void
@@ -138,13 +184,7 @@ function FilterBar({
   onRefresh: () => void
 }) {
   return (
-    <div style={{
-      display: 'flex',
-      gap: 8,
-      padding: '0 0 12px',
-      flexWrap: 'wrap',
-      alignItems: 'center',
-    }}>
+    <div style={{ display: 'flex', gap: 8, padding: '0 0 12px', flexWrap: 'wrap', alignItems: 'center' }}>
       <Select
         size="small"
         value={level}
@@ -188,7 +228,7 @@ function LogList() {
   const filtered = useMemo(() => {
     return allLogs.filter(entry => {
       let parsed: ParsedLog = {}
-      try { parsed = JSON.parse(entry.raw) } catch { /* ignore */ }
+      try { parsed = JSON.parse(entry.raw) } catch { }
 
       const entryLevel = (parsed.level as string ?? 'info').toLowerCase()
       if (level && entryLevel !== level) return false
@@ -222,16 +262,14 @@ function LogList() {
       title: t('form.admins.username', 'Username'),
       dataIndex: 'user',
       width: 150,
-      render: (_, r) => (
-        <span style={{ ...mono, color: '#262626' }}>{r.user ?? '—'}</span>
-      ),
+      render: (_, r) => <span style={{ ...mono, color: '#262626' }}>{r.user ?? '—'}</span>,
     },
     {
       title: 'Level',
       width: 90,
       render: (_, r) => {
         let parsed: ParsedLog = {}
-        try { parsed = JSON.parse(r.raw) } catch { /* ignore */ }
+        try { parsed = JSON.parse(r.raw) } catch {}
         return <LevelBadge level={parsed.level as string} />
       },
     },
@@ -240,13 +278,11 @@ function LogList() {
       dataIndex: 'raw',
       render: (_, r) => {
         let parsed: ParsedLog = {}
-        try { parsed = JSON.parse(r.raw) } catch { /* ignore */ }
+        try { parsed = JSON.parse(r.raw) } catch {}
         const msg = parsed.message as string | undefined
         return (
           <div>
-            {msg && (
-              <div style={{ ...mono, color: '#262626', marginBottom: 2 }}>{msg}</div>
-            )}
+            {msg && <div style={{ ...mono, color: '#262626', marginBottom: 2 }}>{msg}</div>}
             <span style={{ ...mono, color: '#8c8c8c', wordBreak: 'break-all', fontSize: 11 }}>
               {r.raw}
             </span>
