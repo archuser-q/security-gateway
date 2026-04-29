@@ -3,16 +3,13 @@ import { useQueries } from "@tanstack/react-query"
 import { useMemo } from "react"
 import type { Edge, Node } from "@/types/chart/graphNode"
 
-const getParentDomain = (host: string): string | null => {
+const findParents = (host: string, allHosts: Set<string>): string | null => {
   const parts = host.split('.')
-  if (parts.length <= 2) return null
-  return parts.slice(1).join('.')
-}
-
-const stripToSubdomain = (host: string): string => {
-  const parts = host.split('.')
-  if (parts.length <= 2) return host
-  return parts[0]
+  for (let i = 1; i < parts.length - 1; i++) {
+    const candidate = parts.slice(i).join('.')
+    if (allHosts.has(candidate)) return candidate
+  }
+  return null
 }
 
 const useData = () => {
@@ -82,70 +79,24 @@ const useData = () => {
     const allHosts = new Set<string>()
     for (const route of routeData?.list ?? []) {
       const { host, hosts } = route.value
-      const hostList: string[] = [...(hosts ?? []), ...(host ? [host] : [])]
-      for (const h of hostList) allHosts.add(h)
+      for (const h of [...(hosts ?? []), ...(host ? [host] : [])]) {
+        allHosts.add(h)
+      }
     }
 
-    for (const route of routeData?.list ?? []) {
-      const {
-        id: routeId,
-        name: routeName,
-        host,
-        hosts,
-        upstream_id: routeUpstreamId,
-        service_id: serviceId,
-      } = route.value
-
-      const hostList: string[] = [...(hosts ?? []), ...(host ? [host] : [])]
-
-      for (const h of hostList) {
-        const hostNodeId = `host-${h}`
-        const parentDomain = getParentDomain(h)
-
-        if (parentDomain && allHosts.has(parentDomain)) {
-          addNode({
-            id: hostNodeId,
-            value: { title: stripToSubdomain(h), items: [{ text: 'Host' }] },
-          })
-
-          const parentNodeId = `host-${parentDomain}`
-          addNode({
-            id: parentNodeId,
-            value: { title: parentDomain, items: [{ text: 'Host' }] },
-          })
-          addEdge({ source: hostNodeId, target: parentNodeId })
-          addEdge({ source: parentNodeId, target: 'routes', value: routeName || routeId })
-        } else {
-          addNode({
-            id: hostNodeId,
-            value: { title: h, items: [{ text: 'Host' }] },
-          })
-          addEdge({ source: hostNodeId, target: 'routes', value: routeName || routeId })
-        }
-      }
-
-      if (serviceId) {
-        const serviceInfo = serviceMap[serviceId]
-        const serviceNodeId = `service-${serviceId}`
-        addNode({
-          id: serviceNodeId,
-          value: {
-            title: serviceInfo?.name ?? serviceId,
-            items: [{ text: 'Service' }],
-          },
-        })
-        addEdge({ source: 'routes', target: serviceNodeId, value: routeName || routeId })
-      } else if (routeUpstreamId) {
-        const upstreamNodeId = `upstream-${routeUpstreamId}`
-        addNode({
-          id: upstreamNodeId,
-          value: {
-            title: upstreamMap[routeUpstreamId] ?? routeUpstreamId,
-            items: [{ text: 'Upstream' }],
-          },
-        })
-        addEdge({ source: 'routes', target: upstreamNodeId, value: routeName || routeId })
-      }
+    for (const h of allHosts) {
+      const ancestor = findParents(h, allHosts)
+      addNode({
+        id: `host-${h}`,
+        value: {
+          title: ancestor ? h.split('.')[0] : h, 
+          items: [{ text: 'Host' }],
+        },
+      })
+      addEdge({
+        source: `host-${h}`,
+        target: ancestor ? `host-${ancestor}` : 'routes',
+      })
     }
 
     return { nodes, edges }
