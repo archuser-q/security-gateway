@@ -31,7 +31,8 @@ import {
   IconKey,
   IconCode,
   IconHome,
-  IconServerBolt
+  IconServerBolt,
+  IconShieldCheckFilled
 } from '@tabler/icons-react';
 
 export type NavRoute = {
@@ -116,5 +117,10 @@ export const navRoutes: NavRoute[] = [
     to: '/log_histories',
     label: 'log',
     icon: IconServerBolt
+  },
+  {
+    to: '/casdoor',
+    label: 'casdoor',
+    icon: IconShieldCheckFilled
   }
 ];

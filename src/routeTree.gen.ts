@@ -28,6 +28,7 @@ import { Route as AuthenticatedLoghistoriesIndexImport } from './routes/_authent
 import { Route as AuthenticatedGlobalrulesIndexImport } from './routes/_authenticated/global_rules/index'
 import { Route as AuthenticatedConsumersIndexImport } from './routes/_authenticated/consumers/index'
 import { Route as AuthenticatedConsumergroupsIndexImport } from './routes/_authenticated/consumer_groups/index'
+import { Route as AuthenticatedCasdoorIndexImport } from './routes/_authenticated/casdoor/index'
 import { Route as AuthenticatedAdminsIndexImport } from './routes/_authenticated/admins/index'
 import { Route as AuthenticatedUpstreamsAddImport } from './routes/_authenticated/upstreams/add'
 import { Route as AuthenticatedStreamroutesAddImport } from './routes/_authenticated/stream_routes/add'
@@ -179,6 +180,12 @@ const AuthenticatedConsumergroupsIndexRoute =
     path: '/consumer_groups/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+
+const AuthenticatedCasdoorIndexRoute = AuthenticatedCasdoorIndexImport.update({
+  id: '/casdoor/',
+  path: '/casdoor/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 
 const AuthenticatedAdminsIndexRoute = AuthenticatedAdminsIndexImport.update({
   id: '/admins/',
@@ -538,6 +545,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminsIndexImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/casdoor/': {
+      id: '/_authenticated/casdoor/'
+      path: '/casdoor'
+      fullPath: '/casdoor'
+      preLoaderRoute: typeof AuthenticatedCasdoorIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/consumer_groups/': {
       id: '/_authenticated/consumer_groups/'
       path: '/consumer_groups'
@@ -873,6 +887,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedStreamroutesAddRoute: typeof AuthenticatedStreamroutesAddRoute
   AuthenticatedUpstreamsAddRoute: typeof AuthenticatedUpstreamsAddRoute
   AuthenticatedAdminsIndexRoute: typeof AuthenticatedAdminsIndexRoute
+  AuthenticatedCasdoorIndexRoute: typeof AuthenticatedCasdoorIndexRoute
   AuthenticatedConsumergroupsIndexRoute: typeof AuthenticatedConsumergroupsIndexRoute
   AuthenticatedConsumersIndexRoute: typeof AuthenticatedConsumersIndexRoute
   AuthenticatedGlobalrulesIndexRoute: typeof AuthenticatedGlobalrulesIndexRoute
@@ -915,6 +930,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedStreamroutesAddRoute: AuthenticatedStreamroutesAddRoute,
   AuthenticatedUpstreamsAddRoute: AuthenticatedUpstreamsAddRoute,
   AuthenticatedAdminsIndexRoute: AuthenticatedAdminsIndexRoute,
+  AuthenticatedCasdoorIndexRoute: AuthenticatedCasdoorIndexRoute,
   AuthenticatedConsumergroupsIndexRoute: AuthenticatedConsumergroupsIndexRoute,
   AuthenticatedConsumersIndexRoute: AuthenticatedConsumersIndexRoute,
   AuthenticatedGlobalrulesIndexRoute: AuthenticatedGlobalrulesIndexRoute,
@@ -970,6 +986,7 @@ export interface FileRoutesByFullPath {
   '/stream_routes/add': typeof AuthenticatedStreamroutesAddRoute
   '/upstreams/add': typeof AuthenticatedUpstreamsAddRoute
   '/admins': typeof AuthenticatedAdminsIndexRoute
+  '/casdoor': typeof AuthenticatedCasdoorIndexRoute
   '/consumer_groups': typeof AuthenticatedConsumergroupsIndexRoute
   '/consumers': typeof AuthenticatedConsumersIndexRoute
   '/global_rules': typeof AuthenticatedGlobalrulesIndexRoute
@@ -1026,6 +1043,7 @@ export interface FileRoutesByTo {
   '/stream_routes/add': typeof AuthenticatedStreamroutesAddRoute
   '/upstreams/add': typeof AuthenticatedUpstreamsAddRoute
   '/admins': typeof AuthenticatedAdminsIndexRoute
+  '/casdoor': typeof AuthenticatedCasdoorIndexRoute
   '/consumer_groups': typeof AuthenticatedConsumergroupsIndexRoute
   '/consumers': typeof AuthenticatedConsumersIndexRoute
   '/global_rules': typeof AuthenticatedGlobalrulesIndexRoute
@@ -1081,6 +1099,7 @@ export interface FileRoutesById {
   '/_authenticated/stream_routes/add': typeof AuthenticatedStreamroutesAddRoute
   '/_authenticated/upstreams/add': typeof AuthenticatedUpstreamsAddRoute
   '/_authenticated/admins/': typeof AuthenticatedAdminsIndexRoute
+  '/_authenticated/casdoor/': typeof AuthenticatedCasdoorIndexRoute
   '/_authenticated/consumer_groups/': typeof AuthenticatedConsumergroupsIndexRoute
   '/_authenticated/consumers/': typeof AuthenticatedConsumersIndexRoute
   '/_authenticated/global_rules/': typeof AuthenticatedGlobalrulesIndexRoute
@@ -1139,6 +1158,7 @@ export interface FileRouteTypes {
     | '/stream_routes/add'
     | '/upstreams/add'
     | '/admins'
+    | '/casdoor'
     | '/consumer_groups'
     | '/consumers'
     | '/global_rules'
@@ -1194,6 +1214,7 @@ export interface FileRouteTypes {
     | '/stream_routes/add'
     | '/upstreams/add'
     | '/admins'
+    | '/casdoor'
     | '/consumer_groups'
     | '/consumers'
     | '/global_rules'
@@ -1247,6 +1268,7 @@ export interface FileRouteTypes {
     | '/_authenticated/stream_routes/add'
     | '/_authenticated/upstreams/add'
     | '/_authenticated/admins/'
+    | '/_authenticated/casdoor/'
     | '/_authenticated/consumer_groups/'
     | '/_authenticated/consumers/'
     | '/_authenticated/global_rules/'
@@ -1333,6 +1355,7 @@ export const routeTree = rootRoute
         "/_authenticated/stream_routes/add",
         "/_authenticated/upstreams/add",
         "/_authenticated/admins/",
+        "/_authenticated/casdoor/",
         "/_authenticated/consumer_groups/",
         "/_authenticated/consumers/",
         "/_authenticated/global_rules/",
@@ -1414,6 +1437,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/admins/": {
       "filePath": "_authenticated/admins/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/casdoor/": {
+      "filePath": "_authenticated/casdoor/index.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/consumer_groups/": {

@@ -9,7 +9,10 @@ interface type {
 
 export default () => {
   const data = useData();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
+
+  const isEmpty = !data.nodes.length && !data.edges.length;
+
   const options: FlowGraphOptions = {
     autoFit: 'view',
     data,
@@ -17,9 +20,15 @@ export default () => {
   };
 
   return (
-      <div>
-        <PageHeader title={t('form.overview.title')}/>
-        <FlowGraph {...options} />
+    <div>
+      <PageHeader title={t('form.overview.title')} />
+      <div style={{ width: '100%', height: '600px' }}> 
+        {isEmpty ? (
+          <div>Loading...</div>
+        ) : (
+          <FlowGraph key={JSON.stringify(data.nodes.map(n => n.id))} {...options} />
+        )}
       </div>
-    );
+    </div>
+  );
 };

@@ -401,6 +401,7 @@
     "upstreams": "Upstreams",
     "admin": "Administrators",
     "log":"Log",
+    "casdoor": "Casdoor",
     "logout": "Log out"
   },
   "ssls": {

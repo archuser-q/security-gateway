@@ -1,29 +1,18 @@
 import { getRouteListQueryOptions, getServiceListQueryOptions, getUpstreamListQueryOptions } from "@/apis/hooks"
 import { useQueries } from "@tanstack/react-query"
 import { useMemo } from "react"
-
-interface NodeValue {
-  title: string
-  items: { text: string; value?: string }[]
-}
-
-interface Node {
-  [key: string]: any
-  id: string
-  value: NodeValue
-}
-
-interface Edge {
-  [key: string]: any
-  source: string
-  target: string
-  value?: string
-}
+import type { Edge, Node } from "@/types/chart/graphNode"
 
 const getParentDomain = (host: string): string | null => {
   const parts = host.split('.')
   if (parts.length <= 2) return null
   return parts.slice(1).join('.')
+}
+
+const stripToSubdomain = (host: string): string => {
+  const parts = host.split('.')
+  if (parts.length <= 2) return host
+  return parts[0]
 }
 
 const useData = () => {
@@ -63,7 +52,6 @@ const useData = () => {
   return useMemo(() => {
     const nodes: Node[] = []
     const edges: Edge[] = []
-
     const addedNodes = new Set<string>()
     const addedEdges = new Set<string>()
 
@@ -84,6 +72,12 @@ const useData = () => {
       id: 'routes',
       value: { title: 'Routes', items: [] },
     })
+
+    addNode({
+      id: 'host-localhost',
+      value: { title: 'localhost', items: [{ text: 'Host' }] },
+    })
+    addEdge({ source: 'host-localhost', target: 'routes' })
 
     const allHosts = new Set<string>()
     for (const route of routeData?.list ?? []) {
@@ -106,14 +100,14 @@ const useData = () => {
 
       for (const h of hostList) {
         const hostNodeId = `host-${h}`
-        addNode({
-          id: hostNodeId,
-          value: { title: h, items: [{ text: 'Host' }] },
-        })
-
         const parentDomain = getParentDomain(h)
 
         if (parentDomain && allHosts.has(parentDomain)) {
+          addNode({
+            id: hostNodeId,
+            value: { title: stripToSubdomain(h), items: [{ text: 'Host' }] },
+          })
+
           const parentNodeId = `host-${parentDomain}`
           addNode({
             id: parentNodeId,
@@ -122,6 +116,10 @@ const useData = () => {
           addEdge({ source: hostNodeId, target: parentNodeId })
           addEdge({ source: parentNodeId, target: 'routes', value: routeName || routeId })
         } else {
+          addNode({
+            id: hostNodeId,
+            value: { title: h, items: [{ text: 'Host' }] },
+          })
           addEdge({ source: hostNodeId, target: 'routes', value: routeName || routeId })
         }
       }

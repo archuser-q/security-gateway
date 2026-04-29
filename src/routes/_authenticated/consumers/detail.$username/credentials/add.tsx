@@ -36,7 +36,7 @@ const CredentialAddForm = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const { username } = useParams({
-    from: '/consumers/detail/$username/credentials/add',
+    from: '/_authenticated/consumers/detail/$username/credentials/add',
   });
 
   const putCredential = useMutation({
