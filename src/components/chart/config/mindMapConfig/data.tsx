@@ -99,6 +99,52 @@ const useData = () => {
       })
     }
 
+    for (const route of routeData?.list ?? []) {
+      const {
+        id: routeId,
+        name: routeName,
+        upstream_id: routeUpstreamId,
+        service_id: serviceId,
+      } = route.value
+
+      if (serviceId) {
+        const serviceInfo = serviceMap[serviceId]
+        const serviceNodeId = `service-${serviceId}`
+
+        addNode({
+          id: serviceNodeId,
+          value: {
+            title: serviceInfo?.name ?? serviceId,
+            items: [{ text: 'Service' }],
+          },
+        })
+        addEdge({ source: 'routes', target: serviceNodeId, value: routeName || routeId })
+
+        if (serviceInfo?.upstreamId) {
+          const upstreamNodeId = `upstream-${serviceInfo.upstreamId}`
+          addNode({
+            id: upstreamNodeId,
+            value: {
+              title: upstreamMap[serviceInfo.upstreamId] ?? serviceInfo.upstreamId,
+              items: [{ text: 'Upstream' }],
+            },
+          })
+          addEdge({ source: serviceNodeId, target: upstreamNodeId })
+        }
+
+      } else if (routeUpstreamId) {
+        const upstreamNodeId = `upstream-${routeUpstreamId}`
+        addNode({
+          id: upstreamNodeId,
+          value: {
+            title: upstreamMap[routeUpstreamId] ?? routeUpstreamId,
+            items: [{ text: 'Upstream' }],
+          },
+        })
+        addEdge({ source: 'routes', target: upstreamNodeId, value: routeName || routeId })
+      }
+    }
+
     return { nodes, edges }
   }, [routeData, serviceMap, upstreamMap])
 }
