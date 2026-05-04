@@ -1,4 +1,4 @@
-import { getRouteListQueryOptions, getServiceListQueryOptions, getUpstreamListQueryOptions } from "@/apis/hooks"
+import { getConsumerListQueryOptions, getRouteListQueryOptions, getServiceListQueryOptions, getUpstreamListQueryOptions } from "@/apis/hooks"
 import { useQueries } from "@tanstack/react-query"
 import { useMemo } from "react"
 import type { Edge, Node } from "@/types/chart/graphNode"
@@ -17,13 +17,17 @@ const useData = () => {
     { data: routeData },
     { data: serviceData },
     { data: upstreamData },
+    { data: consumerData }
   ] = useQueries({
     queries: [
       getRouteListQueryOptions({ page: 1, page_size: 100 }),
       getServiceListQueryOptions({ page: 1, page_size: 100 }),
       getUpstreamListQueryOptions({ page: 1, page_size: 100 }),
+      getConsumerListQueryOptions({ page: 1, page_size: 100 }),
     ],
   })
+  const CONSUMER_AUTH_PLUGINS = ['jwt-auth', 'key-auth', 'basic-auth', 'hmac-auth', 'ldap-auth', 'wolf-rbac']
+  const consumerMap = consumerData?.list ?? []
 
   const serviceMap = useMemo(() => {
     if (!serviceData?.list) return {}
@@ -105,6 +109,7 @@ const useData = () => {
         name: routeName,
         upstream_id: routeUpstreamId,
         service_id: serviceId,
+        plugins: routePlugins
       } = route.value
 
       if (serviceId) {
@@ -142,6 +147,31 @@ const useData = () => {
           },
         })
         addEdge({ source: 'routes', target: upstreamNodeId, value: routeName || routeId })
+      }
+
+      const routeAuthPlugins = Object.keys(routePlugins ?? {})
+        .filter(p => CONSUMER_AUTH_PLUGINS.includes(p))
+
+      if (routeAuthPlugins.length > 0){
+        for (const consumer of consumerMap){
+          const consumerPlugins = Object.keys(consumer.value.plugins ?? {})
+          const hasMatch = routeAuthPlugins.some(p => consumerPlugins.includes(p))
+
+          if (hasMatch){
+            const consumerNodeId = `consumer-${consumer.value.username}`
+            addNode({
+              id: consumerNodeId,
+              value: {
+                title: consumer.value.username,
+                items: [{ text: 'Consumer' }],
+              }
+            })
+            addEdge({ 
+              source: consumerNodeId, 
+              target: 'routes' 
+            })
+          }
+        }
       }
     }
 
