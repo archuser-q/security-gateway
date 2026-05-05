@@ -54,8 +54,9 @@ const useData = () => {
     const edges: Edge[] = []
     const addedNodes = new Set<string>()
     const addedEdges = new Set<string>()
-    
-    const consumerMap = consumerData?.list ?? []
+
+    const consumerList = consumerData?.list ?? []
+    const routeList = routeData?.list ?? []
 
     const addNode = (node: Node) => {
       if (addedNodes.has(node.id)) return
@@ -82,7 +83,7 @@ const useData = () => {
     addEdge({ source: 'host-localhost', target: 'routes' })
 
     const allHosts = new Set<string>()
-    for (const route of routeData?.list ?? []) {
+    for (const route of routeList) {
       const { host, hosts } = route.value
       for (const h of [...(hosts ?? []), ...(host ? [host] : [])]) {
         allHosts.add(h)
@@ -94,23 +95,70 @@ const useData = () => {
       addNode({
         id: `host-${h}`,
         value: {
-          title: ancestor ? h.split('.')[0] : h, 
+          title: ancestor ? h.split('.')[0] : h,
           items: [{ text: 'Host' }],
         },
       })
-      addEdge({
-        source: `host-${h}`,
-        target: ancestor ? `host-${ancestor}` : 'routes',
-      })
+      if (ancestor) {
+        addEdge({ source: `host-${h}`, target: `host-${ancestor}` })
+      }
     }
 
-    for (const route of routeData?.list ?? []) {
+    const routeAuthConsumers = new Map<string, string[]>()
+    for (const route of routeList) {
+      const { id: routeId, plugins: routePlugins } = route.value
+      const routeAuthPlugins = Object.keys(routePlugins ?? {}).filter(p =>
+        CONSUMER_AUTH_PLUGINS.includes(p)
+      )
+      if (routeAuthPlugins.length > 0) {
+        const matchedConsumers = consumerList
+          .filter(consumer => {
+            const consumerPlugins = Object.keys(consumer.value.plugins ?? {})
+            return routeAuthPlugins.some(p => consumerPlugins.includes(p))
+          })
+          .map(consumer => consumer.value.username)
+        routeAuthConsumers.set(routeId, matchedConsumers)
+      }
+    }
+
+    for (const route of routeList) {
+      const { id: routeId, host, hosts } = route.value
+      const routeHosts = [...(hosts ?? []), ...(host ? [host] : [])]
+      const matchedConsumers = routeAuthConsumers.get(routeId) ?? []
+
+      for (const h of routeHosts) {
+        const hostNodeId = `host-${h}`
+        const ancestor = findParents(h, allHosts)
+
+        if (matchedConsumers.length > 0) {
+          for (const username of matchedConsumers) {
+            const consumerNodeId = `consumer-${username}`
+            addNode({
+              id: consumerNodeId,
+              value: {
+                title: username,
+                items: [{ text: 'Consumer' }],
+              },
+            })
+            if (!ancestor) {
+              addEdge({ source: hostNodeId, target: consumerNodeId })
+            }
+            addEdge({ source: consumerNodeId, target: 'routes' })
+          }
+        } else {
+          if (!ancestor) {
+            addEdge({ source: hostNodeId, target: 'routes' })
+          }
+        }
+      }
+    }
+
+    for (const route of routeList) {
       const {
         id: routeId,
         name: routeName,
         upstream_id: routeUpstreamId,
         service_id: serviceId,
-        plugins: routePlugins
       } = route.value
 
       if (serviceId) {
@@ -137,7 +185,6 @@ const useData = () => {
           })
           addEdge({ source: serviceNodeId, target: upstreamNodeId })
         }
-
       } else if (routeUpstreamId) {
         const upstreamNodeId = `upstream-${routeUpstreamId}`
         addNode({
@@ -149,35 +196,10 @@ const useData = () => {
         })
         addEdge({ source: 'routes', target: upstreamNodeId, value: routeName || routeId })
       }
-
-      const routeAuthPlugins = Object.keys(routePlugins ?? {})
-        .filter(p => CONSUMER_AUTH_PLUGINS.includes(p))
-
-      if (routeAuthPlugins.length > 0){
-        for (const consumer of consumerMap){
-          const consumerPlugins = Object.keys(consumer.value.plugins ?? {})
-          const hasMatch = routeAuthPlugins.some(p => consumerPlugins.includes(p))
-
-          if (hasMatch){
-            const consumerNodeId = `consumer-${consumer.value.username}`
-            addNode({
-              id: consumerNodeId,
-              value: {
-                title: consumer.value.username,
-                items: [{ text: 'Consumer' }],
-              }
-            })
-            addEdge({ 
-              source: consumerNodeId, 
-              target: 'routes' 
-            })
-          }
-        }
-      }
     }
 
     return { nodes, edges }
-  }, [routeData, serviceMap, upstreamMap])
+  }, [routeData, serviceMap, upstreamMap, consumerData])
 }
 
 export default useData
