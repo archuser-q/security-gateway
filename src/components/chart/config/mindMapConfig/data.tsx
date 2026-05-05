@@ -80,7 +80,6 @@ const useData = () => {
       id: 'host-localhost',
       value: { title: 'localhost', items: [{ text: 'Host' }] },
     })
-    addEdge({ source: 'host-localhost', target: 'routes' })
 
     const allHosts = new Set<string>()
     for (const route of routeList) {
@@ -119,6 +118,52 @@ const useData = () => {
           .map(consumer => consumer.value.username)
         routeAuthConsumers.set(routeId, matchedConsumers)
       }
+    }
+    
+    // Fixing edge cases: Route with no hosts attached to it
+    const noHostAuthConsumer = new Set<string>()
+    for (const route of routeList){
+      const {
+        id: routeId,
+        host,hosts
+      } = route.value
+      const hasNoHost = !host && (!hosts || hosts.length===0)
+      if (hasNoHost){
+        const matchedConsumers = routeAuthConsumers.get(routeId) ?? []
+        for (const username of matchedConsumers){
+          noHostAuthConsumer.add(username)
+        }
+      }
+    }
+
+    const localhostConsumers = new Set(noHostAuthConsumer)
+    if (localhostConsumers.size>0){
+      for (const username of localhostConsumers){
+        const consumerNodeId = `consumer-${username}`
+        addNode({
+          id: `consumer-${username}`,
+          value: {
+            title: username,
+            items: [{
+              text: 'Consumer'
+            }]
+          }
+        })
+        addEdge({
+          source: 'host-localhost',
+          target: consumerNodeId
+        })
+        addEdge({
+          source: consumerNodeId,
+          target: 'routes'
+        })
+      }
+    }
+    else{
+      addEdge({
+        source: 'host-localhost',
+        target: 'routes'
+      })
     }
 
     for (const route of routeList) {
