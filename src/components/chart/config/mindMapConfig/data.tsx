@@ -27,7 +27,6 @@ const useData = () => {
     ],
   })
   const CONSUMER_AUTH_PLUGINS = ['jwt-auth', 'key-auth', 'basic-auth', 'hmac-auth', 'ldap-auth', 'wolf-rbac']
-  const consumerMap = consumerData?.list ?? []
 
   const serviceMap = useMemo(() => {
     if (!serviceData?.list) return {}
@@ -55,6 +54,8 @@ const useData = () => {
     const edges: Edge[] = []
     const addedNodes = new Set<string>()
     const addedEdges = new Set<string>()
+    
+    const consumerMap = consumerData?.list ?? []
 
     const addNode = (node: Node) => {
       if (addedNodes.has(node.id)) return
