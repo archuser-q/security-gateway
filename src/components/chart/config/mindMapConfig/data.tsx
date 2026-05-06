@@ -95,7 +95,7 @@ const useData = () => {
         id: `host-${h}`,
         value: {
           title: ancestor ? h.split('.')[0] : h,
-          items: [{ text: 'Host' }],
+          items: [{ text: ancestor ? 'Sub-Host' : 'Host' }],
         },
       })
       if (ancestor) {
