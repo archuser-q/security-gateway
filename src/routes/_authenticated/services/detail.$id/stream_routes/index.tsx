@@ -32,7 +32,7 @@ function StreamRouteComponent() {
     <>
       <PageHeader title={t('sources.streamRoutes')} />
       <StreamRouteList
-        routeKey="/services/detail/$id/stream_routes/"
+        routeKey="/_authenticated/services/detail/$id/stream_routes/"
         ToDetailBtn={({ record }) => (
           <ToDetailPageBtn
             key="detail"

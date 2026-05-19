@@ -24,7 +24,7 @@ export const router = createRouter({
   routeTree, 
   basepath: BASE_PATH,
   context:{
-    auth: null
+    auth: null as any
   } 
 });
 declare module '@tanstack/react-router' {

@@ -36,7 +36,7 @@ import type { ListPageKeys } from '@/utils/useTablePagination';
 export type StreamRouteListProps = {
   routeKey: Extract<
     ListPageKeys,
-    '/stream_routes/' | '/services/detail/$id/stream_routes/'
+    '/_authenticated/stream_routes/' | '/_authenticated/services/detail/$id/stream_routes/'
   >;
   ToDetailBtn: (props: {
     record: APISIXType['RespStreamRouteItem'];
@@ -122,7 +122,7 @@ export const StreamRouteList = (props: StreamRouteListProps) => {
                     label={t('info.add.title', {
                       name: t('streamRoutes.singular'),
                     })}
-                    to={`${routeKey}add`}
+                    to={`${routeKey.replace('/_authenticated', '')}add` as Parameters<typeof ToAddPageBtn>[0]['to']}
                   />
                 ),
               },
@@ -141,7 +141,7 @@ function StreamRouteComponent() {
     <>
       <PageHeader title={t('sources.streamRoutes')} />
       <StreamRouteList
-        routeKey="/stream_routes/"
+        routeKey="/_authenticated/stream_routes/"
         ToDetailBtn={({ record }) => (
           <ToDetailPageBtn
             key="detail"
