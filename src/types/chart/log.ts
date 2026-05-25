@@ -3,4 +3,4 @@ export interface LogEntry {
   timestamp: string
   user?: string
   raw: string
-}
+} 

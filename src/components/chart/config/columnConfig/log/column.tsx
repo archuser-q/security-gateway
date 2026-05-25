@@ -1,10 +1,21 @@
 import { Tooltip } from 'antd'
 import { useMemo } from 'react'
-import type { LogEntry } from '@/types/chart/log'
-import type { ParsedLog } from '@/utils/parseLog'
 
+type ClickHouseLog = {
+  '@timestamp': string
+  status: string
+  user: string
+  request_id: string
+  uri: string
+  service_id: string
+  route_id: string
+  latency: string
+  method: string
+  log_status: string
+  client_ip: string
+}
 
-export function TimelineBar({ logs }: { logs: LogEntry[] }) {
+export function TimelineBar({ logs }: { logs: ClickHouseLog[] }) {
   const DAYS = 7
   const days = useMemo(() => {
     return Array.from({ length: DAYS }, (_, i) => {
@@ -21,14 +32,11 @@ export function TimelineBar({ logs }: { logs: LogEntry[] }) {
       map[d.toDateString()] = { total: 0, failure: 0 }
     })
     logs.forEach(l => {
-      const date = new Date(l.timestamp)
+      const date = new Date(l['@timestamp'])
       const key = date.toDateString()
       if (!map[key]) return
-      let parsed: ParsedLog = {}
-      try { parsed = JSON.parse(l.raw) } catch { }
 
-      const isError = (parsed as {log_status?: string}).log_status === 'failed'
-
+      const isError = l.log_status === 'failed'
       map[key].total++
       if (isError) map[key].failure++
     })
@@ -57,7 +65,7 @@ export function TimelineBar({ logs }: { logs: LogEntry[] }) {
               title={
                 <div className="text-xs">
                   <div className="font-bold">{b.fullLabel}</div>
-                  <div className="text-green-400">✓ Thành công: {b.total}</div>
+                  <div className="text-green-400">✓ Request: {b.total}</div>
                   <div className="text-red-400">✗ Thất bại: {b.failure}</div>
                 </div>
               }
@@ -96,7 +104,7 @@ export function TimelineBar({ logs }: { logs: LogEntry[] }) {
       <div className="flex gap-4 justify-center mt-2">
         <span className="flex items-center gap-1 text-[11px] text-gray-600">
           <span className="w-2.5 h-2.5 rounded-sm bg-green-500 inline-block" />
-          Thành công
+          Tổng request
         </span>
         <span className="flex items-center gap-1 text-[11px] text-gray-600">
           <span className="w-2.5 h-2.5 rounded-sm bg-red-500 inline-block" />

@@ -5,15 +5,51 @@ import { ProTable, type ProColumns } from '@ant-design/pro-components'
 import { useState, useMemo } from 'react'
 import PageHeader from '@/components/page/PageHeader'
 import { AntdConfigProvider } from '@/config/antdConfigProvider'
-import type { ParsedLog } from '@/utils/parseLog'
-import { FilterBar, LevelBadge } from '@/components/chart/config/columnConfig/log/table'
-import type { LogEntry } from '@/types/chart/log'
+import { FilterBar } from '@/components/chart/config/columnConfig/log/table'
 import { TimelineBar } from '@/components/chart/config/columnConfig/log/column'
 
+type ClickHouseLog = {
+  '@timestamp': string
+  status: string
+  user: string
+  request_id: string
+  uri: string
+  service_id: string
+  route_id: string
+  latency: string
+  method: string
+  log_status: string
+  client_ip: string
+}
+
+const CLICKHOUSE_URL = import.meta.env.VITE_CLICKHOUSE_API_BASE_URL
+const CLICKHOUSE_TABLE = import.meta.env.VITE_CLICKHOUSE_TABLE
+const CLICKHOUSE_USER = import.meta.env.VITE_CLICKHOUSE_USER
+const CLICKHOUSE_PASS = import.meta.env.VITE_CLICKHOUSE_PASS
+
 const fetchLogs = async () => {
-  const res = await fetch('http://localhost:3000/logs')
-  if (!res.ok) throw new Error('Failed to fetch logs')
-  return res.json() as Promise<{ list: LogEntry[]; total: number }>
+  const query = `SELECT * FROM quickstart_db.${CLICKHOUSE_TABLE} FORMAT JSON`
+
+  const res = await fetch(
+    `${CLICKHOUSE_URL}/?query=${encodeURIComponent(query)}`,
+    {
+      headers: {
+        Authorization:
+          'Basic ' + btoa(`${CLICKHOUSE_USER}:${CLICKHOUSE_PASS}`),
+      },
+    }
+  )
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch logs')
+  }
+
+  const json = await res.json()
+
+  return {
+    list: json.data as ClickHouseLog[],
+    total: json.rows as number,
+  }
 }
 
 export const Route = createFileRoute('/_authenticated/log_histories/')({
@@ -33,7 +69,7 @@ function RouteComponent() {
 function LogList() {
   const { t } = useTranslation()
   const [search, setSearch] = useState('')
-  const [level, setLevel] = useState('')
+  const [level] = useState('')
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['log_histories'],
@@ -45,30 +81,29 @@ function LogList() {
 
   const filtered = useMemo(() => {
     return allLogs.filter(entry => {
-      let parsed: ParsedLog = {}
-      try { parsed = JSON.parse(entry.raw) } catch { }
-      const entryLevel = (parsed.level as string ?? 'info').toLowerCase()
+      const entryLevel = (entry.log_status ?? 'info').toLowerCase()
       if (level && entryLevel !== level) return false
       if (search) {
         const q = search.toLowerCase()
         if (
-          !entry.raw.toLowerCase().includes(q) &&
+          !entry.uri.toLowerCase().includes(q) &&
           !(entry.user ?? '').toLowerCase().includes(q) &&
-          !(entry.timestamp ?? '').toLowerCase().includes(q)
+          !(entry['@timestamp'] ?? '').toLowerCase().includes(q) &&
+          !(entry.client_ip ?? '').toLowerCase().includes(q)
         ) return false
       }
       return true
     })
   }, [allLogs, search, level])
 
-  const columns: ProColumns<LogEntry>[] = [
+  const columns: ProColumns<ClickHouseLog>[] = [
     {
       title: t('form.admins.loginTimestamp', 'Login at'),
-      dataIndex: 'timestamp',
+      dataIndex: '@timestamp',
       width: 180,
       render: (_, r) => (
         <span className="font-mono text-xs text-gray-500 whitespace-nowrap">
-          {new Date(r.timestamp).toLocaleString()}
+          {new Date(r['@timestamp']).toLocaleString()}
         </span>
       ),
     },
@@ -77,32 +112,24 @@ function LogList() {
       dataIndex: 'user',
       width: 150,
       render: (_, r) => (
-        <span className="font-mono text-xs text-gray-800">{r.user ?? '—'}</span>
+        <span className="font-mono text-xs text-gray-800">{r.user || '—'}</span>
       ),
     },
     {
-      title: 'Level',
-      width: 90,
-      render: (_, r) => {
-        let parsed: ParsedLog = {}
-        try { parsed = JSON.parse(r.raw) } catch {}
-        return <LevelBadge level={parsed.level as string} />
-      },
-    },
-    {
       title: t('sources.log', 'Log'),
-      dataIndex: 'raw',
-      render: (_, r) => {
-        let parsed: ParsedLog = {}
-        try { parsed = JSON.parse(r.raw) } catch {}
-        const msg = parsed.message as string | undefined
-        return (
-          <div>
-            {msg && <div className="font-mono text-xs text-gray-800 mb-0.5">{msg}</div>}
-            <span className="font-mono text-[11px] text-gray-400 break-all">{r.raw}</span>
+      dataIndex: 'uri',
+      render: (_, r) => (
+        <div>
+          <div className="font-mono text-xs text-gray-800 mb-0.5">
+            <span className="font-semibold">{r.method}</span> {r.uri}
+            <span className="ml-2 text-gray-500">status: {r.status}</span>
+            <span className="ml-2 text-gray-500">latency: {r.latency}s</span>
           </div>
-        )
-      },
+          <span className="font-mono text-[11px] text-gray-400 break-all">
+            ip: {r.client_ip} | route: {r.route_id} | req: {r.request_id}
+          </span>
+        </div>
+      ),
     },
   ]
 
@@ -112,14 +139,12 @@ function LogList() {
       <FilterBar
         search={search}
         setSearch={setSearch}
-        level={level}
-        setLevel={setLevel}
         onRefresh={() => refetch()}
       />
-      <ProTable<LogEntry>
+      <ProTable<ClickHouseLog>
         columns={columns}
         dataSource={filtered}
-        rowKey="id"
+        rowKey="request_id"
         loading={isLoading}
         search={false}
         options={false}
