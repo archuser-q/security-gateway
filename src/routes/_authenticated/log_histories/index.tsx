@@ -9,20 +9,7 @@ import { FilterBar } from '@/components/chart/config/columnConfig/log/table'
 import { TimelineBar } from '@/components/chart/config/columnConfig/log/column'
 import { CLICKHOUSE_PASS, CLICKHOUSE_TABLE, CLICKHOUSE_URL, CLICKHOUSE_USER } from '@/stores/global'
 import { Tag } from 'antd'
-
-type ClickHouseLog = {
-  '@timestamp': string
-  status: string
-  user: string
-  request_id: string
-  uri: string
-  service_id: string
-  route_id: string
-  latency: string
-  method: string
-  log_status: string
-  client_ip: string
-}
+import type { ClickHouseLog } from '@/types/chart/log'
 
 const fetchLogs = async () => {
   const query = `SELECT * FROM quickstart_db.${CLICKHOUSE_TABLE} FORMAT JSON`

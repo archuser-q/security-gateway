@@ -1,6 +1,13 @@
-export interface LogEntry {
-  id: string
-  timestamp: string
-  user?: string
-  raw: string
-} 
+export type ClickHouseLog = {
+  '@timestamp': string
+  status: string
+  user: string
+  request_id: string
+  uri: string
+  service_id: string
+  route_id: string
+  latency: string
+  method: string
+  log_status: string
+  client_ip: string
+}
