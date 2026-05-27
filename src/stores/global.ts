@@ -34,3 +34,8 @@ export const userAtom = atom<{
   id: string;
   username: string;
 } | null>(null);
+
+export const CLICKHOUSE_URL = import.meta.env.VITE_CLICKHOUSE_API_BASE_URL
+export const CLICKHOUSE_TABLE = import.meta.env.VITE_CLICKHOUSE_TABLE
+export const CLICKHOUSE_USER = import.meta.env.VITE_CLICKHOUSE_USER
+export const CLICKHOUSE_PASS = import.meta.env.VITE_CLICKHOUSE_PASS

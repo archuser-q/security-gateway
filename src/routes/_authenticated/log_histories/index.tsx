@@ -7,6 +7,8 @@ import PageHeader from '@/components/page/PageHeader'
 import { AntdConfigProvider } from '@/config/antdConfigProvider'
 import { FilterBar } from '@/components/chart/config/columnConfig/log/table'
 import { TimelineBar } from '@/components/chart/config/columnConfig/log/column'
+import { CLICKHOUSE_PASS, CLICKHOUSE_TABLE, CLICKHOUSE_URL, CLICKHOUSE_USER } from '@/stores/global'
+import { Tag } from 'antd'
 
 type ClickHouseLog = {
   '@timestamp': string
@@ -21,11 +23,6 @@ type ClickHouseLog = {
   log_status: string
   client_ip: string
 }
-
-const CLICKHOUSE_URL = import.meta.env.VITE_CLICKHOUSE_API_BASE_URL
-const CLICKHOUSE_TABLE = import.meta.env.VITE_CLICKHOUSE_TABLE
-const CLICKHOUSE_USER = import.meta.env.VITE_CLICKHOUSE_USER
-const CLICKHOUSE_PASS = import.meta.env.VITE_CLICKHOUSE_PASS
 
 const fetchLogs = async () => {
   const query = `SELECT * FROM quickstart_db.${CLICKHOUSE_TABLE} FORMAT JSON`
@@ -60,7 +57,7 @@ function RouteComponent() {
   const { t } = useTranslation()
   return (
     <>
-      <PageHeader title={t('sources.log_histories', 'Log Histories')} />
+      <PageHeader title={t('sources.log_histories', 'Log')} />
       <LogList />
     </>
   )
@@ -116,6 +113,19 @@ function LogList() {
       ),
     },
     {
+      title: t('sources.status', 'Trạng thái'),
+      dataIndex: 'log_status',
+      width: 120,
+      render: (_, r) => {
+        const isSuccess = r.log_status === 'success'
+        return (
+          <Tag color={isSuccess ? 'success' : 'error'}>
+            {isSuccess ? 'Thành công' : 'Thất bại'}
+          </Tag>
+        )
+      },
+    },
+    {
       title: t('sources.log', 'Log'),
       dataIndex: 'uri',
       render: (_, r) => (
@@ -148,7 +158,7 @@ function LogList() {
         loading={isLoading}
         search={false}
         options={false}
-        pagination={{ showSizeChanger: true, pageSize: 20 }}
+        pagination={{ showSizeChanger: true, pageSize: 10 }}
         cardProps={{ bodyStyle: { padding: 0 } }}
       />
     </AntdConfigProvider>
