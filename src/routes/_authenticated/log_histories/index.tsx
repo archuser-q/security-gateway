@@ -2,39 +2,14 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { ProTable, type ProColumns } from '@ant-design/pro-components'
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import PageHeader from '@/components/page/PageHeader'
 import { AntdConfigProvider } from '@/config/antdConfigProvider'
 import { FilterBar } from '@/components/chart/config/columnConfig/log/table'
 import { TimelineBar } from '@/components/chart/config/columnConfig/log/column'
-import { CLICKHOUSE_PASS, CLICKHOUSE_TABLE, CLICKHOUSE_URL, CLICKHOUSE_USER } from '@/stores/global'
 import { Tag } from 'antd'
 import type { ClickHouseLog } from '@/types/chart/log'
-
-const fetchLogs = async () => {
-  const query = `SELECT * FROM quickstart_db.${CLICKHOUSE_TABLE} FORMAT JSON`
-
-  const res = await fetch(
-    `${CLICKHOUSE_URL}/?query=${encodeURIComponent(query)}`,
-    {
-      headers: {
-        Authorization:
-          'Basic ' + btoa(`${CLICKHOUSE_USER}:${CLICKHOUSE_PASS}`),
-      },
-    }
-  )
-
-  if (!res.ok) {
-    throw new Error('Failed to fetch logs')
-  }
-
-  const json = await res.json()
-
-  return {
-    list: json.data as ClickHouseLog[],
-    total: json.rows as number,
-  }
-}
+import { fetchAllLogsForTimeline, fetchLogs } from '@/apis/log'
 
 export const Route = createFileRoute('/_authenticated/log_histories/')({
   component: RouteComponent,
@@ -53,32 +28,23 @@ function RouteComponent() {
 function LogList() {
   const { t } = useTranslation()
   const [search, setSearch] = useState('')
-  const [level] = useState('')
+
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+
+  const { data: timelineData } = useQuery({
+    queryKey: ['log_timeline'],
+    queryFn: fetchAllLogsForTimeline,
+    refetchInterval: 10_000,
+  })
 
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ['log_histories'],
-    queryFn: fetchLogs,
+    queryKey: ['log_histories', page, pageSize, search],
+    queryFn: () => fetchLogs(page, pageSize, search),
     refetchInterval: 10_000,
   })
 
   const allLogs = data?.list ?? []
-
-  const filtered = useMemo(() => {
-    return allLogs.filter(entry => {
-      const entryLevel = (entry.log_status ?? 'info').toLowerCase()
-      if (level && entryLevel !== level) return false
-      if (search) {
-        const q = search.toLowerCase()
-        if (
-          !entry.uri.toLowerCase().includes(q) &&
-          !(entry.user ?? '').toLowerCase().includes(q) &&
-          !(entry['@timestamp'] ?? '').toLowerCase().includes(q) &&
-          !(entry.client_ip ?? '').toLowerCase().includes(q)
-        ) return false
-      }
-      return true
-    })
-  }, [allLogs, search, level])
 
   const columns: ProColumns<ClickHouseLog>[] = [
     {
@@ -131,7 +97,7 @@ function LogList() {
 
   return (
     <AntdConfigProvider>
-      <TimelineBar logs={allLogs} />
+      <TimelineBar logs={timelineData ?? []} />
       <FilterBar
         search={search}
         setSearch={setSearch}
@@ -139,12 +105,18 @@ function LogList() {
       />
       <ProTable<ClickHouseLog>
         columns={columns}
-        dataSource={filtered}
+        dataSource={allLogs}
         rowKey="request_id"
         loading={isLoading}
         search={false}
         options={false}
-        pagination={{ showSizeChanger: true, pageSize: 10 }}
+        pagination={{
+          current: page,
+          pageSize,
+          total: data?.total,
+          onChange: (p, ps) => { setPage(p); setPageSize(ps) },
+          showSizeChanger: true,
+        }}
         cardProps={{ bodyStyle: { padding: 0 } }}
       />
     </AntdConfigProvider>
