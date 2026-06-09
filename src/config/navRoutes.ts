@@ -119,8 +119,8 @@ export const navRoutes: NavRoute[] = [
     icon: IconServerBolt
   },
   {
-    to: '/casdoor',
-    label: 'casdoor',
+    to: '/login_histories',
+    label: 'login',
     icon: IconShieldCheckFilled
   }
 ];

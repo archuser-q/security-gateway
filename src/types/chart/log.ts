@@ -11,3 +11,9 @@ export type ClickHouseLog = {
   log_status: string
   client_ip: string
 }
+
+export type TimelineEntry = {
+  date: string
+  total: number
+  failed: number
+}

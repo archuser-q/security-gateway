@@ -24,6 +24,7 @@ import { Route as AuthenticatedProtosIndexImport } from './routes/_authenticated
 import { Route as AuthenticatedPluginmetadataIndexImport } from './routes/_authenticated/plugin_metadata/index'
 import { Route as AuthenticatedPluginconfigsIndexImport } from './routes/_authenticated/plugin_configs/index'
 import { Route as AuthenticatedOverviewIndexImport } from './routes/_authenticated/overview/index'
+import { Route as AuthenticatedLoginhistoriesIndexImport } from './routes/_authenticated/login_histories/index'
 import { Route as AuthenticatedLoghistoriesIndexImport } from './routes/_authenticated/log_histories/index'
 import { Route as AuthenticatedGlobalrulesIndexImport } from './routes/_authenticated/global_rules/index'
 import { Route as AuthenticatedConsumersIndexImport } from './routes/_authenticated/consumers/index'
@@ -152,6 +153,13 @@ const AuthenticatedOverviewIndexRoute = AuthenticatedOverviewIndexImport.update(
     getParentRoute: () => AuthenticatedRoute,
   } as any,
 )
+
+const AuthenticatedLoginhistoriesIndexRoute =
+  AuthenticatedLoginhistoriesIndexImport.update({
+    id: '/login_histories/',
+    path: '/login_histories/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 const AuthenticatedLoghistoriesIndexRoute =
   AuthenticatedLoghistoriesIndexImport.update({
@@ -580,6 +588,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLoghistoriesIndexImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/login_histories/': {
+      id: '/_authenticated/login_histories/'
+      path: '/login_histories'
+      fullPath: '/login_histories'
+      preLoaderRoute: typeof AuthenticatedLoginhistoriesIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/overview/': {
       id: '/_authenticated/overview/'
       path: '/overview'
@@ -892,6 +907,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedConsumersIndexRoute: typeof AuthenticatedConsumersIndexRoute
   AuthenticatedGlobalrulesIndexRoute: typeof AuthenticatedGlobalrulesIndexRoute
   AuthenticatedLoghistoriesIndexRoute: typeof AuthenticatedLoghistoriesIndexRoute
+  AuthenticatedLoginhistoriesIndexRoute: typeof AuthenticatedLoginhistoriesIndexRoute
   AuthenticatedOverviewIndexRoute: typeof AuthenticatedOverviewIndexRoute
   AuthenticatedPluginconfigsIndexRoute: typeof AuthenticatedPluginconfigsIndexRoute
   AuthenticatedPluginmetadataIndexRoute: typeof AuthenticatedPluginmetadataIndexRoute
@@ -935,6 +951,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedConsumersIndexRoute: AuthenticatedConsumersIndexRoute,
   AuthenticatedGlobalrulesIndexRoute: AuthenticatedGlobalrulesIndexRoute,
   AuthenticatedLoghistoriesIndexRoute: AuthenticatedLoghistoriesIndexRoute,
+  AuthenticatedLoginhistoriesIndexRoute: AuthenticatedLoginhistoriesIndexRoute,
   AuthenticatedOverviewIndexRoute: AuthenticatedOverviewIndexRoute,
   AuthenticatedPluginconfigsIndexRoute: AuthenticatedPluginconfigsIndexRoute,
   AuthenticatedPluginmetadataIndexRoute: AuthenticatedPluginmetadataIndexRoute,
@@ -991,6 +1008,7 @@ export interface FileRoutesByFullPath {
   '/consumers': typeof AuthenticatedConsumersIndexRoute
   '/global_rules': typeof AuthenticatedGlobalrulesIndexRoute
   '/log_histories': typeof AuthenticatedLoghistoriesIndexRoute
+  '/login_histories': typeof AuthenticatedLoginhistoriesIndexRoute
   '/overview': typeof AuthenticatedOverviewIndexRoute
   '/plugin_configs': typeof AuthenticatedPluginconfigsIndexRoute
   '/plugin_metadata': typeof AuthenticatedPluginmetadataIndexRoute
@@ -1048,6 +1066,7 @@ export interface FileRoutesByTo {
   '/consumers': typeof AuthenticatedConsumersIndexRoute
   '/global_rules': typeof AuthenticatedGlobalrulesIndexRoute
   '/log_histories': typeof AuthenticatedLoghistoriesIndexRoute
+  '/login_histories': typeof AuthenticatedLoginhistoriesIndexRoute
   '/overview': typeof AuthenticatedOverviewIndexRoute
   '/plugin_configs': typeof AuthenticatedPluginconfigsIndexRoute
   '/plugin_metadata': typeof AuthenticatedPluginmetadataIndexRoute
@@ -1104,6 +1123,7 @@ export interface FileRoutesById {
   '/_authenticated/consumers/': typeof AuthenticatedConsumersIndexRoute
   '/_authenticated/global_rules/': typeof AuthenticatedGlobalrulesIndexRoute
   '/_authenticated/log_histories/': typeof AuthenticatedLoghistoriesIndexRoute
+  '/_authenticated/login_histories/': typeof AuthenticatedLoginhistoriesIndexRoute
   '/_authenticated/overview/': typeof AuthenticatedOverviewIndexRoute
   '/_authenticated/plugin_configs/': typeof AuthenticatedPluginconfigsIndexRoute
   '/_authenticated/plugin_metadata/': typeof AuthenticatedPluginmetadataIndexRoute
@@ -1163,6 +1183,7 @@ export interface FileRouteTypes {
     | '/consumers'
     | '/global_rules'
     | '/log_histories'
+    | '/login_histories'
     | '/overview'
     | '/plugin_configs'
     | '/plugin_metadata'
@@ -1219,6 +1240,7 @@ export interface FileRouteTypes {
     | '/consumers'
     | '/global_rules'
     | '/log_histories'
+    | '/login_histories'
     | '/overview'
     | '/plugin_configs'
     | '/plugin_metadata'
@@ -1273,6 +1295,7 @@ export interface FileRouteTypes {
     | '/_authenticated/consumers/'
     | '/_authenticated/global_rules/'
     | '/_authenticated/log_histories/'
+    | '/_authenticated/login_histories/'
     | '/_authenticated/overview/'
     | '/_authenticated/plugin_configs/'
     | '/_authenticated/plugin_metadata/'
@@ -1360,6 +1383,7 @@ export const routeTree = rootRoute
         "/_authenticated/consumers/",
         "/_authenticated/global_rules/",
         "/_authenticated/log_histories/",
+        "/_authenticated/login_histories/",
         "/_authenticated/overview/",
         "/_authenticated/plugin_configs/",
         "/_authenticated/plugin_metadata/",
@@ -1457,6 +1481,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/log_histories/": {
       "filePath": "_authenticated/log_histories/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/login_histories/": {
+      "filePath": "_authenticated/login_histories/index.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/overview/": {

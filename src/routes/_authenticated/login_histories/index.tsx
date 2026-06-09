@@ -6,12 +6,12 @@ import { useState } from 'react'
 import PageHeader from '@/components/page/PageHeader'
 import { AntdConfigProvider } from '@/config/antdConfigProvider'
 import { FilterBar } from '@/components/chart/config/columnConfig/log/table'
-import { TimelineBar } from '@/components/chart/config/columnConfig/log/column'
 import { Tag } from 'antd'
 import type { ClickHouseLog } from '@/types/chart/log'
-import { fetchLogs, fetchLogsForTimeline } from '@/apis/log'
+import { fetchLoginLogs, fetchLoginLogsForTimeline } from '@/apis/log'
+import { TimelineBar } from '@/components/chart/config/columnConfig/log/column'
 
-export const Route = createFileRoute('/_authenticated/log_histories/')({
+export const Route = createFileRoute('/_authenticated/login_histories/')({
   component: RouteComponent,
 })
 
@@ -28,19 +28,20 @@ function RouteComponent() {
 function LogList() {
   const { t } = useTranslation()
   const [search, setSearch] = useState('')
+
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['log_histories', page, pageSize, search],
-    queryFn: () => fetchLogs(page, pageSize, search),
+    queryFn: () => fetchLoginLogs(page, pageSize, search),
     refetchInterval: 10_000,
   })
 
   const { data: timelineRaw } = useQuery({
-    queryKey: ['log_timeline'],
-    queryFn: () => fetchLogsForTimeline(),
-    refetchInterval: 10_000,
+      queryKey: ['log_timeline'],
+      queryFn: () => fetchLoginLogsForTimeline(),
+      refetchInterval: 10_000,
   })
 
   const allLogs = data?.list ?? []
