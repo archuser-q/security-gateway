@@ -90,6 +90,11 @@ function LogList() {
           <span className="font-mono text-[11px] text-gray-400 break-all">
             ip: {r.client_ip} | route: {r.route_id} | req: {r.request_id}
           </span>
+          {r.user_agent && (
+            <span className="font-mono text-[11px] text-gray-400 break-all block mt-0.5">
+              agent: {r.user_agent}
+            </span>
+          )}
         </div>
       ),
     },

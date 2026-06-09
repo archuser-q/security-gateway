@@ -10,6 +10,7 @@ export type ClickHouseLog = {
   method: string
   log_status: string
   client_ip: string
+  user_agent: string
 }
 
 export type TimelineEntry = {
