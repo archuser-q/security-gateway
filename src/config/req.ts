@@ -81,11 +81,12 @@ const logRequest = (conf: import('axios').InternalAxiosRequestConfig, status: nu
     },
     body: JSON.stringify({
       resource: conf.url,
-      method: conf.method,
+      method: conf.method?.toUpperCase() ?? '',
       status,
       logStatus: isSuccess ? 'success' : 'failed',
       user: user?.username ?? '',
       userId: user?.id ?? '',
+      queryParams: conf.params ? JSON.stringify(conf.params) : '',
     }),
   }).catch(() => {});
 };
