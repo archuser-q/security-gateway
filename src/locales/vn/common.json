@@ -417,5 +417,11 @@
   },
   "upstreams": {
     "singular": "Upstream"
+  },
+  "logs": {
+    "singular": "Nhật ký",
+    "timeline": "Thời gian",
+    "totalRequest": "Tổng request",
+    "failRequest": "Thất bại"
   }
 }

@@ -120,7 +120,6 @@ function LogList() {
           <div className="font-mono text-xs text-gray-800 mb-0.5">
             <span className="font-semibold">{r.method}</span> {r.uri}
             <span className="ml-2 text-gray-500">status: {r.status}</span>
-            <span className="ml-2 text-gray-500">latency: {r.latency}s</span>
           </div>
           <span className="font-mono text-[11px] text-gray-400 break-all">
             ip: {r.client_ip} | route: {r.route_id} | req: {r.request_id}

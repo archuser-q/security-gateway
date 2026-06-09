@@ -417,5 +417,11 @@
   },
   "upstreams": {
     "singular": "Upstream"
+  },
+  "logs": {
+    "singular": "Log",
+    "timeline": "Timeline",
+    "totalRequest": "Total Request",
+    "failRequest": "Fail"
   }
 }

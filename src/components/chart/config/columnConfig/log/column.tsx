@@ -1,5 +1,6 @@
 import { Tooltip } from 'antd'
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 type ClickHouseLog = {
   '@timestamp': string
@@ -16,6 +17,7 @@ type ClickHouseLog = {
 }
 
 export function TimelineBar({ logs }: { logs: ClickHouseLog[] }) {
+  const {t} = useTranslation()
   const DAYS = 7
   const days = useMemo(() => {
     return Array.from({ length: DAYS }, (_, i) => {
@@ -52,7 +54,7 @@ export function TimelineBar({ logs }: { logs: ClickHouseLog[] }) {
 
   return (
     <div className="bg-white border border-gray-200 rounded-md px-4 pt-3 pb-2 mb-3">
-      <div className="text-[12px] text-gray-400 text-center mb-2">Timeline</div>
+      <div className="text-[12px] text-gray-400 text-center mb-2">{t('logs.timeline')}</div>
 
       <div className="flex items-end gap-3" style={{ height: BAR_HEIGHT }}>
         {buckets.map((b, i) => {
@@ -104,11 +106,11 @@ export function TimelineBar({ logs }: { logs: ClickHouseLog[] }) {
       <div className="flex gap-4 justify-center mt-2">
         <span className="flex items-center gap-1 text-[11px] text-gray-600">
           <span className="w-2.5 h-2.5 rounded-sm bg-green-500 inline-block" />
-          Tổng request
+          {t('logs.totalRequest')}
         </span>
         <span className="flex items-center gap-1 text-[11px] text-gray-600">
           <span className="w-2.5 h-2.5 rounded-sm bg-red-500 inline-block" />
-          Thất bại
+          {t('logs.failRequest')}
         </span>
       </div>
     </div>
