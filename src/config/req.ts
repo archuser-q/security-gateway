@@ -67,6 +67,29 @@ const matchSkipInterceptor = (err: AxiosError) => {
   return interceptors.some((v: string) => v === String(status));
 };
 
+const logRequest = (conf: import('axios').InternalAxiosRequestConfig, status: number) => {
+  const store = getDefaultStore();
+  const user = store.get(userAtom);
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
+  const isSuccess = status >= 200 && status < 300;
+
+  void fetch(`${baseUrl}/api/request`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'text/plain',
+    },
+    body: JSON.stringify({
+      resource: conf.url,
+      method: conf.method,
+      status,
+      logStatus: isSuccess ? 'success' : 'failed',
+      user: user?.username ?? '',
+      userId: user?.id ?? '',
+    }),
+  }).catch(() => {});
+};
+
 req.interceptors.response.use(
   (res) => {
     // it's a apisix design
@@ -79,10 +102,12 @@ req.interceptors.response.use(
     ) {
       res.data.list = [];
     }
+    logRequest(res.config, res.status);
     return res;
   },
   (err) => {
     if (err.response) {
+      logRequest(err.config, err.response.status);
       if (matchSkipInterceptor(err)) return Promise.reject(err);
       const res = err.response as AxiosResponse<APISIXRespErr>;
       const d = res.data;

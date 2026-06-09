@@ -18,17 +18,16 @@ export const handleAdminLogin = async (
   const logEvent = (success: boolean, userId?: string) => {
     void fetch(`${baseUrl}/api/internal/log-event`, {
       method: 'POST',
-      mode: 'cors',
       headers: {
-        'Content-Type': 'application/json',
-        'X-Log-User': username,
-        'X-Log-Id': userId || '',
-        'X-Log-Status': success ? 'success' : 'failed',
+        'Content-Type': 'text/plain',
       },
-      body: JSON.stringify({ }) 
+      body: JSON.stringify({
+        user: username,
+        userId: userId || '',
+        logStatus: success ? 'success' : 'failed',
+      }),
     }).catch(() => {});
   };
-
   const isValid = await verifyAdminReq(req, username, encodedPassword);
 
   if (!isValid) {
