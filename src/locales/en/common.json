@@ -400,8 +400,9 @@
     "streamRoutes": "Stream Routes",
     "upstreams": "Upstreams",
     "admin": "Administrators",
-    "log":"Log",
+    "log":"Access Log",
     "casdoor": "Casdoor",
+    "login": "Login Logs",
     "logout": "Log out"
   },
   "ssls": {

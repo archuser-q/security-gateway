@@ -400,8 +400,9 @@
     "streamRoutes": "Tuyến Đường Luồng",
     "upstreams": "Upstreams",
     "admin": "Quản Trị Viên",
-    "log": "Nhật ký hoạt động",
+    "log": "Nhật ký truy cập",
     "casdoor": "Casdoor",
+    "login": "Nhật ký đăng nhập",
     "logout": "Đăng Xuất"
   },
   "ssls": {
