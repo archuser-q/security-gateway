@@ -7,41 +7,36 @@ import { ProfileViewModal } from '../form/ProfileForm';
 import { useSetAtom } from 'jotai';
 import { isSettingsOpenAtom } from '@/stores/global';
 import { useNavigate } from '@tanstack/react-router';
-
-const ProfileMap = {
-  personalInfo: 'Personal Info',
-  changePassword: 'Change Password',
-  setting: 'Setting',
-  logOut: 'Log out'
-};
+import { useTranslation } from 'react-i18next';
 
 export const ProfileMenu = () => {
   const auth = useAuth();
   const setIsSettingsOpen = useSetAtom(isSettingsOpenAtom);
   const navigate = useNavigate();
+  const {t} = useTranslation();
+
+  const ProfileMap = {
+    personalInfo: t('sources.personalInfo'),
+    changePassword: t('sources.changePassword'),
+    setting: t('sources.setting'),
+    logOut: t('sources.logout')
+  };
 
   const handleClick = (key: string) => {
     if (key === 'changePassword') {
-      modals.open({
-        title: 'Change Password',
-        centered: true,
-        children: (
-          <ChangePasswordForm
-            id={auth.user?.id || ''}
-            password=""
-          />
-        ),
-      });
+        modals.open({
+            title: 'Change Password',
+            centered: true,
+            children: <ChangePasswordForm username={auth.user?.username || ''} />,
+        });
     }
     if (key === 'personalInfo') {
-      modals.open({
-        title: 'Personal Info',
-        centered: true,
-        size: 'xl',
-        children: (
-          <ProfileViewModal id={auth.user?.id || ''} />
-        ),
-      });
+        modals.open({
+            title: 'Personal Info',
+            centered: true,
+            size: 'xl',
+            children: <ProfileViewModal username={auth.user?.username || ''} />,
+        });
     }
     if (key === 'setting') {
       if (auth.user?.role !== 'super_admin') return;

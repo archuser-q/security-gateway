@@ -34,23 +34,11 @@ function AdminList() {
   const { t } = useTranslation();
   const { data, isLoading, refetch, pagination } = useAdminList();
   const auth = useAuth();
-
-  const filteredData = useMemo(() => { 
-    if (auth?.user?.id && auth?.user?.role==="super_admin") return data?.list; 
-    return data?.list?.filter(
-      item => item.value.id === auth.user?.id); 
-    }, [data?.list, auth?.user?.id]);
   
   const columns = useMemo<
     ProColumns<APISIXType['RespAdminList']['data']['list'][number]>[]
   >(() => {
     return [
-      {
-        dataIndex: ['value', 'id'],
-        title: 'ID',
-        key: 'id',
-        valueType: 'text',
-      },
       {
         dataIndex: ['value', 'username'],
         title: t('form.consumers.username'),
@@ -89,13 +77,13 @@ function AdminList() {
         render: (_, record) => [
           <ToDetailPageBtn
             key="detail"
-            to="/admins/detail/$id"
-            params={{ id: record.value.id }}
+            to="/admins/detail/$username"
+            params={{ username: record.value.username }}
           />,
           auth.user?.role === 'super_admin' && <UpdateAdminStatusBtn
             key="status"
             name={record.value.username}
-            id={record.value.id}
+            id={record.value.username}
             status={record.value.status}
             refetch={refetch}
           />,
@@ -108,8 +96,8 @@ function AdminList() {
     <AntdConfigProvider>
       <ProTable
         columns={columns}
-        dataSource={filteredData}
-        rowKey={(record) => record.value.id}
+        dataSource={data.list}
+        rowKey={(record) => record.value.username}
         loading={isLoading}
         search={false}
         options={false}

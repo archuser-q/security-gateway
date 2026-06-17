@@ -22,14 +22,14 @@ import { ChangePasswordBtn } from '@/components/page/ChangePasswordBtn';
 type AdminFormProps = {
   readOnly: boolean;
   setReadOnly: (v:boolean) => void;
-  id: string;
+  username: string;
 }
 
 const AdminDetailForm = (props: AdminFormProps) => {
-  const { readOnly, setReadOnly, id } = props;
+  const { readOnly, setReadOnly, username } = props;
   const { t } = useTranslation();
   const { data: adminData, refetch } = useSuspenseQuery(
-    getAdminQueryOptions(id)
+    getAdminQueryOptions(username)
   );
   
   const form = useForm({
@@ -49,7 +49,7 @@ const AdminDetailForm = (props: AdminFormProps) => {
   
   const putAdmin = useMutation({
     mutationFn: (d: APISIXType['AdminPut']) => 
-      putAdminReq(req, d),
+      putAdminReq(req, username, d),
     async onSuccess(){
       notifications.show({
         message: t('info.edit.success', {name: t('admins.singular')}),
@@ -77,17 +77,14 @@ const AdminDetailForm = (props: AdminFormProps) => {
   );
 };
 
-type AdminDetailProps = Pick<AdminFormProps, 'id'> & {
+type AdminDetailProps = Pick<AdminFormProps, 'username'> & {
   onDeleteSuccess: () => void;
 }
 
 const AdminDetail = (props: AdminDetailProps) => {
-  const { id } = props;
+  const { username } = props;
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
-  const { data: adminData } = useSuspenseQuery(
-    getAdminQueryOptions(id)
-  );
   
   return (
     <>
@@ -97,8 +94,7 @@ const AdminDetail = (props: AdminDetailProps) => {
           extra: (
             <Group>
               <ChangePasswordBtn
-                id={id}
-                password={adminData?.value?.password}
+                username={username}
               />
               <Button
                 onClick={()=>setReadOnly(false)}
@@ -115,7 +111,7 @@ const AdminDetail = (props: AdminDetailProps) => {
         <AdminDetailForm
           readOnly={readOnly}
           setReadOnly={setReadOnly}
-          id={id}  
+          username={username}
         />
       </FormTOCBox>
     </>
@@ -123,17 +119,17 @@ const AdminDetail = (props: AdminDetailProps) => {
 }
 
 function RouteComponent() {
-  const { id } = useParams({ from: '/_authenticated/admins/detail/$id'});
+  const { username } = useParams({ from: '/_authenticated/admins/detail/$username'});
   const navigate = useNavigate();
   
   return (
     <AdminDetail 
-      id={id} 
+      username={username}
       onDeleteSuccess={()=>navigate({ to: '/admins'})}
     />
   )
 }
 
-export const Route = createFileRoute('/_authenticated/admins/detail/$id')({
+export const Route = createFileRoute('/_authenticated/admins/detail/$username')({
   component: RouteComponent,
 })

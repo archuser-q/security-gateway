@@ -1,55 +1,23 @@
-import { userAtom } from "@/stores/global";
-import { getDefaultStore } from "jotai";
-import { 
-    createContext, 
-    useContext, 
-    useState, 
-    type ReactNode 
-} from "react";
-
-type User = {
-    username: string,
-    role: string,
-    id: string
-}
-type AuthContextProps = {
-    user: User | null,
-    login: (user: User) => void;
-    logout: () => void,
-    isAuthenticated: boolean,
-}
+import type { AuthContextProps, User } from "@/types/chart/auth";
+import { createContext, useContext, useState, type ReactNode } from "react";
 
 export const AuthContext = createContext<AuthContextProps | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
-    const store = getDefaultStore();
 
-    const login = (user: User) => {
-        setUser(user);
-        store.set(userAtom, user);
-    }
-
-    const logout = () => {
-        setUser(null);
-        store.set(userAtom, null);
-    };
+    const login = (user: User) => setUser(user);
+    const logout = () => setUser(null);
 
     return (
-        <AuthContext.Provider
-            value = {{
-                user, login, logout, isAuthenticated: Boolean(user)
-            }}
-        >
+        <AuthContext.Provider value={{ user, login, logout, isAuthenticated: Boolean(user) }}>
             {children}
         </AuthContext.Provider>
-    )
-}
+    );
+};
 
 export const useAuth = () => {
     const ctx = useContext(AuthContext);
-    if (!ctx){
-        throw new Error()
-    }
+    if (!ctx) throw new Error();
     return ctx;
-}
+};

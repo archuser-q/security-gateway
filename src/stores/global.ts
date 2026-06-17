@@ -30,11 +30,6 @@ export const adminKeyAtom = atomWithStorage<string>(
 // Settings modal visibility state
 export const isSettingsOpenAtom = atom<boolean>(false);
 
-export const userAtom = atom<{
-  id: string;
-  username: string;
-} | null>(null);
-
 export const CLICKHOUSE_URL = import.meta.env.VITE_CLICKHOUSE_API_BASE_URL
 export const CLICKHOUSE_TABLE_REQUEST = import.meta.env.VITE_CLICKHOUSE_TABLE_REQUEST
 export const CLICKHOUSE_TABLE_LOGIN = import.meta.env.VITE_CLICKHOUSE_TABLE_LOGIN

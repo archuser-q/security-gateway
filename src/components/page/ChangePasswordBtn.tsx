@@ -4,12 +4,11 @@ import { useTranslation } from "react-i18next";
 import { ChangePasswordForm } from "../form/ChangePasswordForm";
 
 export type ChangePasswordBtnProps = {
-    id: string;
-    password: string;
+    username: string
 };
 
 export const ChangePasswordBtn = ({
-  id, password
+  username
 }: ChangePasswordBtnProps) => {
     const { t } = useTranslation();
 
@@ -17,7 +16,7 @@ export const ChangePasswordBtn = ({
         modals.open({
             title: t('form.admins.title'),
             centered:true,
-            children: <ChangePasswordForm id={id} password={password}/>
+            children: <ChangePasswordForm username={username}/>
         })
     }
 

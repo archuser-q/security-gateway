@@ -25,9 +25,11 @@ import {
   API_PREFIX,
   SKIP_INTERCEPTOR_HEADER,
 } from '@/config/constant';
-import { adminKeyAtom, isSettingsOpenAtom, userAtom } from '@/stores/global';
+import { adminKeyAtom, isSettingsOpenAtom } from '@/stores/global';
 
-export const req = axios.create();
+export const req = axios.create({
+  withCredentials: true
+});
 
 req.interceptors.request.use((conf) => {
   // serialize filter params
@@ -45,11 +47,6 @@ req.interceptors.request.use((conf) => {
   const adminKey = store.get(adminKeyAtom);
   conf.headers.set(API_HEADER_KEY, adminKey);
 
-  const user = store.get(userAtom);
-  if (user?.id) {
-    conf.headers.set('X-User-Id', user.id);
-  }
-
   return conf;
 });
 
@@ -64,31 +61,8 @@ export type APISIXRespErr = {
 const matchSkipInterceptor = (err: AxiosError) => {
   const interceptors = err.config?.headers?.[SKIP_INTERCEPTOR_HEADER] || [];
   const status = err.response?.status;
+  if (err.config?.url?.includes('/admins/login')) return true;
   return interceptors.some((v: string) => v === String(status));
-};
-
-const logRequest = (conf: import('axios').InternalAxiosRequestConfig, status: number) => {
-  const store = getDefaultStore();
-  const user = store.get(userAtom);
-  const baseUrl = import.meta.env.VITE_API_BASE_URL;
-
-  const isSuccess = status >= 200 && status < 300;
-
-  void fetch(`${baseUrl}/api/request`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'text/plain',
-    },
-    body: JSON.stringify({
-      resource: conf.url,
-      method: conf.method?.toUpperCase() ?? '',
-      status,
-      logStatus: isSuccess ? 'success' : 'failed',
-      user: user?.username ?? '',
-      userId: user?.id ?? '',
-      queryParams: conf.params ? JSON.stringify(conf.params) : '',
-    }),
-  }).catch(() => {});
 };
 
 req.interceptors.response.use(
@@ -103,12 +77,10 @@ req.interceptors.response.use(
     ) {
       res.data.list = [];
     }
-    logRequest(res.config, res.status);
     return res;
   },
   (err) => {
     if (err.response) {
-      logRequest(err.config, err.response.status);
       if (matchSkipInterceptor(err)) return Promise.reject(err);
       const res = err.response as AxiosResponse<APISIXRespErr>;
       const d = res.data;

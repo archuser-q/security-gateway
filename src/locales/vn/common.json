@@ -403,7 +403,10 @@
     "log": "Nhật ký truy cập",
     "casdoor": "Casdoor",
     "login": "Nhật ký đăng nhập",
-    "logout": "Đăng Xuất"
+    "logout": "Đăng Xuất",
+    "personalInfo": "Thông tin cá nhân",
+    "changePassword": "Đổi mật khẩu",
+    "setting": "Cài đặt"
   },
   "ssls": {
     "singular": "SSL"

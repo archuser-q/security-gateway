@@ -18,77 +18,62 @@ import type { AxiosInstance } from "axios";
 import type { APISIXType } from "@/types/schema/apisix";
 import type { PageSearchType } from "@/types/schema/pageSearch";
 import { API_ADMINS, PAGE_SIZE_MAX, PAGE_SIZE_MIN } from "@/config/constant";
+import axios from "axios";
+
+export const externalURL = import.meta.env.VITE_API_BASE_URL
 
 export const verifyAdminReq = async (
   req: AxiosInstance,
   username: string,
   password: string
-): Promise<{username: string, role:string, id:string} | null> => {
-  const res = await getAdminListReq(req, {
-    page: 1,
-    page_size: PAGE_SIZE_MAX,
-  });
+): Promise<{username: string, role: string } | null> => {
+  try {
+    const res = await req
+      .post(`${API_ADMINS}/login`, { username, password })
+      .then((v) => v.data);
 
-  const admin = res.list.find(({ value }) =>
-    value.username === username &&
-    value.password === password &&
-    value.status === true
-  );
-
-  return admin ? {username: admin.value.username, role: admin.value.role, id: admin.value.id} : null;
+    return { username: res.username, role: res.role };
+  } catch (err) {
+    if (axios.isAxiosError(err) && [401, 403, 404, 500].includes(err.response?.status ?? 0)) {
+      return null;
+    }
+    throw err;
+  }
 };
 
 export const getAdminListReq = (
-    req: AxiosInstance,
-    params: PageSearchType
-) => 
-    req
-        .get<unknown, APISIXType['RespAdminList']>(API_ADMINS, {
-            params,
-        })
-        .then((v) => v.data);
+  req: AxiosInstance,
+  params: PageSearchType
+) =>
+  req
+    .get<unknown, APISIXType['RespAdminList']>(API_ADMINS, { params })
+    .then((v) => v.data);
 
-export const getAdminReq = (req: AxiosInstance, id: string) =>
-    req
-        .get<unknown, APISIXType['RespAdminDetail']>(
-            `${API_ADMINS}/${id}`  
-        )
-        .then((v) => v.data);
+export const getAdminReq = (req: AxiosInstance, username: string) =>
+  req
+    .get<unknown, APISIXType['RespAdminDetail']>(`${API_ADMINS}/${username}`)
+    .then((v) => v.data);
 
-export const postAdminReq = (req: AxiosInstance, data: APISIXType['AdminPost']) => 
-    req.post<unknown, APISIXType['RespAdminDetail']>(
-        API_ADMINS,
-        data
-    );
+export const postAdminReq = (req: AxiosInstance, data: APISIXType['AdminPost']) =>
+  req.post<unknown, APISIXType['RespAdminDetail']>(API_ADMINS, data);
 
-export const putAdminReq = (req: AxiosInstance, data: APISIXType['AdminPut']) => {
-    return req.put<APISIXType['AdminPut'], APISIXType['RespAdminDetail']>(
-        `${API_ADMINS}/${data.id}`,
-        data
-    );
-};
+export const putAdminReq = (req: AxiosInstance, username: string, data: APISIXType['AdminPut']) =>
+  req.put<APISIXType['AdminPut'], APISIXType['RespAdminDetail']>(
+    `${API_ADMINS}/${username}`,
+    data
+  );
 
-export const deleteAdminReq = (req: AxiosInstance, id: string) => {
-    return req.delete(`${API_ADMINS}/${id}`);
-};
+export const deleteAdminReq = (req: AxiosInstance, username: string) =>
+  req.delete(`${API_ADMINS}/${username}`);
 
 export const deleteAllAdmins = async (req: AxiosInstance) => {
-    const totalRes = await getAdminListReq(req, {
-        page: 1,
-        page_size: PAGE_SIZE_MIN,
-    });
-    
-    const total = totalRes.total;
-    if (total == 0) return;
-    
-    for (let times = Math.ceil(total / PAGE_SIZE_MAX); times > 0; times--) {
-        const res = await getAdminListReq(req, {
-            page: 1,
-            page_size: PAGE_SIZE_MAX,
-        });
-        
-        await Promise.all(
-            res.list.map((d) => deleteAdminReq(req, d.value.id))
-        );
-    }
+  const totalRes = await getAdminListReq(req, { page: 1, page_size: PAGE_SIZE_MIN });
+
+  const total = totalRes.total;
+  if (total === 0) return;
+
+  for (let times = Math.ceil(total / PAGE_SIZE_MAX); times > 0; times--) {
+    const res = await getAdminListReq(req, { page: 1, page_size: PAGE_SIZE_MAX });
+    await Promise.all(res.list.map((d) => deleteAdminReq(req, d.value.username)));
+  }
 };

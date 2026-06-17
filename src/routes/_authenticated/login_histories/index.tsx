@@ -6,7 +6,6 @@ import { useState } from 'react'
 import PageHeader from '@/components/page/PageHeader'
 import { AntdConfigProvider } from '@/config/antdConfigProvider'
 import { FilterBar } from '@/components/chart/config/columnConfig/log/table'
-import { Tag } from 'antd'
 import type { ClickHouseLog } from '@/types/chart/log'
 import { fetchLoginLogs, fetchLoginLogsForTimeline } from '@/apis/log'
 import { TimelineBar } from '@/components/chart/config/columnConfig/log/column'
@@ -64,19 +63,6 @@ function LogList() {
       render: (_, r) => (
         <span className="font-mono text-xs text-gray-800">{r.user || '—'}</span>
       ),
-    },
-    {
-      title: t('sources.status', 'Trạng thái'),
-      dataIndex: 'log_status',
-      width: 120,
-      render: (_, r) => {
-        const isSuccess = r.log_status === 'success'
-        return (
-          <Tag color={isSuccess ? 'success' : 'error'}>
-            {isSuccess ? 'Thành công' : 'Thất bại'}
-          </Tag>
-        )
-      },
     },
     {
       title: t('sources.log', 'Log'),

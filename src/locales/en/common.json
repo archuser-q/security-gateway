@@ -403,7 +403,10 @@
     "log":"Access Log",
     "casdoor": "Casdoor",
     "login": "Login Logs",
-    "logout": "Log out"
+    "logout": "Log out",
+    "personalInfo": "Personal Information",
+    "changePassword": "Change Password",
+    "setting": "Setting"
   },
   "ssls": {
     "singular": "SSL"

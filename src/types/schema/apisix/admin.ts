@@ -19,7 +19,6 @@ import { APISIXCommon } from './common';
 
 const Admin = z
   .object({
-    id: z.string(),
     username: z
       .string()
       .min(1)
@@ -52,13 +51,15 @@ const Admin = z
 export const APISIXAdmin = {
     Admin,
     AdminPost: Admin.omit({
-      id: true,
       create_time: true,
       update_time: true,
       role: true,
     }),
     AdminPut: Admin.omit({
         create_time: true, 
-        update_time: true
+        update_time: true,
+        id: true
+    }).extend({
+        password: z.string().min(1).max(100).optional(), 
     })
 }
