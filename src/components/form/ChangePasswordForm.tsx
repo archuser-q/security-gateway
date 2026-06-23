@@ -7,10 +7,10 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 type ChangePasswordFormProps = {
-    username: string;
+    id: string;
 }
 
-export const ChangePasswordForm = ({ username }: ChangePasswordFormProps) => {
+export const ChangePasswordForm = ({ id }: ChangePasswordFormProps) => {
     const { t } = useTranslation();
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -21,7 +21,7 @@ export const ChangePasswordForm = ({ username }: ChangePasswordFormProps) => {
             notifications.show({ color: 'red', message: 'Password do not match' });
             return;
         }
-        await req.patch(`/admins/${username}`, {
+        await req.patch(`/admins/${id}`, {
             old_password: oldPassword,
             password: newPassword
         });

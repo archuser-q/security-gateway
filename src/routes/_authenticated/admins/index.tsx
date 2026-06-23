@@ -77,13 +77,13 @@ function AdminList() {
         render: (_, record) => [
           <ToDetailPageBtn
             key="detail"
-            to="/admins/detail/$username"
-            params={{ username: record.value.username }}
+            to="/admins/detail/$id"
+            params={{ id: record.value.id }}
           />,
           auth.user?.role === 'super_admin' && <UpdateAdminStatusBtn
             key="status"
             name={record.value.username}
-            id={record.value.username}
+            id={record.value.id}
             status={record.value.status}
             refetch={refetch}
           />,
@@ -97,7 +97,7 @@ function AdminList() {
       <ProTable
         columns={columns}
         dataSource={data.list}
-        rowKey={(record) => record.value.username}
+        rowKey={(record) => record.value.id}
         loading={isLoading}
         search={false}
         options={false}

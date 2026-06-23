@@ -22,14 +22,14 @@ import { ChangePasswordBtn } from '@/components/page/ChangePasswordBtn';
 type AdminFormProps = {
   readOnly: boolean;
   setReadOnly: (v:boolean) => void;
-  username: string;
+  id: string;
 }
 
 const AdminDetailForm = (props: AdminFormProps) => {
-  const { readOnly, setReadOnly, username } = props;
+  const { readOnly, setReadOnly, id } = props;
   const { t } = useTranslation();
   const { data: adminData, refetch } = useSuspenseQuery(
-    getAdminQueryOptions(username)
+    getAdminQueryOptions(id)
   );
   
   const form = useForm({
@@ -49,7 +49,7 @@ const AdminDetailForm = (props: AdminFormProps) => {
   
   const putAdmin = useMutation({
     mutationFn: (d: APISIXType['AdminPut']) => 
-      putAdminReq(req, username, d),
+      putAdminReq(req, d),
     async onSuccess(){
       notifications.show({
         message: t('info.edit.success', {name: t('admins.singular')}),
@@ -77,12 +77,12 @@ const AdminDetailForm = (props: AdminFormProps) => {
   );
 };
 
-type AdminDetailProps = Pick<AdminFormProps, 'username'> & {
+type AdminDetailProps = Pick<AdminFormProps, 'id'> & {
   onDeleteSuccess: () => void;
 }
 
 const AdminDetail = (props: AdminDetailProps) => {
-  const { username } = props;
+  const { id } = props;
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
   
@@ -94,7 +94,7 @@ const AdminDetail = (props: AdminDetailProps) => {
           extra: (
             <Group>
               <ChangePasswordBtn
-                username={username}
+                id={id}
               />
               <Button
                 onClick={()=>setReadOnly(false)}
@@ -111,7 +111,7 @@ const AdminDetail = (props: AdminDetailProps) => {
         <AdminDetailForm
           readOnly={readOnly}
           setReadOnly={setReadOnly}
-          username={username}
+          id={id}
         />
       </FormTOCBox>
     </>
@@ -119,17 +119,17 @@ const AdminDetail = (props: AdminDetailProps) => {
 }
 
 function RouteComponent() {
-  const { username } = useParams({ from: '/_authenticated/admins/detail/$username'});
+  const { id } = useParams({ from: '/_authenticated/admins/detail/$id'});
   const navigate = useNavigate();
   
   return (
     <AdminDetail 
-      username={username}
+      id={id}
       onDeleteSuccess={()=>navigate({ to: '/admins'})}
     />
   )
 }
 
-export const Route = createFileRoute('/_authenticated/admins/detail/$username')({
+export const Route = createFileRoute('/_authenticated/admins/detail/$id')({
   component: RouteComponent,
 })

@@ -3,11 +3,11 @@ import { getAdminQueryOptions } from '@/apis/hooks';
 import { Avatar, Box, Stack, Text, SimpleGrid } from '@mantine/core';
 
 type Props = {
-  username: string;
+  id: string;
 }
 
-export const ProfileViewModal = ({ username }: Props) => {
-  const { data: adminData } = useSuspenseQuery(getAdminQueryOptions(username));
+export const ProfileViewModal = ({ id }: Props) => {
+  const { data: adminData } = useSuspenseQuery(getAdminQueryOptions(id));
   const v = adminData?.value;
 
   return (

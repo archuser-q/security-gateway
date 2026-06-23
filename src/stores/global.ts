@@ -33,5 +33,6 @@ export const isSettingsOpenAtom = atom<boolean>(false);
 export const CLICKHOUSE_URL = import.meta.env.VITE_CLICKHOUSE_API_BASE_URL
 export const CLICKHOUSE_TABLE_REQUEST = import.meta.env.VITE_CLICKHOUSE_TABLE_REQUEST
 export const CLICKHOUSE_TABLE_LOGIN = import.meta.env.VITE_CLICKHOUSE_TABLE_LOGIN
+export const CLICKHOUSE_DATABASE = import.meta.env.VITE_CLICKHOUSE_DATABASE
 export const CLICKHOUSE_USER = import.meta.env.VITE_CLICKHOUSE_USER
 export const CLICKHOUSE_PASS = import.meta.env.VITE_CLICKHOUSE_PASS

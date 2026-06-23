@@ -27,7 +27,7 @@ export const ProfileMenu = () => {
         modals.open({
             title: 'Change Password',
             centered: true,
-            children: <ChangePasswordForm username={auth.user?.username || ''} />,
+            children: <ChangePasswordForm id={auth.user?.id || ''} />,
         });
     }
     if (key === 'personalInfo') {
@@ -35,7 +35,7 @@ export const ProfileMenu = () => {
             title: 'Personal Info',
             centered: true,
             size: 'xl',
-            children: <ProfileViewModal username={auth.user?.username || ''} />,
+            children: <ProfileViewModal id={auth.user?.id || ''} />,
         });
     }
     if (key === 'setting') {

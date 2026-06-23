@@ -1,14 +1,14 @@
-import type { ClickHouseLog, TimelineEntry } from "@/types/chart/log"
-import { CLICKHOUSE_PASS, CLICKHOUSE_TABLE_REQUEST, CLICKHOUSE_TABLE_LOGIN, CLICKHOUSE_URL, CLICKHOUSE_USER } from '@/stores/global'
+import type { ClickHouseLog, TimelineEntry, ResourceAccessLog } from "@/types/chart/log"
+import { CLICKHOUSE_PASS, CLICKHOUSE_TABLE_REQUEST, CLICKHOUSE_TABLE_LOGIN, CLICKHOUSE_URL, CLICKHOUSE_USER, CLICKHOUSE_DATABASE } from '@/stores/global'
 
-export const fetchLogs = async (page: number, pageSize: number, search: string) => {
+export const fetchAccessLogs = async (page: number, pageSize: number, search: string) => {
   const offset = (page - 1) * pageSize
   const whereClause = search
-    ? `WHERE uri ILIKE '%${search}%' OR user ILIKE '%${search}%'`
+    ? `WHERE username ILIKE '%${search.replace(/'/g, "''")}%' OR reason ILIKE '%${search.replace(/'/g, "''")}%'`
     : ''
 
-  const query = `SELECT * FROM quickstart_db.${CLICKHOUSE_TABLE_REQUEST} ${whereClause} ORDER BY parseDateTimeBestEffort("@timestamp") DESC LIMIT ${pageSize} OFFSET ${offset} FORMAT JSON`
-  const countQuery = `SELECT count() as total FROM quickstart_db.${CLICKHOUSE_TABLE_REQUEST} ${whereClause} FORMAT JSON`
+  const query = `SELECT * FROM ${CLICKHOUSE_DATABASE}.${CLICKHOUSE_TABLE_REQUEST} ${whereClause} ORDER BY ts DESC LIMIT ${pageSize} OFFSET ${offset} FORMAT JSON`
+  const countQuery = `SELECT count() as total FROM ${CLICKHOUSE_DATABASE}.${CLICKHOUSE_TABLE_REQUEST} ${whereClause} FORMAT JSON`
 
   const [res, countRes] = await Promise.all([
     fetch(`${CLICKHOUSE_URL}/?query=${encodeURIComponent(query)}`, {
@@ -22,23 +22,23 @@ export const fetchLogs = async (page: number, pageSize: number, search: string) 
   const [json, countJson] = await Promise.all([res.json(), countRes.json()])
 
   return {
-    list: json.data as ClickHouseLog[],
+    list: json.data as ResourceAccessLog[],
     total: Number(countJson.data?.[0]?.total ?? 0),
   }
 }
 
-export const fetchLogsForTimeline = async (): Promise<TimelineEntry[]> => {
+export const fetchAccessLogsForTimeline = async (): Promise<TimelineEntry[]> => {
   const query = `
-    SELECT 
-        toDate(parseDateTimeBestEffort("@timestamp")) as date,
+    SELECT
+        toDate(ts) as date,
         count() as total,
-        countIf(log_status = 'failed') as failed
-    FROM quickstart_db.${CLICKHOUSE_TABLE_REQUEST}
-    WHERE toDate(parseDateTimeBestEffort("@timestamp")) >= toDate(now() - INTERVAL 7 DAY)
+        countIf(status >= 400) as failed
+    FROM ${CLICKHOUSE_DATABASE}.${CLICKHOUSE_TABLE_REQUEST}
+    WHERE toDate(ts) >= toDate(now() - INTERVAL 7 DAY)
     GROUP BY date
     ORDER BY date ASC
     FORMAT JSON
-    `
+  `
   const res = await fetch(
     `${CLICKHOUSE_URL}/?query=${encodeURIComponent(query)}`,
     {
@@ -52,11 +52,11 @@ export const fetchLogsForTimeline = async (): Promise<TimelineEntry[]> => {
 export const fetchLoginLogs = async (page: number, pageSize: number, search: string) => {
   const offset = (page - 1) * pageSize
   const whereClause = search
-    ? `WHERE uri ILIKE '%${search}%' OR user ILIKE '%${search}%'`
+    ? `WHERE username ILIKE '%${search.replace(/'/g, "''")}%' OR reason ILIKE '%${search.replace(/'/g, "''")}%'`
     : ''
 
-  const query = `SELECT * FROM quickstart_db.${CLICKHOUSE_TABLE_LOGIN} ${whereClause} ORDER BY "@timestamp" DESC LIMIT ${pageSize} OFFSET ${offset} FORMAT JSON`
-  const countQuery = `SELECT count() as total FROM quickstart_db.${CLICKHOUSE_TABLE_LOGIN} ${whereClause} FORMAT JSON`
+  const query = `SELECT * FROM ${CLICKHOUSE_DATABASE}.${CLICKHOUSE_TABLE_LOGIN} ${whereClause} ORDER BY ts DESC LIMIT ${pageSize} OFFSET ${offset} FORMAT JSON`
+  const countQuery = `SELECT count() as total FROM ${CLICKHOUSE_DATABASE}.${CLICKHOUSE_TABLE_LOGIN} ${whereClause} FORMAT JSON`
 
   const [res, countRes] = await Promise.all([
     fetch(`${CLICKHOUSE_URL}/?query=${encodeURIComponent(query)}`, {
@@ -77,16 +77,16 @@ export const fetchLoginLogs = async (page: number, pageSize: number, search: str
 
 export const fetchLoginLogsForTimeline = async (): Promise<TimelineEntry[]> => {
   const query = `
-    SELECT 
-        toDate(parseDateTimeBestEffort("@timestamp")) as date,
+    SELECT
+        toDate(ts) as date,
         count() as total,
-        countIf(log_status = 'failed') as failed
-    FROM quickstart_db.${CLICKHOUSE_TABLE_LOGIN}
-    WHERE toDate(parseDateTimeBestEffort("@timestamp")) >= toDate(now() - INTERVAL 7 DAY)
+        countIf(success != 200) as failed
+    FROM ${CLICKHOUSE_DATABASE}.${CLICKHOUSE_TABLE_LOGIN}
+    WHERE toDate(ts) >= toDate(now() - INTERVAL 7 DAY)
     GROUP BY date
     ORDER BY date ASC
     FORMAT JSON
-    `
+  `
   const res = await fetch(
     `${CLICKHOUSE_URL}/?query=${encodeURIComponent(query)}`,
     {

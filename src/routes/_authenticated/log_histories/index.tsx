@@ -8,8 +8,18 @@ import { AntdConfigProvider } from '@/config/antdConfigProvider'
 import { FilterBar } from '@/components/chart/config/columnConfig/log/table'
 import { TimelineBar } from '@/components/chart/config/columnConfig/log/column'
 import { Tag } from 'antd'
-import type { ClickHouseLog } from '@/types/chart/log'
-import { fetchLogs, fetchLogsForTimeline } from '@/apis/log'
+import { fetchAccessLogs, fetchAccessLogsForTimeline } from '@/apis/log'
+
+export type ResourceAccessLog = {
+  username: string
+  resource: string
+  resource_id: string
+  method: string
+  status: number
+  ip: string
+  user_agent: string
+  ts: string
+}
 
 export const Route = createFileRoute('/_authenticated/log_histories/')({
   component: RouteComponent,
@@ -19,7 +29,7 @@ function RouteComponent() {
   const { t } = useTranslation()
   return (
     <>
-      <PageHeader title={t('sources.log_histories', 'Log')} />
+      <PageHeader title={t('sources.log_histories', 'Access Log')} />
       <LogList />
     </>
   )
@@ -32,64 +42,95 @@ function LogList() {
   const [pageSize, setPageSize] = useState(10)
 
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ['log_histories', page, pageSize, search],
-    queryFn: () => fetchLogs(page, pageSize, search),
+    queryKey: ['resource_access_log', page, pageSize, search],
+    queryFn: () => fetchAccessLogs(page, pageSize, search),
     refetchInterval: 10_000,
   })
 
   const { data: timelineRaw } = useQuery({
-    queryKey: ['log_timeline'],
-    queryFn: () => fetchLogsForTimeline(),
+    queryKey: ['access_log_timeline'],
+    queryFn: () => fetchAccessLogsForTimeline(),
     refetchInterval: 10_000,
   })
 
   const allLogs = data?.list ?? []
 
-  const columns: ProColumns<ClickHouseLog>[] = [
+  const methodColor: Record<string, string> = {
+    GET: 'blue',
+    POST: 'green',
+    PUT: 'orange',
+    DELETE: 'red',
+    PATCH: 'purple',
+  }
+
+  const columns: ProColumns<ResourceAccessLog>[] = [
     {
-      title: t('form.admins.loginTimestamp', 'Login at'),
-      dataIndex: '@timestamp',
+      title: t('form.admins.loginTimestamp', 'Time'),
+      dataIndex: 'ts',
       width: 180,
       render: (_, r) => (
         <span className="font-mono text-xs text-gray-500 whitespace-nowrap">
-          {new Date(r['@timestamp']).toLocaleString()}
+          {new Date(r.ts).toLocaleString()}
         </span>
       ),
     },
     {
       title: t('form.admins.username', 'Username'),
-      dataIndex: 'user',
-      width: 150,
+      dataIndex: 'username',
+      width: 130,
       render: (_, r) => (
-        <span className="font-mono text-xs text-gray-800">{r.user || '—'}</span>
+        <span className="font-mono text-xs text-gray-800">{r.username || '—'}</span>
       ),
     },
     {
-      title: t('sources.status', 'Trạng thái'),
-      dataIndex: 'log_status',
-      width: 120,
+      title: 'Method',
+      dataIndex: 'method',
+      width: 90,
+      render: (_, r) => (
+        <Tag color={methodColor[r.method] ?? 'default'}>{r.method}</Tag>
+      ),
+    },
+    {
+      title: 'Resource',
+      dataIndex: 'resource',
+      render: (_, r) => (
+        <div>
+          <span className="font-mono text-xs font-semibold text-gray-800">
+            {r.resource}
+          </span>
+          {r.resource_id && (
+            <span className="font-mono text-xs text-gray-400 ml-2">
+              #{r.resource_id}
+            </span>
+          )}
+        </div>
+      ),
+    },
+    {
+      title: t('sources.status', 'Status'),
+      dataIndex: 'status',
+      width: 90,
       render: (_, r) => {
-        const isSuccess = r.log_status === 'success'
+        const isOk = r.status < 400
         return (
-          <Tag color={isSuccess ? 'success' : 'error'}>
-            {isSuccess ? 'Thành công' : 'Thất bại'}
-          </Tag>
+          <Tag color={isOk ? 'success' : 'error'}>{r.status}</Tag>
         )
       },
     },
     {
-      title: t('sources.log', 'Log'),
-      dataIndex: 'uri',
+      title: 'IP',
+      dataIndex: 'ip',
+      width: 130,
       render: (_, r) => (
-        <div>
-          <div className="font-mono text-xs text-gray-800 mb-0.5">
-            <span className="font-semibold">{r.method}</span> {r.uri}
-            <span className="ml-2 text-gray-500">status: {r.status}</span>
-          </div>
-          <span className="font-mono text-[11px] text-gray-400 break-all">
-            ip: {r.client_ip} | route: {r.route_id} | req: {r.request_id}
-          </span>
-        </div>
+        <span className="font-mono text-xs text-gray-500">{r.ip || '—'}</span>
+      ),
+    },
+    {
+      title: 'User Agent',
+      dataIndex: 'user_agent',
+      ellipsis: true,
+      render: (_, r) => (
+        <span className="font-mono text-[11px] text-gray-400">{r.user_agent || '—'}</span>
       ),
     },
   ]
@@ -102,10 +143,10 @@ function LogList() {
         setSearch={setSearch}
         onRefresh={() => refetch()}
       />
-      <ProTable<ClickHouseLog>
+      <ProTable<ResourceAccessLog>
         columns={columns}
         dataSource={allLogs}
-        rowKey="request_id"
+        rowKey={(r) => `${r.ts}-${r.username}-${r.resource_id}`}
         loading={isLoading}
         search={false}
         options={false}

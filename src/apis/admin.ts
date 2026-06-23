@@ -26,13 +26,13 @@ export const verifyAdminReq = async (
   req: AxiosInstance,
   username: string,
   password: string
-): Promise<{username: string, role: string } | null> => {
+): Promise<{username: string, role: string, id: string } | null> => {
   try {
     const res = await req
       .post(`${API_ADMINS}/login`, { username, password })
       .then((v) => v.data);
 
-    return { username: res.username, role: res.role };
+    return { username: res.username, role: res.role, id: res.id };
   } catch (err) {
     if (axios.isAxiosError(err) && [401, 403, 404, 500].includes(err.response?.status ?? 0)) {
       return null;
@@ -42,38 +42,56 @@ export const verifyAdminReq = async (
 };
 
 export const getAdminListReq = (
-  req: AxiosInstance,
-  params: PageSearchType
-) =>
-  req
-    .get<unknown, APISIXType['RespAdminList']>(API_ADMINS, { params })
-    .then((v) => v.data);
+    req: AxiosInstance,
+    params: PageSearchType
+) => 
+    req
+        .get<unknown, APISIXType['RespAdminList']>(API_ADMINS, {
+            params,
+        })
+        .then((v) => v.data);
 
-export const getAdminReq = (req: AxiosInstance, username: string) =>
-  req
-    .get<unknown, APISIXType['RespAdminDetail']>(`${API_ADMINS}/${username}`)
-    .then((v) => v.data);
+export const getAdminReq = (req: AxiosInstance, id: string) =>
+    req
+        .get<unknown, APISIXType['RespAdminDetail']>(
+            `${API_ADMINS}/${id}`  
+        )
+        .then((v) => v.data);
 
-export const postAdminReq = (req: AxiosInstance, data: APISIXType['AdminPost']) =>
-  req.post<unknown, APISIXType['RespAdminDetail']>(API_ADMINS, data);
+export const postAdminReq = (req: AxiosInstance, data: APISIXType['AdminPost']) => 
+    req.post<unknown, APISIXType['RespAdminDetail']>(
+        API_ADMINS,
+        data
+    );
 
-export const putAdminReq = (req: AxiosInstance, username: string, data: APISIXType['AdminPut']) =>
-  req.put<APISIXType['AdminPut'], APISIXType['RespAdminDetail']>(
-    `${API_ADMINS}/${username}`,
-    data
-  );
+export const putAdminReq = (req: AxiosInstance, data: APISIXType['AdminPut']) => {
+    return req.put<APISIXType['AdminPut'], APISIXType['RespAdminDetail']>(
+        `${API_ADMINS}/${data.id}`,
+        data
+    );
+};
 
-export const deleteAdminReq = (req: AxiosInstance, username: string) =>
-  req.delete(`${API_ADMINS}/${username}`);
+export const deleteAdminReq = (req: AxiosInstance, id: string) => {
+    return req.delete(`${API_ADMINS}/${id}`);
+};
 
 export const deleteAllAdmins = async (req: AxiosInstance) => {
-  const totalRes = await getAdminListReq(req, { page: 1, page_size: PAGE_SIZE_MIN });
-
-  const total = totalRes.total;
-  if (total === 0) return;
-
-  for (let times = Math.ceil(total / PAGE_SIZE_MAX); times > 0; times--) {
-    const res = await getAdminListReq(req, { page: 1, page_size: PAGE_SIZE_MAX });
-    await Promise.all(res.list.map((d) => deleteAdminReq(req, d.value.username)));
-  }
+    const totalRes = await getAdminListReq(req, {
+        page: 1,
+        page_size: PAGE_SIZE_MIN,
+    });
+    
+    const total = totalRes.total;
+    if (total == 0) return;
+    
+    for (let times = Math.ceil(total / PAGE_SIZE_MAX); times > 0; times--) {
+        const res = await getAdminListReq(req, {
+            page: 1,
+            page_size: PAGE_SIZE_MAX,
+        });
+        
+        await Promise.all(
+            res.list.map((d) => deleteAdminReq(req, d.value.id))
+        );
+    }
 };
