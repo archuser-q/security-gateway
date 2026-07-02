@@ -31,7 +31,6 @@ import { queryClient } from '@/config/queryClient';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import type { ListPageKeys } from '@/utils/useTablePagination';
-import { useAuth } from '@/context/AuthContext';
 
 export type RouteListProps = {
   routeKey: Extract<ListPageKeys, '/_authenticated/routes/' | '/_authenticated/services/detail/$id/routes/'>;
@@ -45,13 +44,6 @@ export const RouteList = (props: RouteListProps) => {
   const { routeKey, ToDetailBtn, defaultParams } = props;
   const { data, isLoading, refetch, pagination } = useRouteList(routeKey, defaultParams);
   const { t } = useTranslation();
-  const auth = useAuth();
-  const filteredData = useMemo(()=>{
-    if (auth.user?.role === 'super_admin') return data?.list
-    return data?.list?.filter(
-      item => item.value.user_id === auth.user?.id
-    );
-  },[data?.list, auth?.user?.id])
 
   const serviceId = defaultParams?.filter?.service_id;
   const addRoute = serviceId 
@@ -123,7 +115,7 @@ export const RouteList = (props: RouteListProps) => {
     <AntdConfigProvider>
       <ProTable
         columns={columns}
-        dataSource={filteredData}
+        dataSource={data.list}
         rowKey="id"
         loading={isLoading}
         search={false}
