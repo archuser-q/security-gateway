@@ -35,9 +35,7 @@ function AdminList() {
   const { data, isLoading, refetch, pagination } = useAdminList();
   const auth = useAuth();
   
-  const columns = useMemo<
-    ProColumns<APISIXType['RespAdminList']['data']['list'][number]>[]
-  >(() => {
+  const columns = useMemo<ProColumns<APISIXType['RespAdminItem']>[]>(() => {
     return [
       {
         dataIndex: ['value', 'username'],
