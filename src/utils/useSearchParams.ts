@@ -1,0 +1,62 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import {
+  getRouteApi,
+  type RegisteredRouter,
+  type RouteIds,
+  useNavigate,
+} from '@tanstack/react-router';
+import type { ListPageKeys } from './useTablePagination';
+
+
+
+export type RouteTreeIds = RouteIds<RegisteredRouter['routeTree']>;
+
+export const useSearchParams = <
+  T extends RouteTreeIds | ListPageKeys,
+  P extends object
+>(
+  routeId: T
+) => {
+  if ((routeId as string).startsWith('/_authenticated')) {
+    const { useSearch } = getRouteApi<RouteTreeIds>(routeId as RouteTreeIds);
+    const navigate = useNavigate();
+    const params = useSearch() as P;
+
+    const setParams = (props: Partial<P>) =>
+      navigate({ to: '.', search: (prev) => ({ ...prev, ...props }) });
+
+    const resetParams = () =>
+      navigate({ to: '.', search: {}, replace: true });
+
+    return { params, setParams, resetParams } as const;
+  }
+
+  const navigate = useNavigate();
+  const params = {} as P;
+  const setParams = (props: Partial<P>) =>
+    navigate({ to: '.', search: (prev) => ({ ...prev, ...props }) });
+  const resetParams = () =>
+    navigate({ to: '.', search: {}, replace: true });
+
+  return { params, setParams, resetParams } as const;
+};
+
+export type UseSearchParams<
+  T extends RouteTreeIds | ListPageKeys,
+  P extends object
+> = ReturnType<typeof useSearchParams<T, P>>;
