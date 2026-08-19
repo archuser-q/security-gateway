@@ -1,11 +1,32 @@
 import type { ClickHouseLog, TimelineEntry, ResourceAccessLog } from "@/types/chart/log"
 import { CLICKHOUSE_PASS, CLICKHOUSE_TABLE_REQUEST, CLICKHOUSE_TABLE_LOGIN, CLICKHOUSE_URL, CLICKHOUSE_USER, CLICKHOUSE_DATABASE } from '@/stores/global'
 
-export const fetchAccessLogs = async (page: number, pageSize: number, search: string) => {
+export const fetchAccessLogs = async (
+  page: number,
+  pageSize: number,
+  username: string,
+  startDate?: string,
+  endDate?: string,
+  method?: string
+) => {
   const offset = (page - 1) * pageSize
-  const whereClause = search
-    ? `WHERE username ILIKE '%${search.replace(/'/g, "''")}%' OR reason ILIKE '%${search.replace(/'/g, "''")}%'`
-    : ''
+  const conditions: string[] = []
+  if (username) {
+    conditions.push(`username ILIKE '%${username.replace(/'/g, "''")}%'`)
+  }
+  if (startDate) {
+    conditions.push(`toDate(ts) >= toDate('${startDate}')`)
+  }
+  if (endDate) {
+    conditions.push(`toDate(ts) <= toDate('${endDate}')`)
+  }
+  if (method) {
+    const allowedMethods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
+    if (allowedMethods.includes(method)){
+      conditions.push(`method = '${method}'`)
+    }
+  }
+  const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : ''
 
   const query = `SELECT * FROM ${CLICKHOUSE_DATABASE}.${CLICKHOUSE_TABLE_REQUEST} ${whereClause} ORDER BY ts DESC LIMIT ${pageSize} OFFSET ${offset} FORMAT JSON`
   const countQuery = `SELECT count() as total FROM ${CLICKHOUSE_DATABASE}.${CLICKHOUSE_TABLE_REQUEST} ${whereClause} FORMAT JSON`
@@ -49,11 +70,25 @@ export const fetchAccessLogsForTimeline = async (): Promise<TimelineEntry[]> => 
   return json.data as TimelineEntry[]
 }
 
-export const fetchLoginLogs = async (page: number, pageSize: number, search: string) => {
+export const fetchLoginLogs = async (
+  page: number, 
+  pageSize: number,
+  username?: string, 
+  startDate?: string, 
+  endDate?: string
+) => {
   const offset = (page - 1) * pageSize
-  const whereClause = search
-    ? `WHERE username ILIKE '%${search.replace(/'/g, "''")}%' OR reason ILIKE '%${search.replace(/'/g, "''")}%'`
-    : ''
+  const conditions: string[] = []
+  if (username) {
+    conditions.push(`username ILIKE '%${username.replace(/'/g, "''")}%'`)
+  }
+  if (startDate) {
+    conditions.push(`toDate(ts) >= toDate('${startDate}')`)
+  }
+  if (endDate) {
+    conditions.push(`toDate(ts) <= toDate('${endDate}')`)
+  }
+  const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : ''
 
   const query = `SELECT * FROM ${CLICKHOUSE_DATABASE}.${CLICKHOUSE_TABLE_LOGIN} ${whereClause} ORDER BY ts DESC LIMIT ${pageSize} OFFSET ${offset} FORMAT JSON`
   const countQuery = `SELECT count() as total FROM ${CLICKHOUSE_DATABASE}.${CLICKHOUSE_TABLE_LOGIN} ${whereClause} FORMAT JSON`

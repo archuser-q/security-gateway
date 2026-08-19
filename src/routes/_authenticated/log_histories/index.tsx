@@ -5,10 +5,19 @@ import { ProTable, type ProColumns } from '@ant-design/pro-components'
 import { useState } from 'react'
 import PageHeader from '@/components/page/PageHeader'
 import { AntdConfigProvider } from '@/config/antdConfigProvider'
-import { FilterBar } from '@/components/chart/config/columnConfig/log/table'
 import { TimelineBar } from '@/components/chart/config/columnConfig/log/column'
-import { Tag } from 'antd'
+import { DatePicker, Input, Select, Space, Tag } from 'antd'
 import { fetchAccessLogs, fetchAccessLogsForTimeline } from '@/apis/log'
+import type { Dayjs } from 'dayjs'
+
+const { RangePicker } = DatePicker
+const METHOD_OPTIONS = [
+  { label: 'GET', value: 'GET' },
+  { label: 'POST', value: 'POST' },
+  { label: 'PUT', value: 'PUT' },
+  { label: 'DELETE', value: 'DELETE' },
+  { label: 'PATCH', value: 'PATCH' },
+]
 
 export type ResourceAccessLog = {
   username: string
@@ -37,13 +46,18 @@ function RouteComponent() {
 
 function LogList() {
   const { t } = useTranslation()
-  const [search, setSearch] = useState('')
+  const [username, setUsername] = useState('')
+  const [dateRange, setDateRange] = useState<[Dayjs|null, Dayjs|null] | null>(null)
+  const [method, setMethod] = useState<string | undefined>(undefined)
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
 
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ['resource_access_log', page, pageSize, search],
-    queryFn: () => fetchAccessLogs(page, pageSize, search),
+  const startDate = dateRange?.[0] ? dateRange[0].format('YYYY-MM-DD') : undefined
+  const endDate = dateRange?.[0] ? dateRange[0].format('YYYY-MM-DD') : undefined
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['resource_access_log', page, pageSize, username, startDate, endDate, method],
+    queryFn: () => fetchAccessLogs(page, pageSize, username, startDate, endDate, method),
     refetchInterval: 10_000,
   })
 
@@ -138,11 +152,34 @@ function LogList() {
   return (
     <AntdConfigProvider>
       <TimelineBar logs={timelineRaw ?? []} />
-      <FilterBar
-        search={search}
-        setSearch={setSearch}
-        onRefresh={() => refetch()}
-      />
+
+      <Space style={{ marginBottom: 16 }} wrap>
+        <Input.Search
+          placeholder={t('sources.searchUsername', 'Search by username')}
+          allowClear
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          onSearch={(value) => { setUsername(value); setPage(1) }}
+          style={{ width: 240 }}
+        />
+        <RangePicker
+          value={dateRange as any}
+          onChange={(dates) => {
+            setDateRange(dates as [Dayjs | null, Dayjs | null] | null)
+            setPage(1)
+          }}
+          allowClear
+        />
+        <Select
+          placeholder={t('sources.filterMethod', 'Method')}
+          allowClear
+          options={METHOD_OPTIONS}
+          value={method}
+          onChange={(value) => { setMethod(value); setPage(1) }}
+          style={{ width: 140 }}
+        />
+      </Space>
+
       <ProTable<ResourceAccessLog>
         columns={columns}
         dataSource={allLogs}
