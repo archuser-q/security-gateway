@@ -103,7 +103,7 @@ function ConsumersList() {
                 dir={params.sort_field === 'update_time' ? (params.sort_order as SortDir) : undefined}
                 onClick={() => handleSort('update_time')}
               />
-              <th className="w-[120px] px-4 py-3 text-right font-normal text-xs text-gray-400">
+              <th className="w-[120px] px-4 py-3 text-right font-normal">
                 {t('table.actions')}
               </th>
             </tr>
@@ -128,24 +128,24 @@ function ConsumersList() {
                   key={record.value.username}
                   className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/60"
                 >
-                  <td className="px-4 py-3 text-gray-700">{record.value.username}</td>
-                  <td className="px-4 py-3 text-gray-500">{record.value.desc || '-'}</td>
-                  <td className="px-4 py-3 text-gray-500">
+                  <td className="px-4 py-3">{record.value.username}</td>
+                  <td className="px-4 py-3">{record.value.desc || '-'}</td>
+                  <td className="px-4 py-3">
                     {record.value.update_time
                       ? new Date(Number(record.value.update_time) * 1000).toISOString()
                       : '-'}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-2">
-                      <ToDetailPageBtn
-                        to="/consumers/detail/$username"
-                        params={{ username: record.value.username }}
-                      />
                       <DeleteResourceBtn
                         name={t('consumers.singular')}
                         target={record.value.username}
                         api={`${API_CONSUMERS}/${record.value.username}`}
                         onSuccess={refetch}
+                      />
+                      <ToDetailPageBtn
+                        to="/consumers/detail/$username"
+                        params={{ username: record.value.username }}
                       />
                     </div>
                   </td>
@@ -176,7 +176,7 @@ function SortableHeader({
   return (
     <th
       onClick={onClick}
-      className="cursor-pointer select-none px-4 py-3 text-xs font-normal text-gray-400 hover:text-gray-600"
+      className="cursor-pointer select-none px-4 py-3 font-normal hover:text-gray-600"
     >
       <span className="inline-flex items-center gap-1">
         {label}
@@ -203,7 +203,7 @@ function PaginationBar({ pagination }: { pagination: TablePaginationConfig }) {
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
   return (
-    <div className="flex items-center justify-between text-sm text-gray-500">
+    <div className="flex items-center justify-between text-sm">
       <span>
         {t('table.total', { total, defaultValue: `Total ${total} items` })}
       </span>
