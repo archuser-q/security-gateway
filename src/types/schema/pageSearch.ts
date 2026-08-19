@@ -31,6 +31,10 @@ export const pageSearchSchema = z
       .transform((val) => (val ? Number(val) : 10)),
     name: z.string().optional(),
     label: z.string().optional(),
+    search: z.string().optional(),
+    status: z.enum(['all', 'active', 'inactive']).optional().default('all'),
+    sort_field: z.string().optional(),
+    sort_order: z.enum(['asc', 'desc']).optional(),
   })
   .passthrough();
 
