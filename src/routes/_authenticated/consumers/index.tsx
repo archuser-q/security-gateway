@@ -92,12 +92,9 @@ function ConsumersList() {
                 dir={params.sort_field === 'username' ? (params.sort_order as SortDir) : undefined}
                 onClick={() => handleSort('username')}
               />
-              <SortableHeader
-                label={t('form.basic.desc')}
-                active={params.sort_field === 'desc'}
-                dir={params.sort_field === 'desc' ? (params.sort_order as SortDir) : undefined}
-                onClick={() => handleSort('desc')}
-              />
+              <th className="px-4 py-3 text-left font-normal">
+                {t('form.basic.desc')}
+              </th>
               <SortableHeader
                 label={t('form.info.update_time')}
                 active={params.sort_field === 'update_time'}

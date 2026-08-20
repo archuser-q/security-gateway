@@ -1,5 +1,3 @@
-import OverViewColumnChart from '@/components/chart/OverviewColumnChart'
-import SystemMindMap from '@/components/chart/MindMap'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_authenticated/overview/')({
@@ -7,10 +5,5 @@ export const Route = createFileRoute('/_authenticated/overview/')({
 })
 
 function RouteComponent() {
-  return (
-    <div>
-      <SystemMindMap />
-      <OverViewColumnChart />
-    </div>
-  )
+  return <div>Hello "/_authenticated/overview/"!</div>
 }

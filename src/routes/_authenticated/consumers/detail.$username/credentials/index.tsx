@@ -27,6 +27,7 @@ import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { API_CREDENTIALS } from '@/config/constant';
 import { queryClient } from '@/config/queryClient';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
+import dayjs from 'dayjs';
 
 type SortDir = 'asc' | 'desc' | undefined;
 type SortField = 'id' | 'desc' | 'update_time';
@@ -93,25 +94,19 @@ function CredentialsList() {
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-gray-100">
-              <SortableHeader
-                label="ID"
-                active={params.sort_field === 'id'}
-                dir={params.sort_field === 'id' ? (params.sort_order as SortDir) : undefined}
-                onClick={() => handleSort('id')}
-              />
-              <SortableHeader
-                label={t('form.basic.desc')}
-                active={params.sort_field === 'desc'}
-                dir={params.sort_field === 'desc' ? (params.sort_order as SortDir) : undefined}
-                onClick={() => handleSort('desc')}
-              />
+              <th className="px-4 py-3 text-left font-normal">
+                ID
+              </th>
+              <th className="px-4 py-3 text-left font-normal">
+                {t('form.basic.desc')}
+              </th>
               <SortableHeader
                 label={t('form.info.update_time')}
                 active={params.sort_field === 'update_time'}
                 dir={params.sort_field === 'update_time' ? (params.sort_order as SortDir) : undefined}
                 onClick={() => handleSort('update_time')}
               />
-              <th className="w-[120px] px-4 py-3 text-right font-normal text-xs text-gray-400">
+              <th className="w-[120px] px-4 py-3 text-right font-normal">
                 {t('table.actions')}
               </th>
             </tr>
@@ -136,11 +131,11 @@ function CredentialsList() {
                   key={record.value.id}
                   className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/60"
                 >
-                  <td className="px-4 py-3 font-mono text-xs text-gray-500">{record.value.id}</td>
-                  <td className="px-4 py-3 text-gray-700">{record.value.desc || '-'}</td>
-                  <td className="px-4 py-3 text-gray-500">
+                  <td className="px-4 py-3">{record.value.id}</td>
+                  <td className="px-4 py-3">{record.value.desc || '-'}</td>
+                  <td className="px-4 py-3">
                     {record.value.update_time
-                      ? new Date(Number(record.value.update_time) * 1000).toISOString()
+                      ? dayjs(record.value.update_time * 1000).format('YYYY-MM-DD HH:mm:ss')
                       : '-'}
                   </td>
                   <td className="px-4 py-3">
@@ -184,7 +179,7 @@ function SortableHeader({
   return (
     <th
       onClick={onClick}
-      className="cursor-pointer select-none px-4 py-3 text-xs font-normal text-gray-400 hover:text-gray-600"
+      className="cursor-pointer select-none px-4 py-3 font-normal hover:text-black"
     >
       <span className="inline-flex items-center gap-1">
         {label}
@@ -211,7 +206,7 @@ function PaginationBar({ pagination }: { pagination: TablePaginationConfig }) {
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
   return (
-    <div className="flex items-center justify-between text-sm text-gray-500">
+    <div className="flex items-center justify-between text-sm">
       <span>
         {t('table.total', { total, defaultValue: `Total ${total} items` })}
       </span>

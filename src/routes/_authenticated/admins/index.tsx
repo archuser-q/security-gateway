@@ -118,12 +118,9 @@ function AdminList() {
                 dir={params.sort_field === 'username' ? (params.sort_order as SortDir) : undefined}
                 onClick={() => handleSort('username')}
               />
-              <SortableHeader
-                label={t('form.basic.status')}
-                active={params.sort_field === 'status'}
-                dir={params.sort_field === 'status' ? (params.sort_order as SortDir) : undefined}
-                onClick={() => handleSort('status')}
-              />
+              <th className="px-4 py-3 text-left font-normal">
+                {t('form.basic.status')}
+              </th>
               <SortableHeader
                 label={t('form.info.update_time')}
                 active={params.sort_field === 'update_time'}

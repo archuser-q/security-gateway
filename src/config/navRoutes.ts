@@ -35,11 +35,15 @@ import {
   IconShieldCheckFilled
 } from '@tabler/icons-react';
 
+export type NavGroup = 'traffic' | 'security' | 'configuration';
+
 export type NavRoute = {
   to?: FileRouteTypes['to'];
   label: keyof Resources['en']['common']['sources'];
   icon: React.ElementType; 
   onClick?: () => void;
+  /** Sidebar section this item belongs to. Omit for ungrouped items (e.g. Overview) shown at the top. */
+  group?: NavGroup;
 };
 
 export const navRoutes: NavRoute[] = [
@@ -52,75 +56,90 @@ export const navRoutes: NavRoute[] = [
     to: '/services',
     label: 'services',
     icon: IconServer,
+    group: 'traffic',
   },
   {
     to: '/routes',
     label: 'routes',
     icon: IconRoute,
+    group: 'traffic',
   },
   {
     to: '/stream_routes',
     label: 'streamRoutes',
     icon: IconTopologyStar,
+    group: 'traffic',
   },
   {
     to: '/upstreams',
     label: 'upstreams',
     icon: IconArrowMerge,
+    group: 'traffic',
   },
   {
     to: '/consumers',
     label: 'consumers',
     icon: IconUserCog, 
+    group: 'security',
   },
   {
     to: '/consumer_groups',
     label: 'consumerGroups',
     icon: IconUsers,
+    group: 'security',
   },
   {
     to: '/ssls',
     label: 'ssls',
     icon: IconLock,
+    group: 'security',
   },
   {
     to: '/global_rules',
     label: 'globalRules',
     icon: IconShield,
+    group: 'configuration',
   },
   {
     to: '/plugin_metadata',
     label: 'pluginMetadata',
     icon: IconPuzzle,
+    group: 'configuration',
   },
   {
     to: '/plugin_configs',
     label: 'pluginConfigs',
     icon: IconSettings,
+    group: 'configuration',
   },
   {
     to: '/secrets',
     label: 'secrets',
     icon: IconKey,
+    group: 'configuration',
   },
   {
     to: '/protos',
     label: 'protos',
     icon: IconCode,
+    group: 'configuration',
   },
   {
     to: '/admins',
     label: 'admin',
     icon: IconUsers,
+    group: 'configuration',
   },
   {
     to: '/log_histories',
     label: 'log',
-    icon: IconServerBolt
+    icon: IconServerBolt,
+    group: 'configuration',
   },
   {
     to: '/login_histories',
     label: 'login',
-    icon: IconShieldCheckFilled
+    icon: IconShieldCheckFilled,
+    group: 'configuration',
   }
 ];
