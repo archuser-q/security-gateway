@@ -10,6 +10,7 @@ import { UpdateAdminStatusBtn } from '@/components/page/UpdateStatusAdminBtn';
 import { useAuth } from '@/context/AuthContext';
 import { Search, ChevronUp, ChevronDown, CheckCircle2, XCircle, ChevronsUpDown } from 'lucide-react';
 import type { TablePaginationConfig } from 'antd';
+import dayjs from 'dayjs';
 
 export const Route = createFileRoute('/_authenticated/admins/')({
   component: RouteComponent,
@@ -172,7 +173,7 @@ function AdminList() {
 
                   <td className="px-4 py-3">
                     {record.value.update_time
-                      ? new Date(Number(record.value.update_time) * 1000).toLocaleString()
+                      ? dayjs(record.value.update_time * 1000).format('YYYY-MM-DD HH:mm:ss')
                       : '-'}
                   </td>
 

@@ -27,6 +27,7 @@ import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { API_CONSUMERS } from '@/config/constant';
 import { queryClient } from '@/config/queryClient';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
+import dayjs from 'dayjs';
 
 type SortDir = 'asc' | 'desc' | undefined;
 
@@ -132,7 +133,7 @@ function ConsumersList() {
                   <td className="px-4 py-3">{record.value.desc || '-'}</td>
                   <td className="px-4 py-3">
                     {record.value.update_time
-                      ? new Date(record.value.update_time * 1000).toLocaleString()
+                      ? dayjs(record.value.update_time * 1000).format('YYYY-MM-DD HH:mm:ss')
                       : '-'}
                   </td>
                   <td className="px-4 py-3">

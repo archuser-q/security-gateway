@@ -27,6 +27,7 @@ import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { API_UPSTREAMS } from '@/config/constant';
 import { queryClient } from '@/config/queryClient';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
+import dayjs from 'dayjs';
 
 type SortDir = 'asc' | 'desc' | undefined;
 type SortField = 'id' | 'name' | 'scheme' | 'update_time';
@@ -146,7 +147,7 @@ function UpstreamsList() {
                   <td className="px-4 py-3">
                     {(() => {
                       const updateTime = (record.value as unknown as { update_time?: number }).update_time;
-                      return updateTime ? new Date(updateTime * 1000).toLocaleString() : '-';
+                      return updateTime ? dayjs(updateTime * 1000).format('YYYY-MM-DD HH:mm:ss') : '-';
                     })()}
                   </td>
                   <td className="px-4 py-3">
