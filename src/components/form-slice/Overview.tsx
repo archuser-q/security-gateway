@@ -15,7 +15,7 @@ export const Overview = ({ title = 'Overview', fields }: OverviewProps) => {
       <div className="flex flex-wrap gap-x-12 gap-y-4 pt-1">
         {fields.map((field) => (
           <div key={field.label} className="min-w-[90px]">
-            <div className="mb-1 text-xs text-gray-400">{field.label}</div>
+            <div className="mb-1 text-sm text-gray-400">{field.label}</div>
             <div className="text-sm font-semibold text-gray-900">
               {field.value}
             </div>

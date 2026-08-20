@@ -20,10 +20,11 @@ import type { AxiosInstance } from 'axios';
 import { API_CREDENTIALS, SKIP_INTERCEPTOR_HEADER } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
 import type { APISIXListResponse } from '@/types/schema/apisix/type';
+import type { PageSearchType } from '@/types/schema/pageSearch';
 
 export type WithUsername = Pick<APISIXType['Consumer'], 'username'>;
 
-export const getCredentialListReq = (req: AxiosInstance, params: WithUsername) =>
+export const getCredentialListReq = (req: AxiosInstance, params: WithUsername & PageSearchType) =>
   req
     .get<unknown, APISIXType['RespCredentialList']>(
       API_CREDENTIALS(params.username),
