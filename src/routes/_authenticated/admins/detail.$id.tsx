@@ -18,6 +18,7 @@ import PageHeader from '@/components/page/PageHeader';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { pipeProduce } from '@/utils/producer';
 import { ChangePasswordBtn } from '@/components/page/ChangePasswordBtn';
+import { Overview } from '@/components/form-slice/Overview';
 
 type AdminFormProps = {
   readOnly: boolean;
@@ -63,6 +64,20 @@ const AdminDetailForm = (props: AdminFormProps) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d)=>putAdmin.mutateAsync(pipeProduce()(d)))}>
+        <Overview
+          title={t('overview.title', 'Overview')}
+          fields={[
+            { label: 'ID', value: id },
+            {
+              label: t('form.admins.username', 'Username'),
+              value: adminData.value.username,
+            },
+            {
+              label: t('form.admins.role', 'Role'),
+              value: adminData.value.role ?? '-',
+            },
+          ]}
+        />
         <FormPartAdmin showPassword={false}/>
         {!readOnly && (
           <Group>

@@ -132,7 +132,7 @@ function ConsumersList() {
                   <td className="px-4 py-3">{record.value.desc || '-'}</td>
                   <td className="px-4 py-3">
                     {record.value.update_time
-                      ? new Date(Number(record.value.update_time) * 1000).toISOString()
+                      ? new Date(record.value.update_time * 1000).toLocaleString()
                       : '-'}
                   </td>
                   <td className="px-4 py-3">

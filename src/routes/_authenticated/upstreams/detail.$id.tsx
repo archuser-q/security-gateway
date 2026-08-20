@@ -45,6 +45,7 @@ import { API_UPSTREAMS } from '@/config/constant';
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
+import { Overview } from '@/components/form-slice/Overview';
 
 type Props = {
   readOnly: boolean;
@@ -105,6 +106,31 @@ const UpstreamDetailForm = (
             putUpstream.mutateAsync(pipeProduce()(d));
           })}
         >
+          <Overview
+            title={t('overview.title', 'Overview')}
+            fields={[
+              { label: 'ID', value: upstreamData.id },
+              { label: t('form.upstreams.type'), value: upstreamData.type },
+              {
+                label: t('form.upstreams.nodes.title'),
+                value: Array.isArray(upstreamData.nodes)
+                  ? upstreamData.nodes.length
+                  : Object.keys(upstreamData.nodes ?? {}).length,
+              },
+              {
+                label: t('info.updateTime', 'Updated At'),
+                value: (() => {
+                  const updateTime = (
+                    upstreamData as { update_time?: number }
+                  ).update_time;
+
+                  return updateTime
+                    ? new Date(updateTime * 1000).toLocaleString()
+                    : '-';
+                })(),
+              },
+            ]}
+          />
           <FormSectionGeneral readOnly />
           <FormPartUpstream />
           {!readOnly && (

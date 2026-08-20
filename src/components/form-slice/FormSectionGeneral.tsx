@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Divider } from '@mantine/core';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -22,6 +21,7 @@ import type { APISIXType } from '@/types/schema/apisix';
 
 import { FormItemTextInput } from '../form/TextInput';
 import { FormDisplayDate } from './FormDisplayDate';
+import { FormDivider } from './FormDivider';
 import { FormSection } from './FormSection';
 
 const DisplayDate = () => {
@@ -29,13 +29,12 @@ const DisplayDate = () => {
   const { t } = useTranslation();
   const createTime = useWatch({ control, name: 'create_time' });
   const updateTime = useWatch({ control, name: 'update_time' });
-  console.log(createTime);
-  console.log(updateTime);
+
   return (
-    <>
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
       <FormDisplayDate date={createTime} label={t('form.info.create_time')} />
       <FormDisplayDate date={updateTime} label={t('form.info.update_time')} />
-    </>
+    </div>
   );
 };
 
@@ -64,7 +63,7 @@ export const FormSectionGeneral = (props: FormSectionGeneralProps) => {
   return (
     <FormSection legend={t('form.general.title')} disabled={readOnly}>
       {showID && <FormItemID />}
-      {showID && showDate && <Divider my="lg" />}
+      {showID && showDate && <FormDivider />}
       {showDate && <DisplayDate />}
     </FormSection>
   );

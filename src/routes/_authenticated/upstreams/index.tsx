@@ -146,7 +146,7 @@ function UpstreamsList() {
                   <td className="px-4 py-3">
                     {(() => {
                       const updateTime = (record.value as unknown as { update_time?: number }).update_time;
-                      return updateTime ? new Date(Number(updateTime) * 1000).toISOString() : '-';
+                      return updateTime ? new Date(updateTime * 1000).toLocaleString() : '-';
                     })()}
                   </td>
                   <td className="px-4 py-3">
