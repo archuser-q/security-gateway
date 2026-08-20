@@ -30,6 +30,8 @@ import { useBoolean } from 'react-use';
 
 import { getPluginConfigQueryOptions, getRouteQueryOptions, getServiceQueryOptions, getUpstreamQueryOptions } from '@/apis/hooks';
 import { putRouteReq } from '@/apis/routes';
+import { getSSLListReq } from '@/apis/ssls';
+import { RouteLinkAnchor } from '@/components/Btn';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartRoute } from '@/components/form-slice/FormPartRoute';
 import {
@@ -45,10 +47,28 @@ import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
-import { API_ROUTES } from '@/config/constant';
+import { API_ROUTES, PAGE_SIZE_MAX } from '@/config/constant';
 import { req } from '@/config/req';
 import { type APISIXType } from '@/types/schema/apisix';
 import { nodeCount } from '@/utils/upstreamHelpers';
+
+// So khớp Host của Route với SNI của 1 SSL cert - hỗ trợ wildcard 1 cấp
+// kiểu "*.docker.localhost" (khớp "a.docker.localhost", KHÔNG khớp
+// "a.b.docker.localhost"), đúng quy ước wildcard cert phổ biến. Đây là
+// suy luận tự làm phía client (APISIX Route không có field tham chiếu
+// thẳng tới SSL), nên chỉ mang tính gợi ý, không thay được cho việc
+// APISIX thực sự chọn cert nào lúc bắt tay TLS.
+const matchesSni = (host: string, sniPattern: string): boolean => {
+  if (!host || !sniPattern) return false;
+  if (sniPattern === host) return true;
+  if (sniPattern.startsWith('*.')) {
+    const suffix = sniPattern.slice(1); // ".docker.localhost"
+    if (!host.endsWith(suffix)) return false;
+    const prefix = host.slice(0, host.length - suffix.length);
+    return prefix.length > 0 && !prefix.includes('.');
+  }
+  return false;
+};
 
 type Props = {
   readOnly: boolean;
@@ -116,6 +136,11 @@ const RouteFlowDiagram = (props: {
     serviceUpstreamByIdQuery.data?.value ??
     null;
 
+  // Chỉ có ID để dẫn link khi upstream đến từ 1 resource Upstream riêng
+  // (route_upstream_id hoặc service.upstream_id) - upstream khai INLINE
+  // ngay trong route/service thì không có trang chi tiết riêng để trỏ tới.
+  const resolvedUpstreamId = routeUpstreamId || serviceUpstreamId || undefined;
+
   const isUpstreamLoading =
     routeUpstreamByIdQuery.isLoading || serviceUpstreamByIdQuery.isLoading;
 
@@ -137,7 +162,23 @@ const RouteFlowDiagram = (props: {
 
   const inlinePluginNames = Object.keys(route.plugins ?? {});
   const referencedPluginNames = Object.keys(pluginConfigQuery.data?.value.plugins ?? {});
-  const showPluginsBox = inlinePluginNames.length > 0 || !!pluginConfigId;
+  // Service cũng có field plugins riêng (service.plugins), APISIX áp
+  // dụng nó cho MỌI route trỏ tới service đó lúc chạy thật - trước đó bỏ
+  // sót hoàn toàn nguồn này. Thứ tự merge đúng theo docs chính thức của
+  // APISIX: Route > Plugin Config > Service - nếu 1 plugin trùng tên ở
+  // nhiều nơi, chỉ nơi ưu tiên cao nhất thực sự chạy. Tách riêng phần
+  // "đang hoạt động thật" và "bị ghi đè" để không hiện sai, đồng thời
+  // vẫn báo cho người dùng biết vì sao plugin họ đặt trên Service không
+  // thấy tác dụng.
+  const servicePluginNames = Object.keys(service?.plugins ?? {});
+  const activeServicePluginNames = servicePluginNames.filter(
+    (n) => !inlinePluginNames.includes(n) && !referencedPluginNames.includes(n)
+  );
+  const overriddenServicePluginNames = servicePluginNames.filter(
+    (n) => inlinePluginNames.includes(n) || referencedPluginNames.includes(n)
+  );
+  const showPluginsBox =
+    inlinePluginNames.length > 0 || !!pluginConfigId || servicePluginNames.length > 0;
 
   const uriDisplay =
     route.uri || (route.uris?.length ? route.uris.join(', ') : '-');
@@ -202,31 +243,69 @@ const RouteFlowDiagram = (props: {
                         ))}
                       </Group>
                       <Text size="xs" c="dimmed">
-                        {t('form.plugins.via', {
-                          name: pluginConfigQuery.data?.value.name || pluginConfigId,
-                        })}
+                        {t('form.plugins.viaPrefix')}{' '}
+                        <RouteLinkAnchor
+                          to="/plugin_configs/detail/$id"
+                          params={{ id: pluginConfigId }}
+                          size="xs"
+                        >
+                          {pluginConfigQuery.data?.value.name || pluginConfigId}
+                        </RouteLinkAnchor>
                       </Text>
                     </>
                   ))}
+                {activeServicePluginNames.length > 0 && (
+                  <>
+                    <Group gap={4}>
+                      {activeServicePluginNames.map((name) => (
+                        <Badge key={name} size="sm" variant="outline" color="grape">
+                          {name}
+                        </Badge>
+                      ))}
+                    </Group>
+                    <Text size="xs" c="dimmed">
+                      {t('form.plugins.viaPrefix')}{' '}
+                      <RouteLinkAnchor
+                        to="/services/detail/$id"
+                        params={{ id: serviceId ?? '' }}
+                        size="xs"
+                      >
+                        {service?.name || serviceId}
+                      </RouteLinkAnchor>
+                    </Text>
+                  </>
+                )}
+                {overriddenServicePluginNames.length > 0 && (
+                  <Text size="xs" c="orange">
+                    {t('routeFlow.overriddenByHigherPriority', {
+                      names: overriddenServicePluginNames.join(', '),
+                    })}
+                  </Text>
+                )}
               </Stack>
             </FlowBox>
           </>
         )}
 
-        <FlowArrow />
-        <FlowBox label={t('services.singular')}>
-          {!serviceId ? (
-            <Text size="sm" c="dimmed">
-              {t('routeFlow.noService')}
-            </Text>
-          ) : serviceQuery.isLoading ? (
-            <Skeleton height={20} width={90} />
-          ) : (
-            <Text fw={600} size="sm">
-              {service?.name || serviceId}
-            </Text>
-          )}
-        </FlowBox>
+        {serviceId && (
+          <>
+            <FlowArrow />
+            <FlowBox label={t('services.singular')}>
+              {serviceQuery.isLoading ? (
+                <Skeleton height={20} width={90} />
+              ) : (
+                <RouteLinkAnchor
+                  to="/services/detail/$id"
+                  params={{ id: serviceId }}
+                  fw={600}
+                  size="sm"
+                >
+                  {service?.name || serviceId}
+                </RouteLinkAnchor>
+              )}
+            </FlowBox>
+          </>
+        )}
 
         <FlowArrow />
         <FlowBox label={t('upstreams.singular')}>
@@ -234,9 +313,20 @@ const RouteFlowDiagram = (props: {
             <Skeleton height={20} width={90} />
           ) : resolvedUpstream ? (
             <Stack gap={2}>
-              <Text fw={600} size="sm">
-                {t('routeFlow.nodeCount', { count: nodeCount(resolvedUpstream.nodes) })}
-              </Text>
+              {resolvedUpstreamId ? (
+                <RouteLinkAnchor
+                  to="/upstreams/detail/$id"
+                  params={{ id: resolvedUpstreamId }}
+                  fw={600}
+                  size="sm"
+                >
+                  {t('routeFlow.nodeCount', { count: nodeCount(resolvedUpstream.nodes) })}
+                </RouteLinkAnchor>
+              ) : (
+                <Text fw={600} size="sm">
+                  {t('routeFlow.nodeCount', { count: nodeCount(resolvedUpstream.nodes) })}
+                </Text>
+              )}
               <Group gap={4}>
                 {resolvedUpstream.type && (
                   <Badge size="sm" variant="outline">
@@ -257,6 +347,76 @@ const RouteFlowDiagram = (props: {
           )}
         </FlowBox>
       </Group>
+    </Card>
+  );
+};
+
+// Route và SSL trong APISIX tách rời hoàn toàn - không có field tham
+// chiếu trực tiếp, chỉ khớp ngầm lúc runtime qua Host/SNI. Traefik
+// không hiện cert cụ thể ở Router detail (chỉ hiện tên TLS Options +
+// Passthrough, khác khái niệm) vì kiến trúc của nó không cần - nhưng
+// APISIX thì đáng thêm: dễ xảy ra tình huống khai Host cho Route nhưng
+// quên tạo SSL khớp domain, TLS lỗi khi chạy thật mà dashboard không
+// cảnh báo gì trước. Khối này CHỈ mang tính gợi ý (so khớp phía client),
+// không phải xác nhận chính thức - luôn kèm dòng disclaimer.
+const RouteTlsSection = ({ route }: { route: APISIXType['Route'] | undefined }) => {
+  const { t } = useTranslation();
+  const hosts = route?.host ? [route.host] : (route?.hosts ?? []);
+
+  const sslListQuery = useQuery({
+    queryKey: ['route_tls_ssl_scan'],
+    queryFn: () => getSSLListReq(req, { page: 1, page_size: PAGE_SIZE_MAX }),
+    enabled: hosts.length > 0,
+  });
+
+  if (hosts.length === 0) {
+    return null;
+  }
+
+  const matches = hosts.map((host) => {
+    const cert = (sslListQuery.data?.list ?? []).find((item) => {
+      const candidates = [item.value.sni, ...(item.value.snis ?? [])].filter(
+        (v): v is string => !!v
+      );
+      return candidates.some((sni) => matchesSni(host, sni));
+    });
+    return { host, cert };
+  });
+
+  return (
+    <Card withBorder radius="md" p="md" mb="md">
+      <Text fw={600} size="sm" mb="xs">
+        {t('routeFlow.tlsTitle')}
+      </Text>
+      {sslListQuery.isLoading ? (
+        <Skeleton height={24} />
+      ) : (
+        <Stack gap={6}>
+          {matches.map(({ host, cert }) => (
+            <Group key={host} justify="space-between" wrap="nowrap" gap="md">
+              <Text size="sm" ff="monospace">
+                {host}
+              </Text>
+              {cert ? (
+                <RouteLinkAnchor
+                  to="/ssls/detail/$id"
+                  params={{ id: cert.value.id }}
+                  size="sm"
+                >
+                  {cert.value.sni || cert.value.id}
+                </RouteLinkAnchor>
+              ) : (
+                <Badge color="orange" variant="light" size="sm">
+                  {t('routeFlow.noMatchingSsl')}
+                </Badge>
+              )}
+            </Group>
+          ))}
+        </Stack>
+      )}
+      <Text size="xs" c="dimmed" mt="sm">
+        {t('routeFlow.tlsDisclaimer')}
+      </Text>
     </Card>
   );
 };
@@ -306,6 +466,7 @@ const RouteDetailForm = (props: Props) => {
   return (
     <>
       <RouteFlowDiagram route={routeData?.value} />
+      <RouteTlsSection route={routeData?.value} />
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit((d) => putRoute.mutateAsync(d))}>
           <FormSectionGeneral readOnly />

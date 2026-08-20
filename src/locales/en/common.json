@@ -83,7 +83,7 @@
     },
     "plugins": {
       "addPlugin": "Add Plugin",
-      "via": "via {{name}}",
+      "viaPrefix": "via",
       "configId": "Plugin Config ID",
       "editPlugin": "Edit Plugin",
       "label": "Plugins",
@@ -376,7 +376,12 @@
     "noService": "No Service",
     "nodeCount": "{{count}} node",
     "nodeCount_other": "{{count}} nodes",
-    "notConfigured": "Not configured"
+    "notConfigured": "Not configured",
+    "tlsTitle": "SSL Certificate",
+    "tlsDisclaimer": "Computed by matching Route Host against SSL SNI on this page - not an authoritative APISIX confirmation of which cert is actually served.",
+    "noHostRestriction": "This route has no Host restriction, so TLS depends entirely on the incoming SNI - nothing to check here.",
+    "noMatchingSsl": "No matching SSL cert found",
+    "overriddenByHigherPriority": "{{names}} on Service is overridden (Route/Plugin Config takes precedence per APISIX's merge order)"
   },
   "routes": {
     "singular": "Route"

@@ -14,246 +14,76 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Badge, Button, Card, Grid, Group, Skeleton, Stack, Text } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
+
 import {
   createFileRoute,
+  Outlet,
+  useLocation,
   useNavigate,
   useParams,
 } from '@tanstack/react-router';
-import { useEffect } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useBoolean } from 'react-use';
 
-import { getPluginConfigQueryOptions } from '@/apis/hooks';
-import { putPluginConfigReq } from '@/apis/plugin_configs';
-import { FormSubmitBtn } from '@/components/form/Btn';
-import { FormPartPluginConfig } from '@/components/form-slice/FormPartPluginConfig';
-import { FormTOCBox } from '@/components/form-slice/FormSection';
-import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
-import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
-import PageHeader from '@/components/page/PageHeader';
-import { UsedByRoutesPanel } from '@/components/page/UsedByRoutesPanel';
-import { API_PLUGIN_CONFIGS } from '@/config/constant';
-import { req } from '@/config/req';
-import { APISIX, type APISIXType } from '@/types/schema/apisix';
+import { Tabs, type TabsItem } from '@/components/page/Tabs';
 
-const formatConfigValue = (v: unknown): string => {
-  if (v === null || v === undefined || v === '') return '-';
-  if (typeof v === 'object') return JSON.stringify(v);
-  return String(v);
-};
-
-// Traefik hiện thẳng Average/Period/Burst (tham số riêng của middleware
-// ratelimit) ngay đầu trang chi tiết, không bắt người xem phải bấm thêm.
-// Plugin Config của APISIX có thể chứa NHIỀU plugin cùng lúc (khác với
-// Traefik chỉ 1 type/middleware), nên ở đây liệt kê từng plugin thành 1
-// khối riêng, mỗi khối hiện hết key/value cấu hình của đúng plugin đó -
-// giữ đúng tinh thần "xem được ngay, không cần bấm vào tab Plugins".
-const PluginParamsList = ({
-  plugins,
-}: {
-  plugins?: Record<string, Record<string, unknown>>;
-}) => {
-  const entries = Object.entries(plugins ?? {});
-  if (entries.length === 0) return null;
-
-  return (
-    <Grid mb="md">
-      {entries.map(([name, config]) => (
-        <Grid.Col key={name} span={{ base: 12, md: 6 }}>
-          <Card withBorder radius="md" p="md">
-            <Badge variant="light" color="teal" size="sm" mb="xs">
-              {name}
-            </Badge>
-            <Stack gap={0}>
-              {Object.entries(config).length === 0 ? (
-                <Text size="sm" c="dimmed">
-                  -
-                </Text>
-              ) : (
-                Object.entries(config).map(([key, val]) => (
-                  <Group key={key} justify="space-between" py={4} wrap="nowrap" gap="md">
-                    <Text size="sm" c="dimmed" style={{ flexShrink: 0 }}>
-                      {key}
-                    </Text>
-                    <Text size="sm" ta="right" style={{ wordBreak: 'break-all' }}>
-                      {formatConfigValue(val)}
-                    </Text>
-                  </Group>
-                ))
-              )}
-            </Stack>
-          </Card>
-        </Grid.Col>
-      ))}
-    </Grid>
-  );
-};
-
-// Cùng phong cách tóm tắt nhanh đã dùng cho Route/SSL. Không có Status
-// (Plugin Config không thật sự có trạng thái bật/tắt như Route/SSL, xem
-// giải thích trong chat) nên khối tóm tắt chỉ còn ID/Name/Desc + danh
-// sách plugin - giống phần "Type" trên đầu trang Middleware detail của
-// Traefik, chỉ khác là liệt kê nhiều plugin thay vì 1 type.
-const PluginConfigSummaryCard = ({
-  data,
-}: {
-  data: APISIXType['PluginConfig'] | undefined;
-}) => {
+// Theo đúng góp ý của bạn trong nhóm: tách "Used by Routes" ra 1 tab
+// riêng thay vì nhét thẳng vào trang General - nếu 1 Plugin Config bị
+// hàng trăm Route dùng chung, bảng dài sẽ không còn làm hỏng bố cục
+// trang General nữa vì nó nằm ở tab khác hẳn. Cấu trúc file này COPY
+// nguyên pattern đã có sẵn ở Services (detail.$id.tsx + detail.$id/
+// index.tsx + detail.$id/routes/index.tsx) - không phải kiểu mới bịa ra,
+// dùng lại đúng cách team đã làm cho Services.
+const defaultTab = 'detail';
+export const DetailTabs = () => {
   const { t } = useTranslation();
-  if (!data) return null;
-  const pluginNames = Object.keys(data.plugins ?? {});
-
-  return (
-    <Card withBorder radius="md" p="md" mb="md">
-      <Group gap="xl" wrap="wrap" align="flex-start">
-        <Stack gap={2}>
-          <Text size="xs" c="dimmed">
-            ID
-          </Text>
-          <Text fw={600} size="sm">
-            {data.id}
-          </Text>
-        </Stack>
-        {data.name && (
-          <Stack gap={2}>
-            <Text size="xs" c="dimmed">
-              {t('form.basic.name')}
-            </Text>
-            <Text fw={600} size="sm">
-              {data.name}
-            </Text>
-          </Stack>
-        )}
-        <Stack gap={2} style={{ flex: 1, minWidth: 200 }}>
-          <Text size="xs" c="dimmed">
-            {t('pluginConfigs.pluginsCount', { count: pluginNames.length })}
-          </Text>
-          <Group gap={4} wrap="wrap">
-            {pluginNames.length === 0 ? (
-              <Text size="sm">-</Text>
-            ) : (
-              pluginNames.map((name) => (
-                <Badge key={name} variant="light" color="teal" size="sm">
-                  {name}
-                </Badge>
-              ))
-            )}
-          </Group>
-        </Stack>
-      </Group>
-    </Card>
-  );
-};
-
-type Props = {
-  id: string;
-  readOnly: boolean;
-  setReadOnly: (v: boolean) => void;
-};
-
-const PluginConfigDetailForm = (props: Props) => {
-  const { id, readOnly, setReadOnly } = props;
-  const { t } = useTranslation();
-
-  const pluginConfigQuery = useSuspenseQuery(getPluginConfigQueryOptions(id));
-  const { data } = pluginConfigQuery;
-  const initialValue = data.value;
-
-  const putPluginConfig = useMutation({
-    mutationFn: (d: APISIXType['PluginConfigPut']) =>
-      putPluginConfigReq(req, d),
-    async onSuccess() {
-      notifications.show({
-        message: t('info.edit.success', { name: t('pluginConfigs.singular') }),
-        color: 'green',
-      });
-      pluginConfigQuery.refetch();
-      setReadOnly(true);
-    },
+  const { id } = useParams({ strict: false });
+  const navigate = useNavigate();
+  const pathname = useLocation({
+    select: (location) => location.pathname,
   });
 
-  const form = useForm({
-    resolver: zodResolver(APISIX.PluginConfigPut),
-    shouldUnregister: true,
-    shouldFocusError: true,
-    mode: 'all',
-    disabled: readOnly,
-  });
-
-  // Reset form when initialValue changes
-  useEffect(() => {
-    form.reset(initialValue);
-  }, [form, initialValue]);
-
-  if (!data) return <Skeleton height={200} />;
-
+  const items = useMemo(
+    (): TabsItem[] => [
+      {
+        value: 'detail',
+        label: t('info.detail.title', { name: t('pluginConfigs.singular') }),
+      },
+      {
+        value: 'routes',
+        label: t('sources.routes'),
+      },
+    ],
+    [t]
+  );
   return (
-    <>
-      <PluginConfigSummaryCard data={initialValue} />
-      <PluginParamsList plugins={initialValue.plugins} />
-      <UsedByRoutesPanel filter={(route) => route.plugin_config_id === id} />
-      <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit((d) => putPluginConfig.mutateAsync(d))}>
-          <FormSectionGeneral readOnly />
-          <FormPartPluginConfig />
-          {!readOnly && (
-            <Group>
-              <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
-              <Button variant="outline" onClick={() => setReadOnly(true)}>
-                {t('form.btn.cancel')}
-              </Button>
-            </Group>
-          )}
-        </form>
-      </FormProvider>
-    </>
+    <Tabs
+      items={items}
+      variant="outline"
+      value={
+        items
+          .slice()
+          .reverse()
+          .find((v) => pathname.includes(v.value))?.value || defaultTab
+      }
+      onChange={(v) => {
+        navigate({
+          to:
+            v === defaultTab
+              ? '/plugin_configs/detail/$id/'
+              : `/plugin_configs/detail/$id/${v}/`,
+          params: { id: id as string },
+        });
+      }}
+    />
   );
 };
 
 function RouteComponent() {
-  const { id } = useParams({ from: '/_authenticated/plugin_configs/detail/$id' });
-  const { t } = useTranslation();
-  const [readOnly, setReadOnly] = useBoolean(true);
-  const navigate = useNavigate();
-
   return (
     <>
-      <PageHeader
-        title={t('info.edit.title', { name: t('pluginConfigs.singular') })}
-        {...(readOnly && {
-          title: t('info.detail.title', { name: t('pluginConfigs.singular') }),
-          extra: (
-            <Group>
-              <Button
-                onClick={() => setReadOnly(false)}
-                size="compact-sm"
-                variant="gradient"
-              >
-                {t('form.btn.edit')}
-              </Button>
-              <DeleteResourceBtn
-                mode="detail"
-                name={t('pluginConfigs.singular')}
-                target={id}
-                api={`${API_PLUGIN_CONFIGS}/${id}`}
-                onSuccess={() => navigate({ to: '/plugin_configs' })}
-              />
-            </Group>
-          ),
-        })}
-      />
-      <FormTOCBox>
-        <PluginConfigDetailForm
-          id={id}
-          readOnly={readOnly}
-          setReadOnly={setReadOnly}
-        />
-      </FormTOCBox>
+      <DetailTabs />
+      <Outlet />
     </>
   );
 }

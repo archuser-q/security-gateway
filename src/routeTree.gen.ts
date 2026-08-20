@@ -55,10 +55,12 @@ import { Route as AuthenticatedConsumersDetailUsernameImport } from './routes/_a
 import { Route as AuthenticatedConsumergroupsDetailIdImport } from './routes/_authenticated/consumer_groups/detail.$id'
 import { Route as AuthenticatedAdminsDetailIdImport } from './routes/_authenticated/admins/detail.$id'
 import { Route as AuthenticatedServicesDetailIdIndexImport } from './routes/_authenticated/services/detail.$id/index'
+import { Route as AuthenticatedPluginconfigsDetailIdIndexImport } from './routes/_authenticated/plugin_configs/detail.$id/index'
 import { Route as AuthenticatedConsumersDetailUsernameIndexImport } from './routes/_authenticated/consumers/detail.$username/index'
 import { Route as AuthenticatedSecretsDetailManagerIdImport } from './routes/_authenticated/secrets/detail.$manager.$id'
 import { Route as AuthenticatedServicesDetailIdStreamroutesIndexImport } from './routes/_authenticated/services/detail.$id/stream_routes/index'
 import { Route as AuthenticatedServicesDetailIdRoutesIndexImport } from './routes/_authenticated/services/detail.$id/routes/index'
+import { Route as AuthenticatedPluginconfigsDetailIdRoutesIndexImport } from './routes/_authenticated/plugin_configs/detail.$id/routes/index'
 import { Route as AuthenticatedConsumersDetailUsernameCredentialsIndexImport } from './routes/_authenticated/consumers/detail.$username/credentials/index'
 import { Route as AuthenticatedServicesDetailIdStreamroutesAddImport } from './routes/_authenticated/services/detail.$id/stream_routes/add'
 import { Route as AuthenticatedServicesDetailIdRoutesAddImport } from './routes/_authenticated/services/detail.$id/routes/add'
@@ -360,6 +362,13 @@ const AuthenticatedServicesDetailIdIndexRoute =
     getParentRoute: () => AuthenticatedServicesDetailIdRoute,
   } as any)
 
+const AuthenticatedPluginconfigsDetailIdIndexRoute =
+  AuthenticatedPluginconfigsDetailIdIndexImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedPluginconfigsDetailIdRoute,
+  } as any)
+
 const AuthenticatedConsumersDetailUsernameIndexRoute =
   AuthenticatedConsumersDetailUsernameIndexImport.update({
     id: '/',
@@ -386,6 +395,13 @@ const AuthenticatedServicesDetailIdRoutesIndexRoute =
     id: '/routes/',
     path: '/routes/',
     getParentRoute: () => AuthenticatedServicesDetailIdRoute,
+  } as any)
+
+const AuthenticatedPluginconfigsDetailIdRoutesIndexRoute =
+  AuthenticatedPluginconfigsDetailIdRoutesIndexImport.update({
+    id: '/routes/',
+    path: '/routes/',
+    getParentRoute: () => AuthenticatedPluginconfigsDetailIdRoute,
   } as any)
 
 const AuthenticatedConsumersDetailUsernameCredentialsIndexRoute =
@@ -756,6 +772,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedConsumersDetailUsernameIndexImport
       parentRoute: typeof AuthenticatedConsumersDetailUsernameImport
     }
+    '/_authenticated/plugin_configs/detail/$id/': {
+      id: '/_authenticated/plugin_configs/detail/$id/'
+      path: '/'
+      fullPath: '/plugin_configs/detail/$id/'
+      preLoaderRoute: typeof AuthenticatedPluginconfigsDetailIdIndexImport
+      parentRoute: typeof AuthenticatedPluginconfigsDetailIdImport
+    }
     '/_authenticated/services/detail/$id/': {
       id: '/_authenticated/services/detail/$id/'
       path: '/'
@@ -790,6 +813,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/consumers/detail/$username/credentials'
       preLoaderRoute: typeof AuthenticatedConsumersDetailUsernameCredentialsIndexImport
       parentRoute: typeof AuthenticatedConsumersDetailUsernameImport
+    }
+    '/_authenticated/plugin_configs/detail/$id/routes/': {
+      id: '/_authenticated/plugin_configs/detail/$id/routes/'
+      path: '/routes'
+      fullPath: '/plugin_configs/detail/$id/routes'
+      preLoaderRoute: typeof AuthenticatedPluginconfigsDetailIdRoutesIndexImport
+      parentRoute: typeof AuthenticatedPluginconfigsDetailIdImport
     }
     '/_authenticated/services/detail/$id/routes/': {
       id: '/_authenticated/services/detail/$id/routes/'
@@ -853,6 +883,24 @@ const AuthenticatedConsumersDetailUsernameRouteChildren: AuthenticatedConsumersD
 const AuthenticatedConsumersDetailUsernameRouteWithChildren =
   AuthenticatedConsumersDetailUsernameRoute._addFileChildren(
     AuthenticatedConsumersDetailUsernameRouteChildren,
+  )
+
+interface AuthenticatedPluginconfigsDetailIdRouteChildren {
+  AuthenticatedPluginconfigsDetailIdIndexRoute: typeof AuthenticatedPluginconfigsDetailIdIndexRoute
+  AuthenticatedPluginconfigsDetailIdRoutesIndexRoute: typeof AuthenticatedPluginconfigsDetailIdRoutesIndexRoute
+}
+
+const AuthenticatedPluginconfigsDetailIdRouteChildren: AuthenticatedPluginconfigsDetailIdRouteChildren =
+  {
+    AuthenticatedPluginconfigsDetailIdIndexRoute:
+      AuthenticatedPluginconfigsDetailIdIndexRoute,
+    AuthenticatedPluginconfigsDetailIdRoutesIndexRoute:
+      AuthenticatedPluginconfigsDetailIdRoutesIndexRoute,
+  }
+
+const AuthenticatedPluginconfigsDetailIdRouteWithChildren =
+  AuthenticatedPluginconfigsDetailIdRoute._addFileChildren(
+    AuthenticatedPluginconfigsDetailIdRouteChildren,
   )
 
 interface AuthenticatedServicesDetailIdRouteChildren {
@@ -922,7 +970,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedConsumergroupsDetailIdRoute: typeof AuthenticatedConsumergroupsDetailIdRoute
   AuthenticatedConsumersDetailUsernameRoute: typeof AuthenticatedConsumersDetailUsernameRouteWithChildren
   AuthenticatedGlobalrulesDetailIdRoute: typeof AuthenticatedGlobalrulesDetailIdRoute
-  AuthenticatedPluginconfigsDetailIdRoute: typeof AuthenticatedPluginconfigsDetailIdRoute
+  AuthenticatedPluginconfigsDetailIdRoute: typeof AuthenticatedPluginconfigsDetailIdRouteWithChildren
   AuthenticatedProtosDetailIdRoute: typeof AuthenticatedProtosDetailIdRoute
   AuthenticatedRoutesDetailIdRoute: typeof AuthenticatedRoutesDetailIdRoute
   AuthenticatedServicesDetailIdRoute: typeof AuthenticatedServicesDetailIdRouteWithChildren
@@ -969,7 +1017,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
     AuthenticatedConsumersDetailUsernameRouteWithChildren,
   AuthenticatedGlobalrulesDetailIdRoute: AuthenticatedGlobalrulesDetailIdRoute,
   AuthenticatedPluginconfigsDetailIdRoute:
-    AuthenticatedPluginconfigsDetailIdRoute,
+    AuthenticatedPluginconfigsDetailIdRouteWithChildren,
   AuthenticatedProtosDetailIdRoute: AuthenticatedProtosDetailIdRoute,
   AuthenticatedRoutesDetailIdRoute: AuthenticatedRoutesDetailIdRoute,
   AuthenticatedServicesDetailIdRoute:
@@ -1023,7 +1071,7 @@ export interface FileRoutesByFullPath {
   '/consumer_groups/detail/$id': typeof AuthenticatedConsumergroupsDetailIdRoute
   '/consumers/detail/$username': typeof AuthenticatedConsumersDetailUsernameRouteWithChildren
   '/global_rules/detail/$id': typeof AuthenticatedGlobalrulesDetailIdRoute
-  '/plugin_configs/detail/$id': typeof AuthenticatedPluginconfigsDetailIdRoute
+  '/plugin_configs/detail/$id': typeof AuthenticatedPluginconfigsDetailIdRouteWithChildren
   '/protos/detail/$id': typeof AuthenticatedProtosDetailIdRoute
   '/routes/detail/$id': typeof AuthenticatedRoutesDetailIdRoute
   '/services/detail/$id': typeof AuthenticatedServicesDetailIdRouteWithChildren
@@ -1032,11 +1080,13 @@ export interface FileRoutesByFullPath {
   '/upstreams/detail/$id': typeof AuthenticatedUpstreamsDetailIdRoute
   '/secrets/detail/$manager/$id': typeof AuthenticatedSecretsDetailManagerIdRoute
   '/consumers/detail/$username/': typeof AuthenticatedConsumersDetailUsernameIndexRoute
+  '/plugin_configs/detail/$id/': typeof AuthenticatedPluginconfigsDetailIdIndexRoute
   '/services/detail/$id/': typeof AuthenticatedServicesDetailIdIndexRoute
   '/consumers/detail/$username/credentials/add': typeof AuthenticatedConsumersDetailUsernameCredentialsAddRoute
   '/services/detail/$id/routes/add': typeof AuthenticatedServicesDetailIdRoutesAddRoute
   '/services/detail/$id/stream_routes/add': typeof AuthenticatedServicesDetailIdStreamroutesAddRoute
   '/consumers/detail/$username/credentials': typeof AuthenticatedConsumersDetailUsernameCredentialsIndexRoute
+  '/plugin_configs/detail/$id/routes': typeof AuthenticatedPluginconfigsDetailIdRoutesIndexRoute
   '/services/detail/$id/routes': typeof AuthenticatedServicesDetailIdRoutesIndexRoute
   '/services/detail/$id/stream_routes': typeof AuthenticatedServicesDetailIdStreamroutesIndexRoute
   '/consumers/detail/$username/credentials/detail/$id': typeof AuthenticatedConsumersDetailUsernameCredentialsDetailIdRoute
@@ -1080,7 +1130,6 @@ export interface FileRoutesByTo {
   '/admins/detail/$id': typeof AuthenticatedAdminsDetailIdRoute
   '/consumer_groups/detail/$id': typeof AuthenticatedConsumergroupsDetailIdRoute
   '/global_rules/detail/$id': typeof AuthenticatedGlobalrulesDetailIdRoute
-  '/plugin_configs/detail/$id': typeof AuthenticatedPluginconfigsDetailIdRoute
   '/protos/detail/$id': typeof AuthenticatedProtosDetailIdRoute
   '/routes/detail/$id': typeof AuthenticatedRoutesDetailIdRoute
   '/ssls/detail/$id': typeof AuthenticatedSslsDetailIdRoute
@@ -1088,11 +1137,13 @@ export interface FileRoutesByTo {
   '/upstreams/detail/$id': typeof AuthenticatedUpstreamsDetailIdRoute
   '/secrets/detail/$manager/$id': typeof AuthenticatedSecretsDetailManagerIdRoute
   '/consumers/detail/$username': typeof AuthenticatedConsumersDetailUsernameIndexRoute
+  '/plugin_configs/detail/$id': typeof AuthenticatedPluginconfigsDetailIdIndexRoute
   '/services/detail/$id': typeof AuthenticatedServicesDetailIdIndexRoute
   '/consumers/detail/$username/credentials/add': typeof AuthenticatedConsumersDetailUsernameCredentialsAddRoute
   '/services/detail/$id/routes/add': typeof AuthenticatedServicesDetailIdRoutesAddRoute
   '/services/detail/$id/stream_routes/add': typeof AuthenticatedServicesDetailIdStreamroutesAddRoute
   '/consumers/detail/$username/credentials': typeof AuthenticatedConsumersDetailUsernameCredentialsIndexRoute
+  '/plugin_configs/detail/$id/routes': typeof AuthenticatedPluginconfigsDetailIdRoutesIndexRoute
   '/services/detail/$id/routes': typeof AuthenticatedServicesDetailIdRoutesIndexRoute
   '/services/detail/$id/stream_routes': typeof AuthenticatedServicesDetailIdStreamroutesIndexRoute
   '/consumers/detail/$username/credentials/detail/$id': typeof AuthenticatedConsumersDetailUsernameCredentialsDetailIdRoute
@@ -1138,7 +1189,7 @@ export interface FileRoutesById {
   '/_authenticated/consumer_groups/detail/$id': typeof AuthenticatedConsumergroupsDetailIdRoute
   '/_authenticated/consumers/detail/$username': typeof AuthenticatedConsumersDetailUsernameRouteWithChildren
   '/_authenticated/global_rules/detail/$id': typeof AuthenticatedGlobalrulesDetailIdRoute
-  '/_authenticated/plugin_configs/detail/$id': typeof AuthenticatedPluginconfigsDetailIdRoute
+  '/_authenticated/plugin_configs/detail/$id': typeof AuthenticatedPluginconfigsDetailIdRouteWithChildren
   '/_authenticated/protos/detail/$id': typeof AuthenticatedProtosDetailIdRoute
   '/_authenticated/routes/detail/$id': typeof AuthenticatedRoutesDetailIdRoute
   '/_authenticated/services/detail/$id': typeof AuthenticatedServicesDetailIdRouteWithChildren
@@ -1147,11 +1198,13 @@ export interface FileRoutesById {
   '/_authenticated/upstreams/detail/$id': typeof AuthenticatedUpstreamsDetailIdRoute
   '/_authenticated/secrets/detail/$manager/$id': typeof AuthenticatedSecretsDetailManagerIdRoute
   '/_authenticated/consumers/detail/$username/': typeof AuthenticatedConsumersDetailUsernameIndexRoute
+  '/_authenticated/plugin_configs/detail/$id/': typeof AuthenticatedPluginconfigsDetailIdIndexRoute
   '/_authenticated/services/detail/$id/': typeof AuthenticatedServicesDetailIdIndexRoute
   '/_authenticated/consumers/detail/$username/credentials/add': typeof AuthenticatedConsumersDetailUsernameCredentialsAddRoute
   '/_authenticated/services/detail/$id/routes/add': typeof AuthenticatedServicesDetailIdRoutesAddRoute
   '/_authenticated/services/detail/$id/stream_routes/add': typeof AuthenticatedServicesDetailIdStreamroutesAddRoute
   '/_authenticated/consumers/detail/$username/credentials/': typeof AuthenticatedConsumersDetailUsernameCredentialsIndexRoute
+  '/_authenticated/plugin_configs/detail/$id/routes/': typeof AuthenticatedPluginconfigsDetailIdRoutesIndexRoute
   '/_authenticated/services/detail/$id/routes/': typeof AuthenticatedServicesDetailIdRoutesIndexRoute
   '/_authenticated/services/detail/$id/stream_routes/': typeof AuthenticatedServicesDetailIdStreamroutesIndexRoute
   '/_authenticated/consumers/detail/$username/credentials/detail/$id': typeof AuthenticatedConsumersDetailUsernameCredentialsDetailIdRoute
@@ -1207,11 +1260,13 @@ export interface FileRouteTypes {
     | '/upstreams/detail/$id'
     | '/secrets/detail/$manager/$id'
     | '/consumers/detail/$username/'
+    | '/plugin_configs/detail/$id/'
     | '/services/detail/$id/'
     | '/consumers/detail/$username/credentials/add'
     | '/services/detail/$id/routes/add'
     | '/services/detail/$id/stream_routes/add'
     | '/consumers/detail/$username/credentials'
+    | '/plugin_configs/detail/$id/routes'
     | '/services/detail/$id/routes'
     | '/services/detail/$id/stream_routes'
     | '/consumers/detail/$username/credentials/detail/$id'
@@ -1254,7 +1309,6 @@ export interface FileRouteTypes {
     | '/admins/detail/$id'
     | '/consumer_groups/detail/$id'
     | '/global_rules/detail/$id'
-    | '/plugin_configs/detail/$id'
     | '/protos/detail/$id'
     | '/routes/detail/$id'
     | '/ssls/detail/$id'
@@ -1262,11 +1316,13 @@ export interface FileRouteTypes {
     | '/upstreams/detail/$id'
     | '/secrets/detail/$manager/$id'
     | '/consumers/detail/$username'
+    | '/plugin_configs/detail/$id'
     | '/services/detail/$id'
     | '/consumers/detail/$username/credentials/add'
     | '/services/detail/$id/routes/add'
     | '/services/detail/$id/stream_routes/add'
     | '/consumers/detail/$username/credentials'
+    | '/plugin_configs/detail/$id/routes'
     | '/services/detail/$id/routes'
     | '/services/detail/$id/stream_routes'
     | '/consumers/detail/$username/credentials/detail/$id'
@@ -1319,11 +1375,13 @@ export interface FileRouteTypes {
     | '/_authenticated/upstreams/detail/$id'
     | '/_authenticated/secrets/detail/$manager/$id'
     | '/_authenticated/consumers/detail/$username/'
+    | '/_authenticated/plugin_configs/detail/$id/'
     | '/_authenticated/services/detail/$id/'
     | '/_authenticated/consumers/detail/$username/credentials/add'
     | '/_authenticated/services/detail/$id/routes/add'
     | '/_authenticated/services/detail/$id/stream_routes/add'
     | '/_authenticated/consumers/detail/$username/credentials/'
+    | '/_authenticated/plugin_configs/detail/$id/routes/'
     | '/_authenticated/services/detail/$id/routes/'
     | '/_authenticated/services/detail/$id/stream_routes/'
     | '/_authenticated/consumers/detail/$username/credentials/detail/$id'
@@ -1551,7 +1609,11 @@ export const routeTree = rootRoute
     },
     "/_authenticated/plugin_configs/detail/$id": {
       "filePath": "_authenticated/plugin_configs/detail.$id.tsx",
-      "parent": "/_authenticated"
+      "parent": "/_authenticated",
+      "children": [
+        "/_authenticated/plugin_configs/detail/$id/",
+        "/_authenticated/plugin_configs/detail/$id/routes/"
+      ]
     },
     "/_authenticated/protos/detail/$id": {
       "filePath": "_authenticated/protos/detail.$id.tsx",
@@ -1594,6 +1656,10 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/consumers/detail.$username/index.tsx",
       "parent": "/_authenticated/consumers/detail/$username"
     },
+    "/_authenticated/plugin_configs/detail/$id/": {
+      "filePath": "_authenticated/plugin_configs/detail.$id/index.tsx",
+      "parent": "/_authenticated/plugin_configs/detail/$id"
+    },
     "/_authenticated/services/detail/$id/": {
       "filePath": "_authenticated/services/detail.$id/index.tsx",
       "parent": "/_authenticated/services/detail/$id"
@@ -1613,6 +1679,10 @@ export const routeTree = rootRoute
     "/_authenticated/consumers/detail/$username/credentials/": {
       "filePath": "_authenticated/consumers/detail.$username/credentials/index.tsx",
       "parent": "/_authenticated/consumers/detail/$username"
+    },
+    "/_authenticated/plugin_configs/detail/$id/routes/": {
+      "filePath": "_authenticated/plugin_configs/detail.$id/routes/index.tsx",
+      "parent": "/_authenticated/plugin_configs/detail/$id"
     },
     "/_authenticated/services/detail/$id/routes/": {
       "filePath": "_authenticated/services/detail.$id/routes/index.tsx",

@@ -83,7 +83,7 @@
     },
     "plugins": {
       "addPlugin": "Thêm Plugin",
-      "via": "qua {{name}}",
+      "viaPrefix": "qua",
       "configId": "ID Cấu Hình Plugin",
       "editPlugin": "Chỉnh Sửa Plugin",
       "label": "Plugin",
@@ -376,7 +376,12 @@
     "noService": "Không có Service",
     "nodeCount": "{{count}} node",
     "nodeCount_other": "{{count}} node",
-    "notConfigured": "Chưa cấu hình"
+    "notConfigured": "Chưa cấu hình",
+    "tlsTitle": "Chứng Chỉ SSL",
+    "tlsDisclaimer": "Được tính bằng cách so khớp Host của Route với SNI của SSL ngay trên trang này - không phải xác nhận chính thức từ APISIX về cert nào thực sự được dùng.",
+    "noHostRestriction": "Route này không giới hạn Host, nên TLS phụ thuộc hoàn toàn vào SNI của request gửi tới - không có gì để kiểm tra ở đây.",
+    "noMatchingSsl": "Không tìm thấy SSL cert khớp",
+    "overriddenByHigherPriority": "{{names}} trên Service bị ghi đè (Route/Plugin Config có độ ưu tiên cao hơn theo thứ tự merge của APISIX)"
   },
   "routes": {
     "singular": "Tuyến Đường"
