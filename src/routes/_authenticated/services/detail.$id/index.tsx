@@ -34,6 +34,7 @@ import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartService } from '@/components/form-slice/FormPartService';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
+import { ServiceSummaryBar } from '@/components/form-slice/ServiceSummaryBar';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_SERVICES } from '@/config/constant';
@@ -92,6 +93,10 @@ const ServiceDetailForm = (props: Props) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putService.mutateAsync(d))}>
+        {/* Summary card sits inside the content column, above the
+            "General" section — not spanning the full page width above
+            the TOC sidebar. */}
+        <ServiceSummaryBar id={id} />
         <FormSectionGeneral />
         <FormPartService />
         {!readOnly && (

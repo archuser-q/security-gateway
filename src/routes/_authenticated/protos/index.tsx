@@ -14,94 +14,257 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { ProColumns } from '@ant-design/pro-components';
-import { ProTable } from '@ant-design/pro-components';
 import { createFileRoute } from '@tanstack/react-router';
-import { useMemo } from 'react';
+import { ChevronDown, ChevronsUpDown, ChevronUp, Search } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getProtoListQueryOptions, useProtoList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
-import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_PROTOS } from '@/config/constant';
 import { queryClient } from '@/config/queryClient';
-import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
+
+type SortKey = 'update_time' | null;
+type SortDir = 'asc' | 'desc';
+
+/**
+ * Same visual language as Services/Global Rules/Plugin Configs
+ * (Tailwind + lucide icons, black text, sortable headers). Proto only
+ * has `id` + `content` (a protobuf definition string) + timestamps in
+ * the schema — no name/desc/status/plugins — so there's no filter
+ * row and no badges here, just an ID column, a truncated content
+ * preview, and Updated At. Filtering/sorting stays client-side over
+ * the current page, same reasoning as the other resources.
+ */
+const ProtoList = () => {
+  const { data, isLoading, refetch, pagination } = useProtoList();
+  const { t } = useTranslation();
+  const [keyword, setKeyword] = useState('');
+  const [sortKey, setSortKey] = useState<SortKey>(null);
+  const [sortDir, setSortDir] = useState<SortDir>('asc');
+
+  const toggleSort = (key: Exclude<SortKey, null>) => {
+    if (sortKey !== key) {
+      setSortKey(key);
+      setSortDir('asc');
+    } else {
+      setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
+    }
+  };
+
+  const filteredList = useMemo(() => {
+    let list = data.list;
+
+    if (keyword.trim()) {
+      const kw = keyword.trim().toLowerCase();
+      list = list.filter((record) => {
+        const { id, content } = record.value;
+        return [id, content]
+          .filter(Boolean)
+          .some((field) => String(field).toLowerCase().includes(kw));
+      });
+    }
+
+    if (sortKey === 'update_time') {
+      list = [...list].sort((a, b) => {
+        const av = a.value.update_time || 0;
+        const bv = b.value.update_time || 0;
+        const cmp = av > bv ? 1 : av < bv ? -1 : 0;
+        return sortDir === 'asc' ? cmp : -cmp;
+      });
+    }
+
+    return list;
+  }, [data.list, keyword, sortKey, sortDir]);
+
+  return (
+    <div className="space-y-4">
+      {/* Toolbar — no status pill tabs: Proto has no status field */}
+      <div className="flex items-center justify-between gap-4">
+        <ToAddPageBtn
+          to="/protos/add"
+          label={t('info.add.title', { name: t('protos.singular') })}
+        />
+
+        <div className="relative w-72">
+          <input
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            placeholder={t('table.search', 'Search')}
+            className="w-full rounded-lg border border-gray-200 bg-white py-2 pl-3 pr-9 text-sm
+                       placeholder:text-gray-400 focus:border-teal-500 focus:outline-none
+                       focus:ring-1 focus:ring-teal-500"
+          />
+          <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+        </div>
+      </div>
+
+      {/* Table card */}
+      <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
+        <table className="w-full text-left text-base">
+          <thead>
+            <tr className="border-b border-gray-100">
+              <th className="px-4 py-3 text-sm font-normal text-gray-700">ID</th>
+              <th className="px-4 py-3 text-sm font-normal text-gray-700">
+                {t('form.protos.content')}
+              </th>
+              <SortableHeader
+                label={t('form.info.update_time')}
+                active={sortKey === 'update_time'}
+                dir={sortKey === 'update_time' ? sortDir : undefined}
+                onClick={() => toggleSort('update_time')}
+              />
+              <th className="px-4 py-3 text-right font-normal text-sm text-gray-700">
+                {t('table.actions')}
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {isLoading ? (
+              <tr>
+                <td colSpan={4} className="px-4 py-10 text-center text-gray-400">
+                  {t('common.loading', 'Loading...')}
+                </td>
+              </tr>
+            ) : filteredList.length === 0 ? (
+              <tr>
+                <td colSpan={4} className="px-4 py-10 text-center text-gray-400">
+                  {t('common.empty', 'No data')}
+                </td>
+              </tr>
+            ) : (
+              filteredList.map((record) => {
+                const { id, content, update_time } = record.value;
+                const preview = content
+                  ? content.replace(/\s+/g, ' ').trim().slice(0, 80)
+                  : '';
+
+                return (
+                  <tr
+                    key={id}
+                    className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/60"
+                  >
+                    <td className="px-4 py-3 font-mono text-sm text-black">{id}</td>
+                    <td className="px-4 py-3 font-mono text-sm text-black">
+                      {preview ? (
+                        <>
+                          {preview}
+                          {content.length > 80 ? '…' : ''}
+                        </>
+                      ) : (
+                        <span className="text-gray-400">-</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-black">
+                      {update_time
+                        ? new Date(Number(update_time) * 1000).toLocaleString()
+                        : '-'}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center justify-end gap-3">
+                        <ToDetailPageBtn to="/protos/detail/$id" params={{ id }} />
+                        <DeleteResourceBtn
+                          name={t('protos.singular')}
+                          target={id}
+                          api={`${API_PROTOS}/${id}`}
+                          onSuccess={refetch}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination */}
+      {pagination && <PaginationBar pagination={pagination} />}
+    </div>
+  );
+};
+
+function SortableHeader({
+  label,
+  active,
+  dir,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  dir: SortDir | undefined;
+  onClick: () => void;
+}) {
+  return (
+    <th
+      onClick={onClick}
+      className="cursor-pointer select-none px-4 py-3 text-sm font-normal text-gray-700 hover:text-black"
+    >
+      <span className="inline-flex items-center gap-1">
+        {label}
+        {active ? (
+          dir === 'asc' ? (
+            <ChevronUp className="h-3.5 w-3.5" />
+          ) : (
+            <ChevronDown className="h-3.5 w-3.5" />
+          )
+        ) : (
+          <ChevronsUpDown className="h-3.5 w-3.5 opacity-40" />
+        )}
+      </span>
+    </th>
+  );
+}
+
+function PaginationBar({
+  pagination,
+}: {
+  pagination: NonNullable<ReturnType<typeof useProtoList>['pagination']>;
+}) {
+  const { t } = useTranslation();
+
+  const current = pagination.current ?? 1;
+  const pageSize = pagination.pageSize ?? 10;
+  const total = pagination.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+  return (
+    <div className="flex items-center justify-between text-base text-gray-500">
+      <span>{t('table.total', { total, defaultValue: `Total ${total} items` })}</span>
+      <div className="flex items-center gap-1">
+        <button
+          disabled={current <= 1}
+          onClick={() => pagination.onChange?.(current - 1, pageSize)}
+          className="rounded-md border border-gray-200 px-3 py-1 disabled:opacity-40 hover:bg-gray-50"
+        >
+          {t('table.prev', 'Prev')}
+        </button>
+        <span className="px-2">
+          {current} / {totalPages}
+        </span>
+        <button
+          disabled={current >= totalPages}
+          onClick={() => pagination.onChange?.(current + 1, pageSize)}
+          className="rounded-md border border-gray-200 px-3 py-1 disabled:opacity-40 hover:bg-gray-50"
+        >
+          {t('table.next', 'Next')}
+        </button>
+      </div>
+    </div>
+  );
+}
 
 function RouteComponent() {
   const { t } = useTranslation();
-
-  const { data, isLoading, refetch, pagination } = useProtoList();
-
-  const columns = useMemo<
-    ProColumns<APISIXType['RespProtoList']['data']['list'][number]>[]
-  >(() => {
-    return [
-      {
-        dataIndex: ['value', 'id'],
-        title: 'ID',
-        key: 'id',
-        valueType: 'text',
-      },
-      {
-        title: t('table.actions'),
-        valueType: 'option',
-        key: 'option',
-        width: 120,
-        render: (_, record) => [
-          <ToDetailPageBtn
-            key="detail"
-            to="/protos/detail/$id"
-            params={{ id: record.value.id }}
-          />,
-          <DeleteResourceBtn
-            key="delete"
-            name={t('protos.singular')}
-            target={record.value.id}
-            api={`${API_PROTOS}/${record.value.id}`}
-            onSuccess={refetch}
-          />,
-        ],
-      },
-    ];
-  }, [t, refetch]);
-
   return (
     <>
       <PageHeader title={t('sources.protos')} />
-      <AntdConfigProvider>
-        <ProTable
-          columns={columns}
-          dataSource={data?.list || []}
-          rowKey="id"
-          loading={isLoading}
-          search={false}
-          options={false}
-          pagination={pagination}
-          cardProps={{ bodyStyle: { padding: 0 } }}
-          toolbar={{
-            menu: {
-              type: 'inline',
-              items: [
-                {
-                  key: 'add',
-                  label: (
-                    <ToAddPageBtn
-                      key="add"
-                      to="/protos/add"
-                      label={t('info.add.title', {
-                        name: t('protos.singular'),
-                      })}
-                    />
-                  ),
-                },
-              ],
-            },
-          }}
-        />
-      </AntdConfigProvider>
+      <ProtoList />
     </>
   );
 }
