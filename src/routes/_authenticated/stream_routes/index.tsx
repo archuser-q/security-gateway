@@ -30,6 +30,8 @@ import { queryClient } from '@/config/queryClient';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import type { ListPageKeys } from '@/utils/useTablePagination';
+import { PaginationBar } from '@/components/PaginationBar';
+import SortableHeader from '@/components/SortableHeader';
 
 type SortKey = 'server_addr' | 'update_time' | null;
 type SortDir = 'asc' | 'desc';
@@ -250,76 +252,6 @@ export const StreamRouteList = (props: StreamRouteListProps) => {
     </div>
   );
 };
-
-function SortableHeader({
-  label,
-  active,
-  dir,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  dir: SortDir | undefined;
-  onClick: () => void;
-}) {
-  return (
-    <th
-      onClick={onClick}
-      className="cursor-pointer select-none px-4 py-3 text-sm font-normal text-gray-700 hover:text-black"
-    >
-      <span className="inline-flex items-center gap-1">
-        {label}
-        {active ? (
-          dir === 'asc' ? (
-            <ChevronUp className="h-3.5 w-3.5" />
-          ) : (
-            <ChevronDown className="h-3.5 w-3.5" />
-          )
-        ) : (
-          <ChevronsUpDown className="h-3.5 w-3.5 opacity-40" />
-        )}
-      </span>
-    </th>
-  );
-}
-
-function PaginationBar({
-  pagination,
-}: {
-  pagination: NonNullable<ReturnType<typeof useStreamRouteList>['pagination']>;
-}) {
-  const { t } = useTranslation();
-
-  const current = pagination.current ?? 1;
-  const pageSize = pagination.pageSize ?? 10;
-  const total = pagination.total ?? 0;
-  const totalPages = Math.max(1, Math.ceil(total / pageSize));
-
-  return (
-    <div className="flex items-center justify-between text-base text-gray-500">
-      <span>{t('table.total', { total, defaultValue: `Total ${total} items` })}</span>
-      <div className="flex items-center gap-1">
-        <button
-          disabled={current <= 1}
-          onClick={() => pagination.onChange?.(current - 1, pageSize)}
-          className="rounded-md border border-gray-200 px-3 py-1 disabled:opacity-40 hover:bg-gray-50"
-        >
-          {t('table.prev', 'Prev')}
-        </button>
-        <span className="px-2">
-          {current} / {totalPages}
-        </span>
-        <button
-          disabled={current >= totalPages}
-          onClick={() => pagination.onChange?.(current + 1, pageSize)}
-          className="rounded-md border border-gray-200 px-3 py-1 disabled:opacity-40 hover:bg-gray-50"
-        >
-          {t('table.next', 'Next')}
-        </button>
-      </div>
-    </div>
-  );
-}
 
 function StreamRouteComponent() {
   const { t } = useTranslation();
