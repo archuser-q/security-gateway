@@ -56,7 +56,11 @@ export const DetailTabs = () => {
   return (
     <Tabs
       items={items}
-      variant="outline"
+      variant="default"
+      classNames={{
+        tab: 'group transition-all duration-300 ease-in-out aria-selected:text-blue-600',
+        tabLabel: 'transition-colors duration-300 ease-in-out group-aria-selected:text-blue-600',
+      }}
       value={
         items
           .slice()

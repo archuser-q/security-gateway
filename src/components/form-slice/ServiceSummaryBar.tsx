@@ -15,18 +15,29 @@
  * limitations under the License.
  */
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
-import { IconServer } from '@tabler/icons-react';
+import { Link } from '@tanstack/react-router';
+import { IconExternalLink, IconServer } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
 import { getServiceQueryOptions, getUpstreamQueryOptions } from '@/apis/hooks';
 
 import { FormSection } from './FormSection';
 
-/** Counts nodes regardless of whether `nodes` is an array or a {"host:port": weight} object. */
-const countNodes = (nodes: unknown): number => {
-  if (!nodes) return 0;
-  if (Array.isArray(nodes)) return nodes.length;
-  return Object.keys(nodes as Record<string, number>).length;
+/** Normalizes `nodes`, which APISIX accepts either as an array of {host, port, weight} or as a {"host:port": weight} object. */
+const normalizeNodes = (nodes: unknown): { host: string; port: number }[] => {
+  if (!nodes) return [];
+  if (Array.isArray(nodes)) {
+    return (nodes as { host: string; port: number }[]).map(({ host, port }) => ({
+      host,
+      port,
+    }));
+  }
+  return Object.keys(nodes as Record<string, number>).map((key) => {
+    const lastColon = key.lastIndexOf(':');
+    const host = lastColon >= 0 ? key.slice(0, lastColon) : key;
+    const port = lastColon >= 0 ? Number(key.slice(lastColon + 1)) : 0;
+    return { host, port };
+  });
 };
 
 /**
@@ -41,11 +52,11 @@ const SummaryField = ({
   label: string;
   children?: React.ReactNode;
 }) => (
-  <div className="svc-summary__field">
-    <span className="svc-summary__label">{label}</span>
-    <span className="svc-summary__value">
+  <div className="flex flex-col gap-1.5">
+    <span className="text-xs font-semibold text-gray-500">{label}</span>
+    <span className="text-[15px] font-semibold text-gray-800">
       {children === undefined || children === null || children === '' ? (
-        <span className="svc-summary__placeholder">-</span>
+        <span className="font-normal text-gray-300">-</span>
       ) : (
         children
       )}
@@ -55,11 +66,11 @@ const SummaryField = ({
 
 /** key/value row for the Upstream info card — matches the LIMIT-REQ plugin card style (key left, value right). */
 const InfoRow = ({ label, value }: { label: string; value?: React.ReactNode }) => (
-  <div className="svc-info__row">
-    <span className="svc-info__key">{label}</span>
-    <span className="svc-info__value">
+  <div className="flex justify-between border-b border-gray-100 py-2 last:border-b-0">
+    <span className="text-[13.5px] text-gray-500">{label}</span>
+    <span className="text-[13.5px] font-semibold text-gray-800">
       {value === undefined || value === null || value === '' ? (
-        <span className="svc-summary__placeholder">-</span>
+        <span className="font-normal text-gray-300">-</span>
       ) : (
         value
       )}
@@ -74,6 +85,11 @@ const InfoRow = ({ label, value }: { label: string; value?: React.ReactNode }) =
  * "Basic Information" use). Shows the Status/Type/Scheme/Pass Host
  * summary plus an "Upstream" info card (key/value, LIMIT-REQ-card
  * style) describing the upstream this service connects to.
+ *
+ * Styled entirely with Tailwind utility classes (no custom CSS-in-JS
+ * / `!important`) — this project already runs Tailwind app-wide, so
+ * these classes are part of the same cascade layer as everything
+ * else, with no reset-vs-inline-style conflict to fight.
  *
  * Fetches via the same query key as the form (getServiceQueryOptions
  * (id)), so this adds no extra network call for the service itself.
@@ -107,7 +123,8 @@ export const ServiceSummaryBar = ({ id }: { id: string }) => {
   const isEnabled = service.status !== 0;
   // Prefer the inline upstream; fall back to the referenced one fetched above.
   const upstream = service.upstream ?? referencedUpstream?.value;
-  const nodeCount = countNodes(upstream?.nodes);
+  const nodes = normalizeNodes(upstream?.nodes);
+  const scheme = upstream?.scheme || 'http';
   const hasHealthCheck = !!upstream?.checks;
   const timeout = upstream?.timeout;
   const timeoutLabel = timeout
@@ -122,10 +139,14 @@ export const ServiceSummaryBar = ({ id }: { id: string }) => {
 
   return (
     <FormSection legend={t('sources.overview')}>
-      <div className="svc-overview">
-        <div className="svc-summary">
+      <div>
+        <div className="mb-5 grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-x-8 gap-y-4">
           <SummaryField label={t('form.basic.status')}>
-            <span className={`svc-pill ${isEnabled ? 'svc-pill--on' : 'svc-pill--off'}`}>
+            <span
+              className={`inline-block w-fit rounded-md px-2.5 py-0.5 text-[11.5px] font-bold tracking-wide ${
+                isEnabled ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-500'
+              }`}
+            >
               {isEnabled
                 ? t('form.basic.statusOption.1').toUpperCase()
                 : t('form.basic.statusOption.0').toUpperCase()}
@@ -139,14 +160,55 @@ export const ServiceSummaryBar = ({ id }: { id: string }) => {
         </div>
 
         {upstream && (
-          <div className="svc-info">
-            <span className="svc-info__badge">
-              <IconServer size={13} stroke={2} />
-              {t('form.upstreams.title').toUpperCase()}
-            </span>
-            <InfoRow label={t('form.upstreams.upstreamId')} value={upstreamId} />
+          <div className="rounded-xl border border-gray-200 bg-white px-5 py-4">
+            {upstreamId ? (
+              <Link
+                to="/upstreams/detail/$id"
+                params={{ id: upstreamId }}
+                className="mb-3 inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold tracking-wide text-emerald-600 hover:bg-emerald-100"
+              >
+                <IconServer size={13} stroke={2} />
+                {t('form.upstreams.title').toUpperCase()}
+                <IconExternalLink size={12} stroke={2} />
+              </Link>
+            ) : (
+              <span className="mb-3 inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold tracking-wide text-emerald-600">
+                <IconServer size={13} stroke={2} />
+                {t('form.upstreams.title').toUpperCase()}
+              </span>
+            )}
+            <InfoRow
+              label={t('form.upstreams.upstreamId')}
+              value={
+                upstreamId ? (
+                  <Link
+                    to="/upstreams/detail/$id"
+                    params={{ id: upstreamId }}
+                    className="text-teal-600 hover:text-teal-700 hover:underline"
+                  >
+                    {upstreamId}
+                  </Link>
+                ) : undefined
+              }
+            />
             <InfoRow label={t('form.upstreams.upstreamHost')} value={upstream.upstream_host} />
-            <InfoRow label={t('form.upstreams.nodes.title')} value={nodeCount} />
+            <InfoRow
+              label={`${t('form.upstreams.nodes.title')} (${nodes.length})`}
+              value={
+                nodes.length > 0 ? (
+                  <div className="flex flex-col items-end gap-1">
+                    {nodes.map((n, i) => (
+                      <span
+                        key={`${n.host}:${n.port}-${i}`}
+                        className="font-mono text-[13px] font-semibold text-gray-800"
+                      >
+                        {scheme}://{n.host}:{n.port}
+                      </span>
+                    ))}
+                  </div>
+                ) : undefined
+              }
+            />
             <InfoRow label={t('form.upstreams.retries')} value={upstream.retries} />
             <InfoRow label={t('form.upstreams.retryTimeout')} value={upstream.retry_timeout} />
             <InfoRow label={t('form.upstreams.timeout.title')} value={timeoutLabel} />
@@ -157,89 +219,6 @@ export const ServiceSummaryBar = ({ id }: { id: string }) => {
           </div>
         )}
       </div>
-
-      <style>{`
-        .svc-summary {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-          gap: 16px 32px;
-          margin-bottom: 20px;
-        }
-        .svc-summary__field {
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-        }
-        .svc-summary__label {
-          font-size: 12px;
-          font-weight: 600;
-          color: #8c8c8c;
-        }
-        .svc-summary__value {
-          font-size: 15px;
-          font-weight: 600;
-          color: #262626;
-        }
-        .svc-summary__placeholder {
-          color: #bfbfbf;
-          font-weight: 400;
-        }
-        .svc-pill {
-          display: inline-block;
-          width: fit-content;
-          padding: 3px 10px !important;
-          border-radius: 6px !important;
-          font-size: 11.5px;
-          font-weight: 700;
-          letter-spacing: 0.02em;
-        }
-        .svc-pill--on {
-          background: #e6fbf3;
-          color: #0f9d6c;
-        }
-        .svc-pill--off {
-          background: #f5f5f5;
-          color: #8c8c8c;
-        }
-
-        .svc-info {
-          background: #fff !important;
-          border: 1px solid #e6e8eb !important;
-          border-radius: 10px !important;
-          padding: 16px 20px !important;
-        }
-        .svc-info__badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 3px 10px !important;
-          border-radius: 6px !important;
-          background: #e6fbf3;
-          color: #0f9d6c;
-          font-size: 11px;
-          font-weight: 700;
-          letter-spacing: 0.02em;
-          margin-bottom: 12px;
-        }
-        .svc-info__row {
-          display: flex;
-          justify-content: space-between;
-          padding: 8px 0 !important;
-          border-bottom: 1px solid #f5f5f5 !important;
-        }
-        .svc-info__row:last-child {
-          border-bottom: none !important;
-        }
-        .svc-info__key {
-          font-size: 13.5px;
-          color: #8c8c8c;
-        }
-        .svc-info__value {
-          font-size: 13.5px;
-          font-weight: 600;
-          color: #262626;
-        }
-      `}</style>
     </FormSection>
   );
 };

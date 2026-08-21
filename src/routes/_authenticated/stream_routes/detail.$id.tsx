@@ -35,6 +35,7 @@ import { produceRoute } from '@/components/form-slice/FormPartRoute/util';
 import { FormPartStreamRoute } from '@/components/form-slice/FormPartStreamRoute';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
+import { StreamRouteFlow } from '@/components/form-slice/StreamRouteFlow';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
@@ -89,6 +90,7 @@ const StreamRouteDetailForm = (props: Props) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putStreamRoute.mutateAsync(d))}>
+        <StreamRouteFlow id={id} />
         <FormSectionGeneral readOnly />
         <FormPartStreamRoute />
         {!readOnly && (

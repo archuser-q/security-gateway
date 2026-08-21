@@ -34,6 +34,7 @@ import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartProto } from '@/components/form-slice/FormPartProto';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
+import { ProtoOverview } from '@/components/form-slice/ProtoOverview';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_PROTOS } from '@/config/constant';
@@ -88,6 +89,7 @@ const ProtoDetailForm = ({ id, readOnly, setReadOnly }: ProtoFormProps) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putProto.mutateAsync(d))}>
+        <ProtoOverview id={id} />
         <FormSectionGeneral readOnly />
         <FormPartProto allowUpload={!readOnly} />
         {!readOnly && (

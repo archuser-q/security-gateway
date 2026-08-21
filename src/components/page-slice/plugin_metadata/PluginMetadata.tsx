@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Drawer, Group } from '@mantine/core';
+import { Drawer } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
+import { Search } from 'lucide-react';
 import { observable, toJS } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { difference } from 'rambdax';
@@ -25,10 +26,7 @@ import { useDeepCompareEffect } from 'react-use';
 
 import { deletePluginMetadataReq, putPluginMetadataReq } from '@/apis/plugins';
 import type { PluginCardProps } from '@/components/form-slice/FormItemPlugins/PluginCard';
-import {
-  PluginCardList,
-  PluginCardListSearch,
-} from '@/components/form-slice/FormItemPlugins/PluginCardList';
+import { PluginCardList } from '@/components/form-slice/FormItemPlugins/PluginCardList';
 import {
   type PluginConfig,
   PluginEditorDrawer,
@@ -135,18 +133,39 @@ export const PluginMetadata = observer(() => {
 
   return (
     <Drawer.Stack>
-      <Group>
-        <PluginCardListSearch
-          search={pluginsOb.search}
-          setSearch={pluginsOb.setSearch}
-        />
+      {/* Only this toolbar is custom-styled (Tailwind) — PluginCardList
+          itself (the actual card grid) is untouched, and stays the
+          shared component used by Route/Service/Global Rules/Consumer/
+          Credential too. SelectPluginsDrawer's own built-in button is
+          hidden via `disabled` and replaced with a Tailwind one below,
+          driven by the same MobX state. */}
+      <div className="flex items-center justify-between gap-3">
+        <div className="relative flex-1">
+          <input
+            value={pluginsOb.search}
+            onChange={(e) => pluginsOb.setSearch(e.target.value)}
+            placeholder={t('pluginMetadata.search')}
+            className="w-full rounded-lg border border-gray-200 bg-white py-2 pl-3 pr-9 text-sm
+                       placeholder:text-gray-400 focus:border-teal-500 focus:outline-none
+                       focus:ring-1 focus:ring-teal-500"
+          />
+          <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+        </div>
+        <button
+          onClick={() => pluginsOb.setSelectPluginsOpened(true)}
+          className="whitespace-nowrap rounded-md bg-teal-600 px-4 py-2 text-sm
+                     font-medium text-white transition-colors hover:bg-teal-700"
+        >
+          {t('form.plugins.selectPlugins.title')}
+        </button>
         <SelectPluginsDrawer
+          disabled
           plugins={pluginsOb.unSelected}
           onAdd={(name) => pluginsOb.on('add', name)}
           opened={pluginsOb.selectPluginsOpened}
           setOpened={pluginsOb.setSelectPluginsOpened}
         />
-      </Group>
+      </div>
       <PluginCardList
         mode="edit"
         placeholder={t('pluginMetadata.search')}
