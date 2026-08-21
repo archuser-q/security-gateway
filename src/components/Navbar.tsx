@@ -17,14 +17,12 @@
 import { AppShellNavbar, Badge, Divider, NavLink, ScrollArea, Text, type NavLinkProps } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { createLink } from '@tanstack/react-router';
-import { useAtomValue } from 'jotai';
 import type { FC } from 'react';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-
-import { API_HEADER_KEY, API_PREFIX, PAGE_SIZE_MIN } from '@/config/constant';
 import { navRoutes, type NavGroup } from '@/config/navRoutes';
-import { adminKeyAtom } from '@/stores/global';
+import { getResourceStatsReq } from '@/apis/stats';
+import { req } from '@/config/req';
 
 const MantineLinkComponent = React.forwardRef<HTMLAnchorElement, NavLinkProps>(
   (props, ref) => {
@@ -57,32 +55,30 @@ const COUNTABLE_PATHS = [
   '/protos',
   '/admins',
 ] as const;
-const NavCountBadge = ({ to }: { to: string }) => {
-  const adminKey = useAtomValue(adminKeyAtom);
-  const enabled = (COUNTABLE_PATHS as readonly string[]).includes(to);
 
-  const { data } = useQuery({
-    queryKey: ['nav-count', to],
-    queryFn: async () => {
-      const res = await fetch(`${API_PREFIX}${to}?page=1&page_size=${PAGE_SIZE_MIN}`, {
-        headers: { [API_HEADER_KEY]: adminKey },
-        credentials: 'include',
-      });
-      if (!res.ok) throw new Error(String(res.status));
-      const json = await res.json();
-      return typeof json?.total === 'number' ? json.total : null;
-    },
-    enabled,
-    retry: false,
+const useNavStats = () =>
+  useQuery({
+    queryKey: ['resource-stats'],
+    queryFn: () => getResourceStatsReq(req),
     staleTime: 30_000,
+    retry: false,
     throwOnError: false,
   });
 
-  if (data === undefined || data === null) return null;
+const NavCountBadge = ({ to }: { to: string }) => {
+  const enabled = (COUNTABLE_PATHS as readonly string[]).includes(to);
+  const { data } = useNavStats();
+
+  if (!enabled || !data) return null;
+
+  const key = to.slice(1);
+  const statsRecord = data as Record<string, { total: number; enabled: number; disabled: number }> | undefined;
+  const total = statsRecord?.[key]?.total;
+  if (typeof total !== 'number') return null;
 
   return (
     <Badge className="sg-navlink__badge" variant="light" color="gray" size="sm">
-      {data}
+      {total}
     </Badge>
   );
 };
