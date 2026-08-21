@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { createFileRoute } from '@tanstack/react-router';
-import { ChevronDown, ChevronsUpDown, ChevronUp, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
