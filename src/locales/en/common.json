@@ -24,7 +24,8 @@
         "placeholder": "Input text like `key:value`, then enter or blur",
         "title": "Labels",
         "value": "Value",
-        "total": "Total"
+        "total": "Total",
+        "detail": "Detail"
       },
       "name": "Name",
       "status": "Status",
@@ -146,9 +147,11 @@
       }
     },
     "overview": {
-      "title": "Traffic Flow",
-      "systemOverView": "System Overview",
-      "loginCountOverview": "User Login Activity"
+      "sections": {
+        "traffic": "Traffic",
+        "security": "Security",
+        "configuration": "Configuration"
+      }
     },
     "services": {
       "enableWebsocket": "Enable WebSocket",

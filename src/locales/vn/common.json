@@ -24,7 +24,8 @@
         "placeholder": "Nhập văn bản dạng `key:value`, sau đó nhấn Enter hoặc rời khỏi ô",
         "title": "Nhãn",
         "value": "Giá Trị",
-        "total": "Tổng"
+        "total": "Tổng",
+        "detail": "Chi tiết"
       },
       "name": "Tên",
       "status": "Trạng Thái",
@@ -146,9 +147,11 @@
       }
     },
     "overview": {
-      "title": "Luồng Lưu Lượng",
-      "systemOverView": "Tổng Quan Hệ Thống",
-      "loginCountOverview": "Hoạt Động Đăng Nhập Người Dùng"
+      "sections": {
+        "traffic": "Lưu lượng",
+        "security": "Bảo mật",
+        "configuration": "Cấu hình"
+      }
     },
     "services": {
       "enableWebsocket": "Bật WebSocket",

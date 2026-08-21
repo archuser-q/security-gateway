@@ -1,6 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ArrowRight } from 'lucide-react'
 
 import { getResourceStatsReq } from '@/apis/stats'
 import { req } from '@/config/req'
@@ -12,26 +13,46 @@ export const Route = createFileRoute('/_authenticated/overview/')({
   component: RouteComponent,
 })
 
-const RESOURCE_ORDER = [
-  { key: 'routes', labelKey: 'sources.routes' },
-  { key: 'services', labelKey: 'sources.services' },
-  { key: 'upstreams', labelKey: 'sources.upstreams' },
-  { key: 'consumers', labelKey: 'sources.consumers' },
-  { key: 'consumer_groups', labelKey: 'sources.consumerGroups' },
-  { key: 'plugin_configs', labelKey: 'sources.pluginConfigs' },
-  { key: 'global_rules', labelKey: 'sources.globalRules' },
-  { key: 'ssls', labelKey: 'sources.ssls' },
-  { key: 'admins', labelKey: 'sources.admin' },
+const SECTIONS = [
+  {
+    titleKey: 'form.overview.sections.traffic',
+    items: [
+      { key: 'services', labelKey: 'sources.services', path: '/services' },
+      { key: 'routes', labelKey: 'sources.routes', path: '/routes' },
+      { key: 'stream_routes', labelKey: 'sources.streamRoutes', path: '/stream_routes' },
+      { key: 'upstreams', labelKey: 'sources.upstreams', path: '/upstreams' },
+    ],
+  },
+  {
+    titleKey: 'form.overview.sections.security',
+    items: [
+      { key: 'consumers', labelKey: 'sources.consumers', path: '/consumers' },
+      { key: 'consumer_groups', labelKey: 'sources.consumerGroups', path: '/consumer_groups' },
+      { key: 'ssls', labelKey: 'sources.ssls', path: '/ssls' },
+    ],
+  },
+  {
+    titleKey: 'form.overview.sections.configuration',
+    items: [
+      { key: 'plugin_configs', labelKey: 'sources.pluginConfigs', path: '/plugin_configs' },
+      { key: 'global_rules', labelKey: 'sources.globalRules', path: '/global_rules' },
+      { key: 'protos', labelKey: 'sources.protos', path: '/protos' },
+      { key: 'secrets', labelKey: 'sources.secrets', path: '/secrets' },
+      { key: 'admins', labelKey: 'sources.admin', path: '/admins' },
+    ],
+  },
 ] as const
 
 function ResourceStatCard({
   title,
   stat,
   isLoading,
+  onDetailClick,
 }: {
   title: string
   stat: ResourceStat | null
   isLoading: boolean
+  onDetailClick: () => void
 }) {
   const { t } = useTranslation()
   const total = stat?.total ?? 0
@@ -42,9 +63,14 @@ function ResourceStatCard({
     <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
-        <span className="text-xs text-gray-400">
-          {t('form.basic.labels.total')}: {isLoading || !stat ? '—' : total}
-        </span>
+        <button
+          type="button"
+          onClick={onDetailClick}
+          className="flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700"
+        >
+          {t('form.basic.labels.detail')}
+          <ArrowRight className="h-3.5 w-3.5" strokeWidth={2.5} />
+        </button>
       </div>
 
       {isLoading || !stat ? (
@@ -57,9 +83,9 @@ function ResourceStatCard({
         </div>
       ) : (
         <div className="flex items-center gap-6">
-          <PieChart 
-            enabled={stat.enabled} 
-            disabled={stat.disabled} 
+          <PieChart
+            enabled={stat.enabled}
+            disabled={stat.disabled}
             enabledLabel={t('form.basic.statusOption.1')}
             disabledLabel={t('form.basic.statusOption.0')}
           />
@@ -69,14 +95,14 @@ function ResourceStatCard({
               label={t('form.basic.statusOption.1')}
               value={stat.enabled}
               percent={enabledPct}
-              variant='enabled'
+              variant="enabled"
             />
             <LegendRow
               colorClass="bg-red-500"
               label={t('form.basic.statusOption.0')}
               value={stat.disabled}
               percent={disabledPct}
-              variant='disabled'
+              variant="disabled"
             />
           </div>
         </div>
@@ -87,6 +113,7 @@ function ResourceStatCard({
 
 function RouteComponent() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const [data, setData] = useState<Record<string, ResourceStat> | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isError, setIsError] = useState(false)
@@ -110,15 +137,24 @@ function RouteComponent() {
 
   return (
     <div className="p-6">
-      <h2 className="mb-4 text-xl font-semibold text-gray-800">{t('form.overview.systemOverView')}</h2>
-      <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
-        {RESOURCE_ORDER.map(({ key, labelKey }) => (
-          <ResourceStatCard
-            key={key}
-            title={t(labelKey)}
-            stat={data?.[key] ?? null}
-            isLoading={isLoading}
-          />
+      <div className="space-y-8">
+        {SECTIONS.map((section) => (
+          <section key={section.titleKey}>
+            <h3 className="mb-3 text-xl font-semibold uppercase tracking-wide">
+              {t(section.titleKey)}
+            </h3>
+            <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
+              {section.items.map(({ key, labelKey, path }) => (
+                <ResourceStatCard
+                  key={key}
+                  title={t(labelKey)}
+                  stat={data?.[key] ?? null}
+                  isLoading={isLoading}
+                  onDetailClick={() => navigate({ to: path })}
+                />
+              ))}
+            </div>
+          </section>
         ))}
       </div>
     </div>
