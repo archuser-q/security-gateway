@@ -23,7 +23,8 @@
         "key": "Khóa",
         "placeholder": "Nhập văn bản dạng `key:value`, sau đó nhấn Enter hoặc rời khỏi ô",
         "title": "Nhãn",
-        "value": "Giá Trị"
+        "value": "Giá Trị",
+        "total": "Tổng"
       },
       "name": "Tên",
       "status": "Trạng Thái",
@@ -427,5 +428,8 @@
     "timeline": "Thời gian",
     "totalRequest": "Tổng request",
     "failRequest": "Thất bại"
+  },
+  "dashboard": {
+    "statsError": "Có một lỗi xuất hiện! Vui lòng thử lại sau"
   }
 }

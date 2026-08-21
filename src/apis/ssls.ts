@@ -47,6 +47,7 @@ export const postSSLReq = (req: AxiosInstance, data: SSLPostType) =>
 export const deleteAllSSLs = async (req: AxiosInstance) => {
   const { PAGE_SIZE_MIN, PAGE_SIZE_MAX } = await import('@/config/constant');
   const totalRes = await getSSLListReq(req, {
+    status:'all',
     page: 1,
     page_size: PAGE_SIZE_MIN,
   });
@@ -54,6 +55,7 @@ export const deleteAllSSLs = async (req: AxiosInstance) => {
   if (total === 0) return;
   for (let times = Math.ceil(total / PAGE_SIZE_MAX); times > 0; times--) {
     const res = await getSSLListReq(req, {
+      status:'all',
       page: 1,
       page_size: PAGE_SIZE_MAX,
     });

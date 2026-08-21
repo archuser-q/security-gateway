@@ -23,7 +23,8 @@
         "key": "Key",
         "placeholder": "Input text like `key:value`, then enter or blur",
         "title": "Labels",
-        "value": "Value"
+        "value": "Value",
+        "total": "Total"
       },
       "name": "Name",
       "status": "Status",
@@ -427,5 +428,8 @@
     "timeline": "Timeline",
     "totalRequest": "Total Request",
     "failRequest": "Fail"
+  },
+  "dashboard": {
+    "statsError": "An error occured! Please try again"
   }
 }

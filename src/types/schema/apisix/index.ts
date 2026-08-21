@@ -28,6 +28,7 @@ import { APISIXRoutes } from './routes';
 import { APISIXSecrets } from './secrets';
 import { APISIXServices } from './services';
 import { APISIXSSLs } from './ssls';
+import { APISIXStats } from './stats';
 import { APISIXStreamRoutes } from './stream_routes';
 import { APISIXUpstreams } from './upstreams';
 
@@ -48,5 +49,6 @@ export const APISIX = {
   ...APISIXSecrets,
   ...APISIXCredentials,
   ...APISIXPluginConfigs,
-  ...APISIXAdmin
+  ...APISIXAdmin,
+  ...APISIXStats
 };
