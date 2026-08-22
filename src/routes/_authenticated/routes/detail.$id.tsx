@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Badge, Button, Card, Group, Skeleton, Stack, Text } from '@mantine/core';
+import { Badge, Button, Card, Grid, Group, ScrollArea, Skeleton, Stack, Text, Tooltip } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
@@ -50,7 +50,7 @@ import PageHeader from '@/components/page/PageHeader';
 import { API_ROUTES, PAGE_SIZE_MAX } from '@/config/constant';
 import { req } from '@/config/req';
 import { type APISIXType } from '@/types/schema/apisix';
-import { nodeCount } from '@/utils/upstreamHelpers';
+import { normalizeNodes } from '@/utils/upstreamHelpers';
 
 // So khớp Host của Route với SNI của 1 SSL cert - hỗ trợ wildcard 1 cấp
 // kiểu "*.docker.localhost" (khớp "a.docker.localhost", KHÔNG khớp
@@ -77,7 +77,7 @@ type Props = {
 };
 
 const FlowBox = (props: { label: string; children: React.ReactNode }) => (
-  <Card withBorder radius="md" p="sm" miw={170}>
+  <Card withBorder radius="md" p="sm" miw={170} style={{ flex: '0 0 auto' }}>
     <Text size="xs" c="dimmed" tt="uppercase" mb={4}>
       {props.label}
     </Text>
@@ -86,7 +86,7 @@ const FlowBox = (props: { label: string; children: React.ReactNode }) => (
 );
 
 const FlowArrow = () => (
-  <Text size="xl" c="dimmed" px={4} style={{ alignSelf: 'center' }}>
+  <Text size="xl" c="dimmed" px={4} style={{ alignSelf: 'center', flex: '0 0 auto' }}>
     →
   </Text>
 );
@@ -182,18 +182,62 @@ const RouteFlowDiagram = (props: {
 
   const uriDisplay =
     route.uri || (route.uris?.length ? route.uris.join(', ') : '-');
+  // Host bị "giấu" hoàn toàn trong ô Route trước đây - trong khi Route
+  // này thật ra chỉ áp dụng cho đúng 1 Host (site-a.local), người xem
+  // nhìn "/demo/*" một mình rất dễ hiểu nhầm là áp dụng cho MỌI domain.
+  // Ghép Host ngay cạnh URI cũng cô đọng hơn cách Traefik viết cả biểu
+  // thức "Host(`...`)" dài dòng trong 1 dòng Rule.
+  const hostDisplay = route.host || (route.hosts?.length ? route.hosts.join(', ') : '');
+
+  const effectivePlugins: {
+    name: string;
+    config: Record<string, unknown>;
+    source: 'route' | 'pluginConfig' | 'service';
+  }[] = [];
+  {
+    const seen = new Set<string>();
+    for (const [name, config] of Object.entries(route.plugins ?? {})) {
+      effectivePlugins.push({ name, config: config as Record<string, unknown>, source: 'route' });
+      seen.add(name);
+    }
+    for (const [name, config] of Object.entries(pluginConfigQuery.data?.value.plugins ?? {})) {
+      if (seen.has(name)) continue;
+      effectivePlugins.push({
+        name,
+        config: config as Record<string, unknown>,
+        source: 'pluginConfig',
+      });
+      seen.add(name);
+    }
+    for (const [name, config] of Object.entries(service?.plugins ?? {})) {
+      if (seen.has(name)) continue;
+      effectivePlugins.push({
+        name,
+        config: config as Record<string, unknown>,
+        source: 'service',
+      });
+      seen.add(name);
+    }
+  }
 
   return (
+    <>
     <Card withBorder radius="md" p="md" mb="md">
       <Text size="xs" c="dimmed" mb="sm">
         {t('routeFlow.title')}
       </Text>
-      <Group gap={0} wrap="wrap" align="stretch">
-        <FlowBox label={t('routes.singular')}>
-          <Stack gap={4}>
-            <Text fw={600} size="sm" truncate="end" maw={220}>
+      <ScrollArea type="auto" offsetScrollbars scrollbarSize={8}>
+        <Group gap={0} wrap="nowrap" align="stretch">
+          <FlowBox label={t('routes.singular')}>
+            <Stack gap={4}>
+              <Text fw={600} size="sm" truncate="end" maw={220}>
               {uriDisplay}
             </Text>
+            {hostDisplay && (
+              <Text size="xs" c="dimmed" truncate="end" maw={220}>
+                {t('routeFlow.host', { host: hostDisplay })}
+              </Text>
+            )}
             <Group gap={4}>
               {route.status === 0 ? (
                 <Badge size="sm" color="gray" variant="light">
@@ -312,34 +356,86 @@ const RouteFlowDiagram = (props: {
           {isUpstreamLoading ? (
             <Skeleton height={20} width={90} />
           ) : resolvedUpstream ? (
-            <Stack gap={2}>
-              {resolvedUpstreamId ? (
-                <RouteLinkAnchor
-                  to="/upstreams/detail/$id"
-                  params={{ id: resolvedUpstreamId }}
-                  fw={600}
-                  size="sm"
-                >
-                  {t('routeFlow.nodeCount', { count: nodeCount(resolvedUpstream.nodes) })}
-                </RouteLinkAnchor>
-              ) : (
-                <Text fw={600} size="sm">
-                  {t('routeFlow.nodeCount', { count: nodeCount(resolvedUpstream.nodes) })}
-                </Text>
-              )}
-              <Group gap={4}>
-                {resolvedUpstream.type && (
-                  <Badge size="sm" variant="outline">
-                    {resolvedUpstream.type}
-                  </Badge>
-                )}
-                {resolvedUpstream.scheme && (
-                  <Badge size="sm" variant="outline" color="grape">
-                    {resolvedUpstream.scheme}
-                  </Badge>
-                )}
-              </Group>
-            </Stack>
+            (() => {
+              // Trước đây ô này chỉ hiện "N node" - đúng như bạn nhận
+              // xét, người dùng không thể biết traffic thực tế đi đâu.
+              // Giờ hiện thẳng host:port thật, kèm weight nếu các node
+              // có trọng số khác nhau (dấu hiệu canary/chia tải không
+              // đều - thông tin "1 node" cũ giấu mất hoàn toàn).
+              const nodes = normalizeNodes(resolvedUpstream.nodes);
+              const hasVaryingWeights = new Set(nodes.map((n) => n.weight)).size > 1;
+              const visibleNodes = nodes.slice(0, 2);
+              const remaining = nodes.length - visibleNodes.length;
+              const hasHealthCheck = !!(
+                resolvedUpstream.checks?.active || resolvedUpstream.checks?.passive
+              );
+
+              return (
+                <Stack gap={4}>
+                  {visibleNodes.length === 0 ? (
+                    <Text size="sm" c="dimmed">
+                      {t('routeFlow.notConfigured')}
+                    </Text>
+                  ) : (
+                    <Stack gap={0}>
+                      {visibleNodes.map((n, i) => (
+                        <Text
+                          key={`${n.host}:${n.port}:${i}`}
+                          fw={600}
+                          size="sm"
+                          ff="monospace"
+                          truncate="end"
+                          maw={210}
+                        >
+                          {n.host}
+                          {n.port ? `:${n.port}` : ''}
+                          {hasVaryingWeights ? ` · w${n.weight}` : ''}
+                        </Text>
+                      ))}
+                      {remaining > 0 && (
+                        <Text size="xs" c="dimmed">
+                          {t('routeFlow.moreNodes', { count: remaining })}
+                        </Text>
+                      )}
+                    </Stack>
+                  )}
+                  <Group gap={4}>
+                    <Tooltip
+                      label={t('routeFlow.defaultNote')}
+                      disabled={!!resolvedUpstream.type}
+                      withArrow
+                    >
+                      <Badge size="sm" variant="outline">
+                        {resolvedUpstream.type || t('routeFlow.defaultType')}
+                      </Badge>
+                    </Tooltip>
+                    <Tooltip
+                      label={t('routeFlow.defaultNote')}
+                      disabled={!!resolvedUpstream.scheme}
+                      withArrow
+                    >
+                      <Badge size="sm" variant="outline" color="grape">
+                        {resolvedUpstream.scheme || t('routeFlow.defaultScheme')}
+                      </Badge>
+                    </Tooltip>
+                    {hasHealthCheck && (
+                      <Badge size="sm" variant="outline" color="green">
+                        {t('routeFlow.healthCheck')}
+                      </Badge>
+                    )}
+                  </Group>
+                  {resolvedUpstreamId && (
+                    <RouteLinkAnchor
+                      to="/upstreams/detail/$id"
+                      params={{ id: resolvedUpstreamId }}
+                      size="xs"
+                    >
+                      {t('routeFlow.viewUpstream')}
+                    </RouteLinkAnchor>
+                  )}
+                </Stack>
+              );
+            })()
           ) : (
             <Text size="sm" c="dimmed">
               {t('routeFlow.notConfigured')}
@@ -347,7 +443,81 @@ const RouteFlowDiagram = (props: {
           )}
         </FlowBox>
       </Group>
+      </ScrollArea>
     </Card>
+
+    {effectivePlugins.length > 0 && (
+      <Card withBorder radius="md" p="md" mb="md">
+        <Text fw={600} size="sm" mb="xs">
+          {t('routeFlow.pluginDetailsTitle')}
+        </Text>
+        <Grid>
+          {effectivePlugins.map(({ name, config, source }) => (
+            <Grid.Col key={name} span={{ base: 12, md: 6 }}>
+              <Card withBorder radius="md" p="md">
+                <Group justify="space-between" mb="xs">
+                  <Badge variant="light" color="teal" size="sm">
+                    {name}
+                  </Badge>
+                  {source === 'route' && (
+                    <Text size="xs" c="dimmed">
+                      {t('routeFlow.sourceRoute')}
+                    </Text>
+                  )}
+                  {source === 'pluginConfig' && (
+                    <Text size="xs" c="dimmed">
+                      {t('form.plugins.viaPrefix')}{' '}
+                      <RouteLinkAnchor
+                        to="/plugin_configs/detail/$id"
+                        params={{ id: pluginConfigId ?? '' }}
+                        size="xs"
+                      >
+                        {pluginConfigQuery.data?.value.name || pluginConfigId}
+                      </RouteLinkAnchor>
+                    </Text>
+                  )}
+                  {source === 'service' && (
+                    <Text size="xs" c="dimmed">
+                      {t('form.plugins.viaPrefix')}{' '}
+                      <RouteLinkAnchor
+                        to="/services/detail/$id"
+                        params={{ id: serviceId ?? '' }}
+                        size="xs"
+                      >
+                        {service?.name || serviceId}
+                      </RouteLinkAnchor>
+                    </Text>
+                  )}
+                </Group>
+                <Stack gap={0}>
+                  {Object.keys(config).length === 0 ? (
+                    <Text size="sm" c="dimmed">
+                      -
+                    </Text>
+                  ) : (
+                    Object.entries(config).map(([key, val]) => (
+                      <Group key={key} justify="space-between" py={4} wrap="nowrap" gap="md">
+                        <Text size="sm" c="dimmed" style={{ flexShrink: 0 }}>
+                          {key}
+                        </Text>
+                        <Text size="sm" ta="right" style={{ wordBreak: 'break-all' }}>
+                          {val === null || val === undefined || val === ''
+                            ? '-'
+                            : typeof val === 'object'
+                              ? JSON.stringify(val)
+                              : String(val)}
+                        </Text>
+                      </Group>
+                    ))
+                  )}
+                </Stack>
+              </Card>
+            </Grid.Col>
+          ))}
+        </Grid>
+      </Card>
+    )}
+    </>
   );
 };
 
@@ -374,12 +544,14 @@ const RouteTlsSection = ({ route }: { route: APISIXType['Route'] | undefined }) 
   }
 
   const matches = hosts.map((host) => {
-    const cert = (sslListQuery.data?.list ?? []).find((item) => {
-      const candidates = [item.value.sni, ...(item.value.snis ?? [])].filter(
-        (v): v is string => !!v
-      );
-      return candidates.some((sni) => matchesSni(host, sni));
-    });
+    const cert = (sslListQuery.data?.list ?? [])
+      .filter((item) => item.value.type !== 'client')
+      .find((item) => {
+        const candidates = [item.value.sni, ...(item.value.snis ?? [])].filter(
+          (v): v is string => !!v
+        );
+        return candidates.some((sni) => matchesSni(host, sni));
+      });
     return { host, cert };
   });
 

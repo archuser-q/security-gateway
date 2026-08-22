@@ -14,133 +14,72 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Group,Skeleton } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
+
 import {
   createFileRoute,
+  Outlet,
+  useLocation,
   useNavigate,
   useParams,
 } from '@tanstack/react-router';
-import { useEffect } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useBoolean } from 'react-use';
 
-import { putConsumerGroupReq } from '@/apis/consumer_groups';
-import { getConsumerGroupQueryOptions } from '@/apis/hooks';
-import { FormSubmitBtn } from '@/components/form/Btn';
-import { FormPartPluginConfig } from '@/components/form-slice/FormPartPluginConfig';
-import { FormTOCBox } from '@/components/form-slice/FormSection';
-import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
-import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
-import PageHeader from '@/components/page/PageHeader';
-import { API_CONSUMER_GROUPS } from '@/config/constant';
-import { req } from '@/config/req';
-import { APISIX, type APISIXType } from '@/types/schema/apisix';
+import { Tabs, type TabsItem } from '@/components/page/Tabs';
 
-type Props = {
-  id: string;
-  readOnly: boolean;
-  setReadOnly: (v: boolean) => void;
-};
-
-const ConsumerGroupDetailForm = (props: Props) => {
-  const { id, readOnly, setReadOnly } = props;
+// Cùng kiến trúc file đã dùng cho Plugin Configs (copy nguyên pattern
+// gốc từ Services): detail.$id.tsx là layout có tab, detail.$id/index.tsx
+// là tab General, detail.$id/consumers/index.tsx là tab Consumers.
+const defaultTab = 'detail';
+export const DetailTabs = () => {
   const { t } = useTranslation();
-
-  const consumerGroupQuery = useSuspenseQuery(getConsumerGroupQueryOptions(id));
-  const { data } = consumerGroupQuery;
-
-  const putConsumerGroup = useMutation({
-    mutationFn: (d: APISIXType['ConsumerGroupPut']) =>
-      putConsumerGroupReq(req, d),
-    async onSuccess() {
-      notifications.show({
-        message: t('info.edit.success', { name: t('consumerGroups.singular') }),
-        color: 'green',
-      });
-      consumerGroupQuery.refetch();
-      setReadOnly(true);
-    },
+  const { id } = useParams({ strict: false });
+  const navigate = useNavigate();
+  const pathname = useLocation({
+    select: (location) => location.pathname,
   });
 
-  const form = useForm({
-    resolver: zodResolver(APISIX.ConsumerGroupPut),
-    shouldUnregister: true,
-    shouldFocusError: true,
-    mode: 'all',
-    disabled: readOnly,
-  });
-
-  useEffect(() => {
-    form.reset(data.value);
-  }, [form, data.value]);
-
-  if (!data) return <Skeleton height={200} />;
-
+  const items = useMemo(
+    (): TabsItem[] => [
+      {
+        value: 'detail',
+        label: t('info.detail.title', { name: t('consumerGroups.singular') }),
+      },
+      {
+        value: 'consumers',
+        label: t('sources.consumers'),
+      },
+    ],
+    [t]
+  );
   return (
-    <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit((d) =>
-          putConsumerGroup.mutateAsync({ ...d, id })
-        )}
-      >
-        <FormSectionGeneral readOnly />
-        <FormPartPluginConfig basicProps={{ showName: false }} />
-        {!readOnly && (
-          <Group>
-            <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
-            <Button variant="outline" onClick={() => setReadOnly(true)}>
-              {t('form.btn.cancel')}
-            </Button>
-          </Group>
-        )}
-      </form>
-    </FormProvider>
+    <Tabs
+      items={items}
+      variant="outline"
+      value={
+        items
+          .slice()
+          .reverse()
+          .find((v) => pathname.includes(v.value))?.value || defaultTab
+      }
+      onChange={(v) => {
+        navigate({
+          to:
+            v === defaultTab
+              ? '/consumer_groups/detail/$id/'
+              : `/consumer_groups/detail/$id/${v}/`,
+          params: { id: id as string },
+        });
+      }}
+    />
   );
 };
 
 function RouteComponent() {
-  const { id } = useParams({ from: '/_authenticated/consumer_groups/detail/$id' });
-  const { t } = useTranslation();
-  const [readOnly, setReadOnly] = useBoolean(true);
-  const navigate = useNavigate();
-
   return (
     <>
-      <PageHeader
-        title={t('info.edit.title', { name: t('consumerGroups.singular') })}
-        {...(readOnly && {
-          title: t('info.detail.title', { name: t('consumerGroups.singular') }),
-          extra: (
-            <Group>
-              <Button
-                onClick={() => setReadOnly(false)}
-                size="compact-sm"
-                variant="gradient"
-              >
-                {t('form.btn.edit')}
-              </Button>
-              <DeleteResourceBtn
-                mode="detail"
-                name={t('consumerGroups.singular')}
-                target={id}
-                api={`${API_CONSUMER_GROUPS}/${id}`}
-                onSuccess={() => navigate({ to: '/consumer_groups' })}
-              />
-            </Group>
-          ),
-        })}
-      />
-      <FormTOCBox>
-        <ConsumerGroupDetailForm
-          id={id}
-          readOnly={readOnly}
-          setReadOnly={setReadOnly}
-        />
-      </FormTOCBox>
+      <DetailTabs />
+      <Outlet />
     </>
   );
 }

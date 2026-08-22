@@ -16,13 +16,16 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
+import { Group } from '@mantine/core';
 import { createFileRoute } from '@tanstack/react-router';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getSecretListQueryOptions, useSecretList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { ListSearchBox } from '@/components/page/ListSearchBox';
 import PageHeader from '@/components/page/PageHeader';
+import { SecretManagerBadge } from '@/components/page/SecretManagerBadge';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_SECRETS } from '@/config/constant';
@@ -33,6 +36,19 @@ import { pageSearchSchema } from '@/types/schema/pageSearch';
 function SecretList() {
   const { t } = useTranslation();
   const { data, isLoading, refetch, pagination } = useSecretList();
+  const [search, setSearch] = useState('');
+
+  // Secret không có field "name"/"desc" nên search lọc theo ID/manager
+  // ngay trên mảng đã tải (giống lý do SSL/Plugin Config làm client-side
+  // thay vì gọi setParams).
+  const filteredList = useMemo(() => {
+    const list = data?.list || [];
+    if (!search.trim()) return list;
+    const q = search.trim().toLowerCase();
+    return list.filter((item) =>
+      `${item.value.id} ${item.value.manager}`.toLowerCase().includes(q)
+    );
+  }, [data?.list, search]);
 
   const columns = useMemo<
     ProColumns<APISIXType['RespSecretList']['data']['list'][number]>[]
@@ -46,11 +62,10 @@ function SecretList() {
         width: 300,
       },
       {
-        dataIndex: ['value', 'manager'],
         title: t('form.secrets.manager'),
         key: 'manager',
-        valueType: 'text',
         width: 120,
+        render: (_, record) => <SecretManagerBadge manager={record.value.manager} />,
       },
       {
         title: t('table.actions'),
@@ -80,9 +95,12 @@ function SecretList() {
 
   return (
     <AntdConfigProvider>
+      <Group justify="flex-end" mb="sm">
+        <ListSearchBox value={search} onSearch={setSearch} />
+      </Group>
       <ProTable
         columns={columns}
-        dataSource={data?.list || []}
+        dataSource={filteredList}
         rowKey="id"
         loading={isLoading}
         search={false}

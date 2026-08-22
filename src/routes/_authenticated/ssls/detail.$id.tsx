@@ -171,6 +171,14 @@ const SSLSummaryCard = (props: {
           </Stack>
           <Stack gap={2}>
             <Text size="xs" c="dimmed">
+              {t('certDetail.type')}
+            </Text>
+            <Badge color={value.type === 'client' ? 'violet' : 'blue'} variant="light">
+              {value.type === 'client' ? t('certDetail.typeClient') : t('certDetail.typeServer')}
+            </Badge>
+          </Stack>
+          <Stack gap={2}>
+            <Text size="xs" c="dimmed">
               {t('certDetail.sniMatch')}
             </Text>
             <Text fw={600} size="sm" truncate="end" maw={220}>
@@ -204,6 +212,11 @@ const SSLSummaryCard = (props: {
             </Badge>
           </Stack>
         </Group>
+        {value.type === 'client' && (
+          <Text size="xs" c="dimmed" mt="xs">
+            {t('certDetail.clientTypeNote')}
+          </Text>
+        )}
       </Card>
 
       {certInfo && (
@@ -248,6 +261,29 @@ const SSLSummaryCard = (props: {
               <FingerprintRow label="Public Key" value={fingerprints?.publicKey ?? null} />
             </InfoSection>
           </Grid.Col>
+          {(value.ssl_protocols?.length || value.client) && (
+            <Grid.Col span={12}>
+              <InfoSection title={t('certDetail.apisixConfigTitle')}>
+                {value.ssl_protocols?.length ? (
+                  <InfoRow
+                    label={t('certDetail.allowedProtocols')}
+                    value={value.ssl_protocols.join(', ')}
+                  />
+                ) : null}
+                {value.client && (
+                  <>
+                    <InfoRow
+                      label={t('certDetail.mtlsCa')}
+                      value={value.client.ca ? t('certDetail.mtlsCaSet') : '-'}
+                    />
+                    {typeof value.client.depth === 'number' && (
+                      <InfoRow label={t('certDetail.mtlsDepth')} value={value.client.depth} />
+                    )}
+                  </>
+                )}
+              </InfoSection>
+            </Grid.Col>
+          )}
         </Grid>
       )}
     </>

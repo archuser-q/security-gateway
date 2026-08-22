@@ -19,17 +19,18 @@ import { ProTable } from '@ant-design/pro-components';
 import { Group } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute, useParams } from '@tanstack/react-router';
-import { Badge } from 'antd';
+import { Badge, Space, Tag } from 'antd';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getRouteListReq } from '@/apis/routes';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import { ListSearchBox } from '@/components/page/ListSearchBox';
 import PageHeader from '@/components/page/PageHeader';
 import { StatusFilterTabs } from '@/components/page/StatusFilterTabs';
 import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
-import { PAGE_SIZE_MAX } from '@/config/constant';
+import { API_ROUTES, PAGE_SIZE_MAX } from '@/config/constant';
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
 import { filterByStatus, type StatusFilterValue } from '@/utils/statusFilter';
@@ -48,7 +49,7 @@ function RouteComponent() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilterValue>('all');
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['plugin_config_routes_scan', id],
     queryFn: () => getRouteListReq(req, { page: 1, page_size: PAGE_SIZE_MAX }),
   });
@@ -97,6 +98,22 @@ function RouteComponent() {
         valueType: 'text',
       },
       {
+        dataIndex: ['value', 'methods'],
+        title: t('form.routes.methods'),
+        key: 'methods',
+        width: 220,
+        render: (_, record) =>
+          record.value.methods?.length ? (
+            <Space size={4} wrap>
+              {record.value.methods.map((m) => (
+                <Tag key={m}>{m}</Tag>
+              ))}
+            </Space>
+          ) : (
+            '-'
+          ),
+      },
+      {
         dataIndex: ['value', 'priority'],
         title: t('form.routes.priority'),
         key: 'priority',
@@ -104,15 +121,58 @@ function RouteComponent() {
         render: (_, record) => record.value.priority ?? 0,
       },
       {
+        dataIndex: ['value', 'service_id'],
+        title: t('form.routes.service'),
+        key: 'service_id',
+        width: 140,
+        render: (_, record) => record.value.service_id || '-',
+      },
+      {
+        dataIndex: ['value', 'create_time'],
+        title: t('form.routes.createTime'),
+        key: 'create_time',
+        width: 170,
+        valueType: 'dateTime',
+        renderText: (text) => {
+          if (!text) return '-';
+          return new Date(Number(text) * 1000).toISOString();
+        },
+      },
+      {
+        dataIndex: ['value', 'created_by'],
+        title: t('form.basic.created_by'),
+        key: 'created_by',
+        valueType: 'text',
+        renderText: (text) => text || '-',
+      },
+      {
+        dataIndex: ['value', 'id'],
+        title: 'ID',
+        key: 'id',
+        width: 160,
+        valueType: 'text',
+      },
+      {
         title: t('table.actions'),
         key: 'actions',
-        width: 100,
-        render: (_, record) => (
-          <ToDetailPageBtn to="/routes/detail/$id" params={{ id: record.value.id }} />
-        ),
+        width: 120,
+        render: (_, record) => [
+          <ToDetailPageBtn
+            key="detail"
+            to="/routes/detail/$id"
+            params={{ id: record.value.id }}
+          />,
+          <DeleteResourceBtn
+            key="delete"
+            name={t('routes.singular')}
+            target={record.value.id}
+            api={`${API_ROUTES}/${record.value.id}`}
+            onSuccess={refetch}
+          />,
+        ],
       },
     ],
-    [t]
+    [t, refetch]
   );
 
   return (

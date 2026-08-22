@@ -24,3 +24,27 @@ export const nodeCount = (nodes: unknown): number => {
   if (typeof nodes === 'object') return Object.keys(nodes).length;
   return 0;
 };
+
+export type NormalizedNode = { host: string; port?: number; weight: number };
+
+/** Chuẩn hoá cả 2 dạng nodes về cùng 1 hình dạng {host, port, weight} để hiển thị thật (không chỉ đếm số lượng). */
+export const normalizeNodes = (nodes: unknown): NormalizedNode[] => {
+  if (!nodes) return [];
+  if (Array.isArray(nodes)) {
+    return nodes.map((n: { host: string; port?: number; weight: number }) => ({
+      host: n.host,
+      port: n.port,
+      weight: n.weight,
+    }));
+  }
+  if (typeof nodes === 'object') {
+    return Object.entries(nodes as Record<string, number>).map(([key, weight]) => {
+      const lastColon = key.lastIndexOf(':');
+      if (lastColon === -1) return { host: key, weight };
+      const host = key.slice(0, lastColon);
+      const port = Number(key.slice(lastColon + 1));
+      return { host, port: Number.isNaN(port) ? undefined : port, weight };
+    });
+  }
+  return [];
+};

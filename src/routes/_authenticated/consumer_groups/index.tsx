@@ -16,12 +16,14 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
+import { Badge, Group } from '@mantine/core';
 import { createFileRoute } from '@tanstack/react-router';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getConsumerGroupListQueryOptions, useConsumerGroupList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { ListSearchBox } from '@/components/page/ListSearchBox';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
@@ -30,13 +32,46 @@ import { queryClient } from '@/config/queryClient';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 
+// Cùng cách hiển thị plugin dạng badge như Plugin Configs, vì
+// ConsumerGroup bản chất CHÍNH LÀ PluginConfig (chỉ thiếu field name) -
+// xem ConsumerGroup = APISIXPluginConfigs.PluginConfig.omit({name:true})
+// trong types/schema/apisix/consumer_groups.ts. Không có cột Name vì
+// resource này không có field đó (bản cũ có cột Name nhưng luôn rỗng vì
+// đọc nhầm field không tồn tại - đã bỏ).
+const PluginBadges = ({ plugins }: { plugins?: Record<string, unknown> }) => {
+  const names = Object.keys(plugins ?? {});
+  if (names.length === 0) return <>-</>;
+  return (
+    <Group gap={4} wrap="wrap">
+      {names.map((name) => (
+        <Badge key={name} variant="light" color="teal" size="sm">
+          {name}
+        </Badge>
+      ))}
+    </Group>
+  );
+};
+
 function ConsumerGroupsList() {
   const { t } = useTranslation();
   const { data, isLoading, refetch, pagination } = useConsumerGroupList();
+  const [search, setSearch] = useState('');
 
-  const columns = useMemo<
-    ProColumns<APISIXType['RespConsumerGroupItem']>[]
-  >(() => {
+  // ConsumerGroup không có field "name" nên server không có gì để lọc
+  // theo tên - search ở đây lọc phía client theo ID/desc/tên plugin bên
+  // trong (hữu ích thật: vd tìm nhanh "group nào đang dùng limit-count").
+  const filteredList = useMemo(() => {
+    if (!search.trim()) return data.list;
+    const q = search.trim().toLowerCase();
+    return data.list.filter((item) => {
+      const id = item.value.id ?? '';
+      const desc = item.value.desc ?? '';
+      const pluginNames = Object.keys(item.value.plugins ?? {}).join(' ');
+      return `${id} ${desc} ${pluginNames}`.toLowerCase().includes(q);
+    });
+  }, [data.list, search]);
+
+  const columns = useMemo<ProColumns<APISIXType['RespConsumerGroupItem']>[]>(() => {
     return [
       {
         dataIndex: ['value', 'id'],
@@ -45,10 +80,9 @@ function ConsumerGroupsList() {
         valueType: 'text',
       },
       {
-        dataIndex: ['value', 'name'],
-        title: t('form.basic.name'),
-        key: 'name',
-        valueType: 'text',
+        title: t('form.plugins.label'),
+        key: 'plugins',
+        render: (_, record) => <PluginBadges plugins={record.value.plugins} />,
       },
       {
         dataIndex: ['value', 'desc'],
@@ -92,9 +126,12 @@ function ConsumerGroupsList() {
 
   return (
     <AntdConfigProvider>
+      <Group justify="flex-end" mb="sm">
+        <ListSearchBox value={search} onSearch={setSearch} />
+      </Group>
       <ProTable
         columns={columns}
-        dataSource={data.list}
+        dataSource={filteredList}
         rowKey="id"
         loading={isLoading}
         search={false}
