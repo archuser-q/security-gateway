@@ -1,24 +1,24 @@
 import { getAdminListQueryOptions, useAdminList } from '@/apis/hooks';
-import { useMemo } from 'react';
-import type { APISIXType } from '@/types/schema/apisix';
-import { ProTable, type ProColumns } from '@ant-design/pro-components';
+import { useEffect, useState } from 'react';
 import PageHeader from '@/components/page/PageHeader';
-import { createFileRoute } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
+import { createFileRoute, useSearch } from '@tanstack/react-router'; 
+import { useTranslation } from 'react-i18next';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
-import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import { queryClient } from '@/config/queryClient';
-import { Tag } from 'antd';
 import { UpdateAdminStatusBtn } from '@/components/page/UpdateStatusAdminBtn';
 import { useAuth } from '@/context/AuthContext';
+import { Search, CheckCircle2, XCircle } from 'lucide-react';
+import dayjs from 'dayjs';
+import { PaginationBar } from '@/components/PaginationBar';
+import SortableHeader, { type SortDir } from '@/components/SortableHeader';
 
 export const Route = createFileRoute('/_authenticated/admins/')({
   component: RouteComponent,
   validateSearch: pageSearchSchema,
-  loaderDeps: ({search}) => search,
-  loader: ({deps}) => queryClient.ensureQueryData(getAdminListQueryOptions(deps)),
-})
+  loaderDeps: ({ search }) => search,
+  loader: ({ deps }) => queryClient.ensureQueryData(getAdminListQueryOptions(deps)),
+});
 
 function RouteComponent() {
   const { t } = useTranslation();
@@ -32,95 +32,169 @@ function RouteComponent() {
 
 function AdminList() {
   const { t } = useTranslation();
-  const { data, isLoading, refetch, pagination } = useAdminList();
+  const { data, isLoading, refetch, pagination, setParams } = useAdminList(); 
   const auth = useAuth();
-  
-  const columns = useMemo<ProColumns<APISIXType['RespAdminItem']>[]>(() => {
-    return [
-      {
-        dataIndex: ['value', 'username'],
-        title: t('form.consumers.username'),
-        key: 'username',
-        valueType: 'text',
-      },
-      {
-        dataIndex: ['value', 'status'],
-        title: t('form.basic.status'),
-        key: 'status',
-        valueType: 'text',
-        render: (_, record) => {
-          const isActive = record.value.status;
-          return (
-            <Tag color={isActive ? 'success' : 'error'}>
-              {isActive ? t('info.status.active') : t('info.status.inactive')}
-            </Tag>
-          );
-        },
-      },
-      {
-        dataIndex: ['value', 'update_time'],
-        title: t('form.info.update_time'),
-        key: 'update_time',
-        valueType: 'dateTime',
-        sorter: true,
-        renderText: (text) => {
-          if (!text) return '-';
-          return new Date(Number(text) * 1000).toLocaleString();
-        },
-      },
-      {
-        title: t('table.actions'),
-        valueType: 'option',
-        key: 'option',
-        render: (_, record) => [
-          <ToDetailPageBtn
-            key="detail"
-            to="/admins/detail/$id"
-            params={{ id: record.value.id }}
-          />,
-          auth.user?.role === 'super_admin' && <UpdateAdminStatusBtn
-            key="status"
-            name={record.value.username}
-            id={record.value.id}
-            status={record.value.status}
-            refetch={refetch}
-          />,
-        ],
-      },
-    ];
-  }, [t, refetch]);
-  
-  return(
-    <AntdConfigProvider>
-      <ProTable
-        columns={columns}
-        dataSource={data.list}
-        rowKey={(record) => record.value.id}
-        loading={isLoading}
-        search={false}
-        options={false}
-        pagination={pagination}
-        cardProps={{ bodyStyle: { padding: 0 } }}
-        toolbar={{
-          menu: {
-                type: 'inline',
-                items: [
-                  {
-                    key: 'add',
-                    label: (
-                      <ToAddPageBtn
-                        key="add"
-                        to="/admins/add"
-                        label={t('info.add.title', {
-                          name: t('admins.singular'),
-                        })}
-                      />
-                    )
-                  }
-                ]
-              }
-        }}
-      />
-    </AntdConfigProvider>
-  )
+
+  const rawParams = useSearch({ from: '/_authenticated/admins/' });
+  const params = pageSearchSchema.parse(rawParams);
+  const [searchInput, setSearchInput] = useState(params.search ?? '');
+
+  useEffect(() => {
+    setSearchInput(params.search ?? '');
+  }, [params.search]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchInput !== (params.search ?? '')) {
+        setParams({ search: searchInput || undefined, page: 1 });
+      }
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  const handleStatusFilter = (status: 'all' | 'active' | 'inactive') => {
+    setParams({ status, page: 1 });
+  };
+
+  const handleSort = (field: 'username' | 'status' | 'update_time') => {
+    const isSame = params.sort_field === field;
+    const nextOrder: SortDir = isSame && params.sort_order === 'asc' ? 'desc' : 'asc';
+    setParams({ sort_field: field, sort_order: nextOrder });
+  };
+
+  const filterOptions: { key: 'all' | 'active' | 'inactive'; label: string }[] = [
+    { key: 'all', label: t('info.status.all', 'All status') },
+    { key: 'active', label: t('info.status.active') },
+    { key: 'inactive', label: t('info.status.inactive') },
+  ];
+
+  return (
+    <div className="space-y-4">
+      {/* Toolbar */}
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-2">
+          {filterOptions.map((opt) => (
+            <button
+              key={opt.key}
+              onClick={() => handleStatusFilter(opt.key)}
+              className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                (params.status ?? 'all') === opt.key
+                  ? 'bg-teal-600 text-white'
+                  : 'text-gray-500 hover:bg-gray-100'
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+
+          <ToAddPageBtn
+            to="/admins/add"
+            label={t('info.add.title', { name: t('admins.singular') })}
+          />
+        </div>
+
+        <div className="relative w-72">
+          <input
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            placeholder={t('table.search', 'Search')}
+            className="w-full rounded-lg border border-gray-200 bg-white py-2 pl-3 pr-9 text-sm
+                       placeholder:text-gray-400 focus:border-teal-500 focus:outline-none
+                       focus:ring-1 focus:ring-teal-500"
+          />
+          <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+        </div>
+      </div>
+
+      {/* Table card */}
+      <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
+        <table className="w-full text-left text-sm">
+          <thead>
+            <tr className="border-b border-gray-100">
+              <SortableHeader
+                label={t('form.consumers.username')}
+                active={params.sort_field === 'username'}
+                dir={params.sort_field === 'username' ? (params.sort_order as SortDir) : undefined}
+                onClick={() => handleSort('username')}
+              />
+              <th className="px-4 py-3 text-left font-normal">
+                {t('form.basic.status')}
+              </th>
+              <SortableHeader
+                label={t('form.info.update_time')}
+                active={params.sort_field === 'update_time'}
+                dir={params.sort_field === 'update_time' ? (params.sort_order as SortDir) : undefined}
+                onClick={() => handleSort('update_time')}
+              />
+              <th className="px-4 py-3 text-right font-normal">
+                {t('table.actions')}
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {isLoading ? (
+              <tr>
+                <td colSpan={4} className="px-4 py-10 text-center text-gray-400">
+                  {t('common.loading', 'Loading...')}
+                </td>
+              </tr>
+            ) : data.list.length === 0 ? ( 
+              <tr>
+                <td colSpan={4} className="px-4 py-10 text-center text-gray-400">
+                  {t('common.empty', 'No data')}
+                </td>
+              </tr>
+            ) : (
+              data.list.map((record) => ( 
+                <tr
+                  key={record.value.id}
+                  className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/60"
+                >
+                  <td className="px-4 py-3">{record.value.username}</td>
+
+                  <td className="px-4 py-3">
+                    {record.value.status ? (
+                      <span className="inline-flex items-center gap-1.5 text-green-600">
+                        <CheckCircle2 className="h-4 w-4" />
+                        <span className="text-gray-600">{t('info.status.active')}</span>
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 text-red-500">
+                        <XCircle className="h-4 w-4" />
+                        <span className="text-gray-600">{t('info.status.inactive')}</span>
+                      </span>
+                    )}
+                  </td>
+
+                  <td className="px-4 py-3">
+                    {record.value.update_time
+                      ? dayjs(record.value.update_time * 1000).format('YYYY-MM-DD HH:mm:ss')
+                      : '-'}
+                  </td>
+
+                  <td className="px-4 py-3">
+                    <div className="flex items-center justify-end gap-2">
+                      <ToDetailPageBtn to="/admins/detail/$id" params={{ id: record.value.id }} />
+                      {auth.user?.role === 'super_admin' && (
+                        <UpdateAdminStatusBtn
+                          name={record.value.username}
+                          id={record.value.id}
+                          status={record.value.status}
+                          refetch={refetch}
+                        />
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination */}
+      {pagination && <PaginationBar pagination={pagination} />}
+    </div>
+  );
 }

@@ -104,4 +104,8 @@ export type APISIXType = RawAPISIXType & {
   RespSSLList: AxiosResponse<APISIXListResponse<APISIXType['SSL']>>;
   RespSSLItem: APISIXType['RespSSLList']['data']['list'][number];
   RespSSLDetail: AxiosResponse<APISIXDetailResponse<APISIXType['SSL']>>;
+  RespStats: AxiosResponse<{
+    code: number;
+    data: APISIXType['ResourceStats'];
+  }>;
 };

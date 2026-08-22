@@ -40,6 +40,7 @@ import { API_CONSUMERS } from '@/config/constant';
 import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
+import { Overview } from '@/components/form-slice/Overview';
 
 type Props = {
   readOnly: boolean;
@@ -91,6 +92,32 @@ const ConsumerDetailForm = (props: Props) => {
           putConsumer.mutateAsync(pipeProduce()(d));
         })}
       >
+        <Overview
+          title={t('overview.title', 'Overview')}
+          fields={[
+            { label: 'Username', value: consumerData.value.username },
+            {
+              label: t('consumer_groups.singular', 'Group ID'),
+              value: consumerData.value.group_id ?? '-',
+            },
+            {
+              label: t('form.consumers.plugins', 'Plugins'),
+              value: Object.keys(consumerData.value.plugins ?? {}).length,
+            },
+            {
+              label: t('info.updateTime', 'Updated At'),
+              value: (() => {
+                const updateTime = (
+                  consumerData.value as { update_time?: number }
+                ).update_time;
+
+                return updateTime
+                  ? new Date(updateTime * 1000).toLocaleString()
+                  : '-';
+              })(),
+            },
+          ]}
+        />
         <FormSectionGeneral showID={false} readOnly />
         <FormPartConsumer />
         {!readOnly && (

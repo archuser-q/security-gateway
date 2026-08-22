@@ -23,7 +23,9 @@
         "key": "Key",
         "placeholder": "Input text like `key:value`, then enter or blur",
         "title": "Labels",
-        "value": "Value"
+        "value": "Value",
+        "total": "Total",
+        "detail": "Detail"
       },
       "name": "Name",
       "status": "Status",
@@ -145,9 +147,11 @@
       }
     },
     "overview": {
-      "title": "Traffic Flow",
-      "systemOverView": "System Overview",
-      "loginCountOverview": "User Login Activity"
+      "sections": {
+        "traffic": "Traffic",
+        "security": "Security",
+        "configuration": "Configuration"
+      }
     },
     "services": {
       "enableWebsocket": "Enable WebSocket",
@@ -427,5 +431,8 @@
     "timeline": "Timeline",
     "totalRequest": "Total Request",
     "failRequest": "Fail"
+  },
+  "dashboard": {
+    "statsError": "An error occured! Please try again"
   }
 }

@@ -50,6 +50,7 @@ export const postRouteReq = (req: AxiosInstance, data: RoutePostType) =>
 
 export const deleteAllRoutes = async (req: AxiosInstance) => {
   const totalRes = await getRouteListReq(req, {
+    status:'all',
     page: 1,
     page_size: PAGE_SIZE_MIN,
   });
@@ -57,6 +58,7 @@ export const deleteAllRoutes = async (req: AxiosInstance) => {
   if (total === 0) return;
   for (let times = Math.ceil(total / PAGE_SIZE_MAX); times > 0; times--) {
     const res = await getRouteListReq(req, {
+      status:'all',
       page: 1,
       page_size: PAGE_SIZE_MAX,
     });

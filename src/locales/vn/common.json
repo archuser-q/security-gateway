@@ -23,7 +23,9 @@
         "key": "Khóa",
         "placeholder": "Nhập văn bản dạng `key:value`, sau đó nhấn Enter hoặc rời khỏi ô",
         "title": "Nhãn",
-        "value": "Giá Trị"
+        "value": "Giá Trị",
+        "total": "Tổng",
+        "detail": "Chi tiết"
       },
       "name": "Tên",
       "status": "Trạng Thái",
@@ -145,9 +147,11 @@
       }
     },
     "overview": {
-      "title": "Luồng Lưu Lượng",
-      "systemOverView": "Tổng Quan Hệ Thống",
-      "loginCountOverview": "Hoạt Động Đăng Nhập Người Dùng"
+      "sections": {
+        "traffic": "Lưu lượng",
+        "security": "Bảo mật",
+        "configuration": "Cấu hình"
+      }
     },
     "services": {
       "enableWebsocket": "Bật WebSocket",
@@ -427,5 +431,8 @@
     "timeline": "Thời gian",
     "totalRequest": "Tổng request",
     "failRequest": "Thất bại"
+  },
+  "dashboard": {
+    "statsError": "Có một lỗi xuất hiện! Vui lòng thử lại sau"
   }
 }

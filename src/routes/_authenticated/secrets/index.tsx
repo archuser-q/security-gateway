@@ -26,6 +26,7 @@ import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { API_SECRETS } from '@/config/constant';
 import { queryClient } from '@/config/queryClient';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
+import { PaginationBar } from '@/components/PaginationBar';
 
 const MANAGER_COLORS: Record<string, string> = {
   vault: 'bg-purple-50 text-purple-600',
@@ -33,17 +34,6 @@ const MANAGER_COLORS: Record<string, string> = {
   gcp: 'bg-blue-50 text-blue-600',
 };
 
-/**
- * Same visual language as the other resources (Tailwind + lucide
- * icons, black text). Secret only exposes `id` + `manager` in the
- * schema/UI on purpose — everything else (token, secret_access_key,
- * private_key, etc.) is sensitive credential material and must never
- * be rendered in a list, so there is no way to add more columns here
- * even for visual consistency. There's also no status/plugins/
- * timestamp fields at all (Secret doesn't merge APISIXCommon.Info),
- * so no status tabs and no Updated-At sort — those genuinely don't
- * exist for this resource.
- */
 const SecretList = () => {
   const { data, isLoading, refetch, pagination } = useSecretList();
   const { t } = useTranslation();
@@ -161,44 +151,6 @@ const SecretList = () => {
     </div>
   );
 };
-
-function PaginationBar({
-  pagination,
-}: {
-  pagination: NonNullable<ReturnType<typeof useSecretList>['pagination']>;
-}) {
-  const { t } = useTranslation();
-
-  const current = pagination.current ?? 1;
-  const pageSize = pagination.pageSize ?? 10;
-  const total = pagination.total ?? 0;
-  const totalPages = Math.max(1, Math.ceil(total / pageSize));
-
-  return (
-    <div className="flex items-center justify-between text-base text-gray-500">
-      <span>{t('table.total', { total, defaultValue: `Total ${total} items` })}</span>
-      <div className="flex items-center gap-1">
-        <button
-          disabled={current <= 1}
-          onClick={() => pagination.onChange?.(current - 1, pageSize)}
-          className="rounded-md border border-gray-200 px-3 py-1 disabled:opacity-40 hover:bg-gray-50"
-        >
-          {t('table.prev', 'Prev')}
-        </button>
-        <span className="px-2">
-          {current} / {totalPages}
-        </span>
-        <button
-          disabled={current >= totalPages}
-          onClick={() => pagination.onChange?.(current + 1, pageSize)}
-          className="rounded-md border border-gray-200 px-3 py-1 disabled:opacity-40 hover:bg-gray-50"
-        >
-          {t('table.next', 'Next')}
-        </button>
-      </div>
-    </div>
-  );
-}
 
 function RouteComponent() {
   const { t } = useTranslation();

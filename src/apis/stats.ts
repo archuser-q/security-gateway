@@ -14,28 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { z } from 'zod';
 
+import type { AxiosInstance } from 'axios';
 
-export const pageSearchSchema = z
-  .object({
-    page: z
-      .union([z.string(), z.number()])
-      .optional()
-      .default(1)
-      .transform((val) => (val ? Number(val) : 1)),
-    page_size: z
-      .union([z.string(), z.number()])
-      .optional()
-      .default(10)
-      .transform((val) => (val ? Number(val) : 10)),
-    name: z.string().optional(),
-    label: z.string().optional(),
-    search: z.string().optional(),
-    status: z.enum(['all', 'active', 'inactive']).optional().default('all'),
-    sort_field: z.string().optional(),
-    sort_order: z.enum(['asc', 'desc']).optional(),
-  })
-  .passthrough();
+import { API_STATS } from '@/config/constant';
+import type { APISIXType } from '@/types/schema/apisix';
 
-export type PageSearchType = z.infer<typeof pageSearchSchema>;
+export const getResourceStatsReq = (req: AxiosInstance) =>
+  req
+    .get<unknown, APISIXType['RespStats']>(API_STATS)
+    .then((v) => v.data.data);

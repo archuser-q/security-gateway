@@ -24,7 +24,7 @@ import type {
   APISIXDetailResponse,
   APISIXListResponse,
 } from '@/types/schema/apisix/type';
-import { type PageSearchType } from '@/types/schema/pageSearch';
+import { pageSearchSchema, type PageSearchType } from '@/types/schema/pageSearch';
 import { useSearchParams } from '@/utils/useSearchParams';
 import {
   type ListPageKeys,
@@ -209,18 +209,32 @@ export const getCredentialQueryOptions = genDetailQueryOptions(
   'credential',
   getCredentialReq
 );
-export const getCredentialListQueryOptions = (username: string) => {
+export const getCredentialListQueryOptions = (
+  username: string,
+  params: PageSearchType
+) => {
   return queryOptions({
-    queryKey: ['credentials', username],
-    queryFn: () => getCredentialListReq(req, { username }),
+    queryKey: ['credentials', username, params],
+    queryFn: () => getCredentialListReq(req, { username, ...params }),
   });
 };
+
 export const useCredentialsList = (username: string) => {
+  const { params, setParams } = useSearchParams<
+    '/_authenticated/consumers/detail/$username/credentials/',
+    PageSearchType
+  >('/_authenticated/consumers/detail/$username/credentials/');
+
+  const parsedParams = pageSearchSchema.parse(params);
+
   const credentialQuery = useSuspenseQuery(
-    getCredentialListQueryOptions(username)
+    getCredentialListQueryOptions(username, parsedParams)
   );
   const { data, isLoading, refetch } = credentialQuery;
-  return { data, isLoading, refetch };
+
+  const pagination = useTablePagination({ data, params, setParams });
+
+  return { data, isLoading, refetch, setParams, pagination };
 };
 
 export const getProtoQueryOptions = genDetailQueryOptions('proto', getProtoReq);

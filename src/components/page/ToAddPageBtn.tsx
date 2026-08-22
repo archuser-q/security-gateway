@@ -56,7 +56,7 @@ export const ToDetailPageBtn = (props: ToDetailPageBtnProps) => {
     <Link
       to={to}
       params={params}
-      className="group inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium
+      className="group inline-flex items-center gap-1 rounded-md px-2.5 py-1 font-medium
                  text-teal-600 transition-colors hover:bg-teal-50 hover:text-teal-700"
     >
       {t('form.btn.view')}

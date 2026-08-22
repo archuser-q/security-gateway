@@ -77,6 +77,7 @@ export const deleteAdminReq = (req: AxiosInstance, id: string) => {
 
 export const deleteAllAdmins = async (req: AxiosInstance) => {
     const totalRes = await getAdminListReq(req, {
+        status: 'all',
         page: 1,
         page_size: PAGE_SIZE_MIN,
     });
@@ -86,6 +87,7 @@ export const deleteAllAdmins = async (req: AxiosInstance) => {
     
     for (let times = Math.ceil(total / PAGE_SIZE_MAX); times > 0; times--) {
         const res = await getAdminListReq(req, {
+            status: 'all',
             page: 1,
             page_size: PAGE_SIZE_MAX,
         });
