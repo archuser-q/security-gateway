@@ -17,7 +17,7 @@
 
 import type { AxiosInstance } from 'axios';
 
-import type { StreamRoutePostType } from '@/components/form-slice/FormPartStreamRoute/schema';
+import type { StreamRoutePostType, StreamRoutePutType } from '@/components/form-slice/FormPartStreamRoute/schema';
 import {
   API_STREAM_ROUTES,
   PAGE_SIZE_MAX,
@@ -46,7 +46,7 @@ export const getStreamRouteReq = (req: AxiosInstance, id: string) =>
 
 export const putStreamRouteReq = (
   req: AxiosInstance,
-  data: APISIXType['StreamRoute']
+  data: StreamRoutePutType
 ) => {
   const { id, ...rest } = data;
   return req.put<
