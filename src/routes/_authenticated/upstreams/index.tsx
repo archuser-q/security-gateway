@@ -88,24 +88,15 @@ function UpstreamsList() {
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-gray-100">
-              <SortableHeader
-                label="ID"
-                active={params.sort_field === 'id'}
-                dir={params.sort_field === 'id' ? (params.sort_order as SortDir) : undefined}
-                onClick={() => handleSort('id')}
-              />
-              <SortableHeader
-                label={t('form.basic.name')}
-                active={params.sort_field === 'name'}
-                dir={params.sort_field === 'name' ? (params.sort_order as SortDir) : undefined}
-                onClick={() => handleSort('name')}
-              />
-              <SortableHeader
-                label={t('form.upstreams.scheme')}
-                active={params.sort_field === 'scheme'}
-                dir={params.sort_field === 'scheme' ? (params.sort_order as SortDir) : undefined}
-                onClick={() => handleSort('scheme')}
-              />
+              <th className="px-4 py-3 text-left font-normal">
+                ID
+              </th>
+              <th className="px-4 py-3 text-left font-normal">
+                {t('form.basic.name')}
+              </th>
+              <th className="px-4 py-3 text-left font-normal">
+                {t('form.upstreams.scheme')}
+              </th>
               <SortableHeader
                 label={t('form.upstreams.updateTime')}
                 active={params.sort_field === 'update_time'}

@@ -85,12 +85,9 @@ function ConsumersList() {
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-gray-100">
-              <SortableHeader
-                label={t('form.consumers.username')}
-                active={params.sort_field === 'username'}
-                dir={params.sort_field === 'username' ? (params.sort_order as SortDir) : undefined}
-                onClick={() => handleSort('username')}
-              />
+              <th className="px-4 py-3 text-left font-normal">
+                {t('form.consumers.username')}
+              </th>
               <th className="px-4 py-3 text-left font-normal">
                 {t('form.basic.desc')}
               </th>
