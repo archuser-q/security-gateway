@@ -32,9 +32,9 @@ export const getProtoReq = (req: AxiosInstance, id: string) =>
     .get<unknown, APISIXType['RespProtoDetail']>(`${API_PROTOS}/${id}`)
     .then((v) => v.data);
 
-export const putProtoReq = (req: AxiosInstance, data: APISIXType['Proto']) => {
+export const putProtoReq = (req: AxiosInstance, data: APISIXType['ProtoPut']) => {
   const { id, ...rest } = data;
-  return req.put<APISIXType['Proto'], APISIXType['RespProtoDetail']>(
+  return req.put<APISIXType['ProtoPut'], APISIXType['RespProtoDetail']>(
     `${API_PROTOS}/${id}`,
     rest
   );

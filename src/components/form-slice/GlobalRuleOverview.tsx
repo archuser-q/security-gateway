@@ -20,41 +20,8 @@ import { useTranslation } from 'react-i18next';
 import { getGlobalRuleQueryOptions } from '@/apis/hooks';
 
 import { FormSection } from './FormSection';
+import { SummaryField, SummaryGrid } from './OverviewField';
 
-const SummaryField = ({
-  label,
-  children,
-}: {
-  label: string;
-  children?: React.ReactNode;
-}) => (
-  <div className="flex flex-col gap-1.5">
-    <span className="text-xs font-semibold text-gray-500">{label}</span>
-    <span className="text-[15px] font-semibold text-gray-800">
-      {children === undefined || children === null || children === '' ? (
-        <span className="font-normal text-gray-300">-</span>
-      ) : (
-        children
-      )}
-    </span>
-  </div>
-);
-
-/**
- * "Overview" section for Global Rule Detail: registers itself in the
- * TOC sidebar (via the shared FormSection component — any FormSection
- * with a `legend` auto-appears as a scroll-spy entry, same mechanism
- * "General" uses). GlobalRule's schema only has id/plugins/timestamps
- * — no name/desc/status — so the Overview just surfaces the plugin
- * count and names plus the updated time.
- *
- * Styled entirely with Tailwind utility classes (no custom CSS-in-JS)
- * — this project already runs Tailwind app-wide, so these classes
- * are part of the same cascade layer as everything else.
- *
- * Fetches via the same query key as the detail form
- * (getGlobalRuleQueryOptions(id)), so this adds no extra network call.
- */
 export const GlobalRuleOverview = ({ id }: { id: string }) => {
   const { t } = useTranslation();
   const { data } = useSuspenseQuery(getGlobalRuleQueryOptions(id));
@@ -69,7 +36,7 @@ export const GlobalRuleOverview = ({ id }: { id: string }) => {
 
   return (
     <FormSection legend={t('sources.overview')}>
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-x-8 gap-y-4">
+      <SummaryGrid>
         <SummaryField label={`${t('form.plugins.label')} (${pluginNames.length})`}>
           {pluginNames.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
@@ -85,7 +52,7 @@ export const GlobalRuleOverview = ({ id }: { id: string }) => {
           )}
         </SummaryField>
         <SummaryField label={t('form.info.update_time')}>{updatedLabel}</SummaryField>
-      </div>
+      </SummaryGrid>
     </FormSection>
   );
 };

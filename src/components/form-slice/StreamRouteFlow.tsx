@@ -83,33 +83,6 @@ const FlowLinkBox = ({
   </FlowBox>
 );
 
-/**
- * "Overview" section for Stream Route Detail: registers itself in
- * the TOC sidebar (same FormSection-with-legend mechanism as
- * "General"). Shows a Traefik-style connected-box flow.
- *
- * A StreamRoute can reference a Service, an Upstream, both, or
- * neither (an inline upstream with no separate resource) — the
- * schema permits `service_id` and `upstream_id`/`upstream`
- * independently, and APISIX resolves them as a real chain (a route
- * hits a Service, which in turn resolves an Upstream). So Service and
- * Upstream are two separate boxes here, each shown only when its own
- * field is actually set — not an either/or choice — matching a route
- * that legitimately has both configured.
- *
- * StreamRoute's schema has no explicit TCP/UDP flag — the real,
- * data-backed signal for that is `upstream.scheme`: APISIX requires
- * `scheme: 'udp'` on the upstream for UDP stream routing, vs
- * 'tcp'/'tls' for TCP. So the TLS box only renders when scheme is
- * NOT 'udp'. Note this only reads the route's own *inline* upstream —
- * if the route only has `upstream_id` (a separate Upstream resource)
- * or resolves its upstream via `service_id`, this component doesn't
- * fetch that far to check its scheme, so TLS defaults to shown (TCP
- * assumption) in that case.
- *
- * Fetches via the same query key as the detail form
- * (getStreamRouteQueryOptions(id)), so this adds no extra network call.
- */
 export const StreamRouteFlow = ({ id }: { id: string }) => {
   const { t } = useTranslation();
   const { data } = useQuery(getStreamRouteQueryOptions(id));

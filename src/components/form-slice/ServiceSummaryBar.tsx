@@ -17,11 +17,15 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { IconExternalLink, IconServer } from '@tabler/icons-react';
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getServiceQueryOptions, getUpstreamQueryOptions } from '@/apis/hooks';
 
 import { FormSection } from './FormSection';
+import { InfoRow, SummaryField, SummaryGrid } from './OverviewField';
+
+type Field = { label: string; value: ReactNode };
 
 /** Normalizes `nodes`, which APISIX accepts either as an array of {host, port, weight} or as a {"host:port": weight} object. */
 const normalizeNodes = (nodes: unknown): { host: string; port: number }[] => {
@@ -40,72 +44,6 @@ const normalizeNodes = (nodes: unknown): { host: string; port: number }[] => {
   });
 };
 
-/**
- * Card-style summary field: small gray label above, bold black value
- * below. Matches the "ID / Name / Plugins" field style from the
- * Plugin Config Detail reference design — label-above-value.
- */
-const SummaryField = ({
-  label,
-  children,
-}: {
-  label: string;
-  children?: React.ReactNode;
-}) => (
-  <div className="flex flex-col gap-1.5">
-    <span className="text-xs font-semibold text-gray-500">{label}</span>
-    <span className="text-[15px] font-semibold text-gray-800">
-      {children === undefined || children === null || children === '' ? (
-        <span className="font-normal text-gray-300">-</span>
-      ) : (
-        children
-      )}
-    </span>
-  </div>
-);
-
-/** key/value row for the Upstream info card — matches the LIMIT-REQ plugin card style (key left, value right). */
-const InfoRow = ({ label, value }: { label: string; value?: React.ReactNode }) => (
-  <div className="flex justify-between border-b border-gray-100 py-2 last:border-b-0">
-    <span className="text-[13.5px] text-gray-500">{label}</span>
-    <span className="text-[13.5px] font-semibold text-gray-800">
-      {value === undefined || value === null || value === '' ? (
-        <span className="font-normal text-gray-300">-</span>
-      ) : (
-        value
-      )}
-    </span>
-  </div>
-);
-
-/**
- * "Overview" section: registers itself in the TOC sidebar (via the
- * shared FormSection component — any FormSection with a `legend`
- * auto-appears as a scroll-spy entry, same mechanism "General" /
- * "Basic Information" use). Shows the Status/Type/Scheme/Pass Host
- * summary plus an "Upstream" info card (key/value, LIMIT-REQ-card
- * style) describing the upstream this service connects to.
- *
- * Styled entirely with Tailwind utility classes (no custom CSS-in-JS
- * / `!important`) — this project already runs Tailwind app-wide, so
- * these classes are part of the same cascade layer as everything
- * else, with no reset-vs-inline-style conflict to fight.
- *
- * Fetches via the same query key as the form (getServiceQueryOptions
- * (id)), so this adds no extra network call for the service itself.
- * If the service references its upstream by `upstream_id` (a separate
- * Upstream resource) rather than embedding it inline, these fields
- * live on that Upstream, not on the Service — so this fetches the
- * referenced Upstream too (only when there's no inline upstream) to
- * fill them correctly instead of showing "-".
- *
- * Deliberately no per-node live health/status: APISIX's node config
- * (host/port/weight) carries no live health field, and this project
- * has no health-check runtime API wired up anywhere — a green check
- * here would be fabricated data, not a real reading. "Health Check"
- * below only reflects whether active/passive checks are *configured*
- * (a real field), not whether nodes are currently up.
- */
 export const ServiceSummaryBar = ({ id }: { id: string }) => {
   const { t } = useTranslation();
   const { data } = useSuspenseQuery(getServiceQueryOptions(id));
@@ -137,27 +75,75 @@ export const ServiceSummaryBar = ({ id }: { id: string }) => {
         .join(' / ')
     : undefined;
 
+  const summaryFields: Field[] = [
+    {
+      label: t('form.basic.status'),
+      value: (
+        <span
+          className={`inline-block w-fit rounded-md px-2.5 py-0.5 text-[11.5px] font-bold tracking-wide ${
+            isEnabled ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-500'
+          }`}
+        >
+          {isEnabled
+            ? t('form.basic.statusOption.1').toUpperCase()
+            : t('form.basic.statusOption.0').toUpperCase()}
+        </span>
+      ),
+    },
+    { label: t('form.upstreams.type'), value: upstream?.type },
+    { label: t('form.upstreams.scheme'), value: upstream?.scheme },
+    { label: t('form.upstreams.passHost'), value: upstream?.pass_host },
+  ];
+
+  const infoRows: Field[] = [
+    {
+      label: t('form.upstreams.upstreamId'),
+      value: upstreamId ? (
+        <Link
+          to="/upstreams/detail/$id"
+          params={{ id: upstreamId }}
+          className="text-teal-600 hover:text-teal-700 hover:underline"
+        >
+          {upstreamId}
+        </Link>
+      ) : undefined,
+    },
+    { label: t('form.upstreams.upstreamHost'), value: upstream?.upstream_host },
+    {
+      label: `${t('form.upstreams.nodes.title')} (${nodes.length})`,
+      value:
+        nodes.length > 0 ? (
+          <div className="flex flex-col items-end gap-1">
+            {nodes.map((n, i) => (
+              <span
+                key={`${n.host}:${n.port}-${i}`}
+                className="font-mono text-[13px] font-semibold text-gray-800"
+              >
+                {scheme}://{n.host}:{n.port}
+              </span>
+            ))}
+          </div>
+        ) : undefined,
+    },
+    { label: t('form.upstreams.retries'), value: upstream?.retries },
+    { label: t('form.upstreams.retryTimeout'), value: upstream?.retry_timeout },
+    { label: t('form.upstreams.timeout.title'), value: timeoutLabel },
+    {
+      label: t('form.upstreams.checks.title'),
+      value: hasHealthCheck ? t('table.enabled') : t('table.disabled'),
+    },
+  ];
+
   return (
     <FormSection legend={t('sources.overview')}>
       <div>
-        <div className="mb-5 grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-x-8 gap-y-4">
-          <SummaryField label={t('form.basic.status')}>
-            <span
-              className={`inline-block w-fit rounded-md px-2.5 py-0.5 text-[11.5px] font-bold tracking-wide ${
-                isEnabled ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-500'
-              }`}
-            >
-              {isEnabled
-                ? t('form.basic.statusOption.1').toUpperCase()
-                : t('form.basic.statusOption.0').toUpperCase()}
-            </span>
-          </SummaryField>
-          <SummaryField label={t('form.upstreams.type')}>{upstream?.type}</SummaryField>
-          <SummaryField label={t('form.upstreams.scheme')}>{upstream?.scheme}</SummaryField>
-          <SummaryField label={t('form.upstreams.passHost')}>
-            {upstream?.pass_host}
-          </SummaryField>
-        </div>
+        <SummaryGrid className="mb-5">
+          {summaryFields.map((f) => (
+            <SummaryField key={f.label} label={f.label}>
+              {f.value}
+            </SummaryField>
+          ))}
+        </SummaryGrid>
 
         {upstream && (
           <div className="rounded-xl border border-gray-200 bg-white px-5 py-4">
@@ -177,45 +163,9 @@ export const ServiceSummaryBar = ({ id }: { id: string }) => {
                 {t('form.upstreams.title').toUpperCase()}
               </span>
             )}
-            <InfoRow
-              label={t('form.upstreams.upstreamId')}
-              value={
-                upstreamId ? (
-                  <Link
-                    to="/upstreams/detail/$id"
-                    params={{ id: upstreamId }}
-                    className="text-teal-600 hover:text-teal-700 hover:underline"
-                  >
-                    {upstreamId}
-                  </Link>
-                ) : undefined
-              }
-            />
-            <InfoRow label={t('form.upstreams.upstreamHost')} value={upstream.upstream_host} />
-            <InfoRow
-              label={`${t('form.upstreams.nodes.title')} (${nodes.length})`}
-              value={
-                nodes.length > 0 ? (
-                  <div className="flex flex-col items-end gap-1">
-                    {nodes.map((n, i) => (
-                      <span
-                        key={`${n.host}:${n.port}-${i}`}
-                        className="font-mono text-[13px] font-semibold text-gray-800"
-                      >
-                        {scheme}://{n.host}:{n.port}
-                      </span>
-                    ))}
-                  </div>
-                ) : undefined
-              }
-            />
-            <InfoRow label={t('form.upstreams.retries')} value={upstream.retries} />
-            <InfoRow label={t('form.upstreams.retryTimeout')} value={upstream.retry_timeout} />
-            <InfoRow label={t('form.upstreams.timeout.title')} value={timeoutLabel} />
-            <InfoRow
-              label={t('form.upstreams.checks.title')}
-              value={hasHealthCheck ? t('table.enabled') : t('table.disabled')}
-            />
+            {infoRows.map((r) => (
+              <InfoRow key={r.label} label={r.label} value={r.value} />
+            ))}
           </div>
         )}
       </div>

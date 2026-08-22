@@ -14,136 +14,75 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Group, Skeleton } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import {
   createFileRoute,
+  Outlet,
+  useLocation,
   useNavigate,
   useParams,
 } from '@tanstack/react-router';
-import { useEffect } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useBoolean } from 'react-use';
 
-import { getProtoQueryOptions } from '@/apis/hooks';
-import { putProtoReq } from '@/apis/protos';
-import { FormSubmitBtn } from '@/components/form/Btn';
-import { FormPartProto } from '@/components/form-slice/FormPartProto';
-import { FormTOCBox } from '@/components/form-slice/FormSection';
-import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
-import { ProtoOverview } from '@/components/form-slice/ProtoOverview';
-import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
-import PageHeader from '@/components/page/PageHeader';
-import { API_PROTOS } from '@/config/constant';
-import { req } from '@/config/req';
-import { APISIX, type APISIXType } from '@/types/schema/apisix';
-import { pipeProduce } from '@/utils/producer';
+import { Tabs, type TabsItem } from '@/components/page/Tabs';
 
-type ProtoFormProps = {
-  id: string;
-  readOnly: boolean;
-  setReadOnly: (v: boolean) => void;
-};
+const defaultTab = 'detail';
 
-const ProtoDetailForm = ({ id, readOnly, setReadOnly }: ProtoFormProps) => {
+const ProtoDetailTabs = () => {
   const { t } = useTranslation();
-  const {
-    data: protoData,
-    isLoading,
-    refetch,
-  } = useSuspenseQuery(getProtoQueryOptions(id));
-
-  const form = useForm<APISIXType['Proto']>({
-    resolver: zodResolver(APISIX.Proto),
-    shouldUnregister: true,
-    mode: 'all',
-    disabled: readOnly,
+  const { id } = useParams({ strict: false });
+  const navigate = useNavigate();
+  const pathname = useLocation({
+    select: (location) => location.pathname,
   });
 
-  const putProto = useMutation({
-    mutationFn: (d: APISIXType['Proto']) => putProtoReq(req, pipeProduce()(d)),
-    async onSuccess() {
-      notifications.show({
-        message: t('info.edit.success', { name: t('protos.singular') }),
-        color: 'green',
-      });
-      await refetch();
-      setReadOnly(true);
-    },
-  });
-
-  // Update form values when data is loaded
-  useEffect(() => {
-    if (protoData?.value) {
-      form.reset(protoData.value);
-    }
-  }, [protoData, form]);
-
-  if (isLoading) {
-    return <Skeleton height={400} />;
-  }
+  const items = useMemo(
+    (): TabsItem[] => [
+      {
+        value: 'detail',
+        label: t('info.detail.title', { name: t('protos.singular') }),
+      },
+      {
+        value: 'used-by',
+        label: 'Used By',
+      },
+    ],
+    [t]
+  );
 
   return (
-    <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit((d) => putProto.mutateAsync(d))}>
-        <ProtoOverview id={id} />
-        <FormSectionGeneral readOnly />
-        <FormPartProto allowUpload={!readOnly} />
-        {!readOnly && (
-          <Group>
-            <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
-            <Button variant="outline" onClick={() => setReadOnly(true)}>
-              {t('form.btn.cancel')}
-            </Button>
-          </Group>
-        )}
-      </form>
-    </FormProvider>
+    <Tabs
+      items={items}
+      variant="default"
+      classNames={{
+        tab: 'group transition-all duration-300 ease-in-out aria-selected:text-blue-600',
+        tabLabel:
+          'transition-colors duration-300 ease-in-out group-aria-selected:text-blue-600',
+      }}
+      value={
+        items
+          .slice()
+          .reverse()
+          .find((v) => pathname.includes(v.value))?.value || defaultTab
+      }
+      onChange={(v) => {
+        navigate({
+          to:
+            v === defaultTab
+              ? '/protos/detail/$id/'
+              : `/protos/detail/$id/${v}/`,
+          params: { id: id as string },
+        });
+      }}
+    />
   );
 };
 
 function RouteComponent() {
-  const { id } = useParams({ from: '/_authenticated/protos/detail/$id' });
-  const { t } = useTranslation();
-  const [readOnly, setReadOnly] = useBoolean(true);
-  const navigate = useNavigate();
-
   return (
     <>
-      <PageHeader
-        title={t('info.edit.title', { name: t('protos.singular') })}
-        {...(readOnly && {
-          title: t('info.detail.title', { name: t('protos.singular') }),
-          extra: (
-            <Group>
-              <Button
-                onClick={() => setReadOnly(false)}
-                size="compact-sm"
-                variant="gradient"
-              >
-                {t('form.btn.edit')}
-              </Button>
-              <DeleteResourceBtn
-                mode="detail"
-                name={t('protos.singular')}
-                target={id}
-                api={`${API_PROTOS}/${id}`}
-                onSuccess={() => navigate({ to: '/protos' })}
-              />
-            </Group>
-          ),
-        })}
-      />
-      <FormTOCBox>
-        <ProtoDetailForm
-          id={id}
-          readOnly={readOnly}
-          setReadOnly={setReadOnly}
-        />
-      </FormTOCBox>
+      <ProtoDetailTabs />
+      <Outlet />
     </>
   );
 }
