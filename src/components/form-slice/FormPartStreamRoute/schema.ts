@@ -26,3 +26,15 @@ export const StreamRoutePostSchema = APISIXStreamRoutes.StreamRoute.omit({
 }).merge(APISIXCommon.Basic);
 
 export type StreamRoutePostType = TypeOf<typeof StreamRoutePostSchema>;
+
+export const StreamRoutePutSchema = APISIXStreamRoutes.StreamRoute.omit({
+  upstream: true,
+  sni: true,
+  remote_addr: true,
+  protocol: true
+}).merge(APISIXCommon.Basic).omit({
+  create_time: true, 
+  update_time: true,
+});
+
+export type StreamRoutePutType = TypeOf<typeof StreamRoutePutSchema>;

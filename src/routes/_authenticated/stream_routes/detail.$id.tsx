@@ -31,7 +31,6 @@ import { useBoolean } from 'react-use';
 import { getStreamRouteQueryOptions } from '@/apis/hooks';
 import { putStreamRouteReq } from '@/apis/stream_routes';
 import { FormSubmitBtn } from '@/components/form/Btn';
-import { produceRoute } from '@/components/form-slice/FormPartRoute/util';
 import { FormPartStreamRoute } from '@/components/form-slice/FormPartStreamRoute';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
@@ -41,7 +40,8 @@ import PageHeader from '@/components/page/PageHeader';
 import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
 import { API_STREAM_ROUTES } from '@/config/constant';
 import { req } from '@/config/req';
-import { APISIX, type APISIXType } from '@/types/schema/apisix';
+import { observer } from 'mobx-react-lite';
+import { StreamRoutePutSchema, type StreamRoutePutType } from '@/components/form-slice/FormPartStreamRoute/schema';
 
 type Props = {
   readOnly: boolean;
@@ -49,7 +49,7 @@ type Props = {
   id: string;
 };
 
-const StreamRouteDetailForm = (props: Props) => {
+const StreamRouteDetailForm = observer((props: Props) => {
   const { readOnly, setReadOnly, id } = props;
   const { t } = useTranslation();
 
@@ -57,7 +57,7 @@ const StreamRouteDetailForm = (props: Props) => {
   const { data: streamRouteData, isLoading, refetch } = streamRouteQuery;
 
   const form = useForm({
-    resolver: zodResolver(APISIX.StreamRoute),
+    resolver: zodResolver(StreamRoutePutSchema),
     shouldUnregister: true,
     shouldFocusError: true,
     mode: 'all',
@@ -71,8 +71,8 @@ const StreamRouteDetailForm = (props: Props) => {
   }, [streamRouteData, form, isLoading]);
 
   const putStreamRoute = useMutation({
-    mutationFn: (d: APISIXType['StreamRoute']) =>
-      putStreamRouteReq(req, produceRoute(d)),
+    mutationFn: (d: StreamRoutePutType) =>
+      putStreamRouteReq(req, d),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('streamRoutes.singular') }),
@@ -104,13 +104,13 @@ const StreamRouteDetailForm = (props: Props) => {
       </form>
     </FormProvider>
   );
-};
+});
 
 type StreamRouteDetailProps = Pick<Props, 'id'> & {
   onDeleteSuccess: () => void;
 };
 
-export const StreamRouteDetail = (props: StreamRouteDetailProps) => {
+export const StreamRouteDetail = observer((props: StreamRouteDetailProps) => {
   const { id, onDeleteSuccess } = props;
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
@@ -150,7 +150,7 @@ export const StreamRouteDetail = (props: StreamRouteDetailProps) => {
       </FormTOCBox>
     </>
   );
-};
+});
 
 function RouteComponent() {
   const { id } = useParams({ from: '/_authenticated/stream_routes/detail/$id' });
