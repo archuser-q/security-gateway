@@ -23,7 +23,7 @@ import {
   IconServer2,
   IconWorld,
 } from '@tabler/icons-react';
-import type { ReactNode } from 'react';
+import { Fragment, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getStreamRouteQueryOptions } from '@/apis/hooks';
@@ -56,7 +56,6 @@ const FlowArrow = () => (
   </div>
 );
 
-/** A box that's a clickable link to a resource's own detail page. */
 const FlowLinkBox = ({
   title,
   icon,
@@ -94,28 +93,32 @@ export const StreamRouteFlow = ({ id }: { id: string }) => {
     route;
 
   const isUdp = upstream?.scheme === 'udp';
-
   const hasUpstream = !!upstream_id || !!upstream;
 
-  return (
-    <FormSection legend={t('sources.overview')}>
-      <div className="flex flex-nowrap items-stretch gap-1 overflow-x-auto pb-1">
+  const rawBoxes: ({ key: string; node: ReactNode } | null)[] = [
+    {
+      key: 'port',
+      node: (
         <FlowBox title={t('form.streamRoutes.serverPort')}>
           <span className="font-mono text-lg font-semibold text-gray-800">
             {server_port ? `:${server_port}` : <span className="text-gray-300">-</span>}
           </span>
         </FlowBox>
-
-        <FlowArrow />
-
+      ),
+    },
+    {
+      key: 'router',
+      node: (
         <FlowBox title={isUdp ? 'UDP Router' : 'TCP Router'}>
           <FlowRow label={t('form.streamRoutes.serverAddr')} value={server_addr} />
           <FlowRow label={t('form.streamRoutes.remoteAddr')} value={remote_addr} />
         </FlowBox>
-
-        {service_id && (
-          <>
-            <FlowArrow />
+      ),
+    },
+    service_id
+      ? {
+          key: 'service',
+          node: (
             <FlowLinkBox
               title={t('form.streamRoutes.server')}
               icon={<IconServer2 size={16} className="text-teal-600" />}
@@ -123,32 +126,44 @@ export const StreamRouteFlow = ({ id }: { id: string }) => {
               id={service_id}
               label={service_id}
             />
-          </>
-        )}
+          ),
+        }
+      : null,
+    hasUpstream
+      ? {
+          key: 'upstream',
+          node: upstream_id ? (
+            <FlowLinkBox
+              title={t('form.upstreams.title')}
+              icon={<IconWorld size={16} className="text-teal-600" />}
+              to="/upstreams/detail/$id"
+              id={upstream_id}
+              label={upstream_id}
+            />
+          ) : (
+            <FlowBox title={t('form.upstreams.title')}>
+              <div className="flex items-center gap-2">
+                <IconWorld size={16} className="text-teal-600" />
+                <span className="text-sm font-semibold text-gray-800">
+                  {t('form.upstreams.title')}
+                </span>
+              </div>
+            </FlowBox>
+          ),
+        }
+      : null,
+  ];
+  const boxes = rawBoxes.filter((b): b is { key: string; node: ReactNode } => b !== null);
 
-        {hasUpstream && (
-          <>
-            <FlowArrow />
-            {upstream_id ? (
-              <FlowLinkBox
-                title={t('form.upstreams.title')}
-                icon={<IconWorld size={16} className="text-teal-600" />}
-                to="/upstreams/detail/$id"
-                id={upstream_id}
-                label={upstream_id}
-              />
-            ) : (
-              <FlowBox title={t('form.upstreams.title')}>
-                <div className="flex items-center gap-2">
-                  <IconWorld size={16} className="text-teal-600" />
-                  <span className="text-sm font-semibold text-gray-800">
-                    {t('form.upstreams.title')}
-                  </span>
-                </div>
-              </FlowBox>
-            )}
-          </>
-        )}
+  return (
+    <FormSection legend={t('sources.overview')}>
+      <div className="flex flex-nowrap items-stretch gap-1 overflow-x-auto pb-1">
+        {boxes.map((b, i) => (
+          <Fragment key={b.key}>
+            {i > 0 && <FlowArrow />}
+            {b.node}
+          </Fragment>
+        ))}
       </div>
 
       {!isUdp && (

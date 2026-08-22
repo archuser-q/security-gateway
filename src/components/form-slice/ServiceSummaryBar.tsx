@@ -27,7 +27,7 @@ import { InfoRow, SummaryField, SummaryGrid } from './OverviewField';
 
 type Field = { label: string; value: ReactNode };
 
-/** Normalizes `nodes`, which APISIX accepts either as an array of {host, port, weight} or as a {"host:port": weight} object. */
+
 const normalizeNodes = (nodes: unknown): { host: string; port: number }[] => {
   if (!nodes) return [];
   if (Array.isArray(nodes)) {
@@ -57,9 +57,7 @@ export const ServiceSummaryBar = ({ id }: { id: string }) => {
 
   if (!service) return null;
 
-  // APISIX: status omitted or 1 => enabled, 0 => explicitly disabled.
   const isEnabled = service.status !== 0;
-  // Prefer the inline upstream; fall back to the referenced one fetched above.
   const upstream = service.upstream ?? referencedUpstream?.value;
   const nodes = normalizeNodes(upstream?.nodes);
   const scheme = upstream?.scheme || 'http';

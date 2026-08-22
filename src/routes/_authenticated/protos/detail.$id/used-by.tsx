@@ -37,10 +37,10 @@ function RouteComponent() {
   const { t } = useTranslation();
 
   const { data: routesData, isLoading: routesLoading } = useQuery(
-    getRouteListQueryOptions({ page: 1, page_size: PAGE_SIZE_MAX })
+    getRouteListQueryOptions({ page: 1, page_size: PAGE_SIZE_MAX, status: 'all' })
   );
   const { data: servicesData, isLoading: servicesLoading } = useQuery(
-    getServiceListQueryOptions({ page: 1, page_size: PAGE_SIZE_MAX })
+    getServiceListQueryOptions({ page: 1, page_size: PAGE_SIZE_MAX, status: 'all' })
   );
 
   const isLoading = routesLoading || servicesLoading;

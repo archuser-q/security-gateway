@@ -30,15 +30,6 @@ import { pageSearchSchema } from '@/types/schema/pageSearch';
 type SortKey = 'update_time' | null;
 type SortDir = 'asc' | 'desc';
 
-/**
- * Same visual language as Services/Global Rules/Plugin Configs
- * (Tailwind + lucide icons, black text, sortable headers). Proto only
- * has `id` + `content` (a protobuf definition string) + timestamps in
- * the schema — no name/desc/status/plugins — so there's no filter
- * row and no badges here, just an ID column, a truncated content
- * preview, and Updated At. Filtering/sorting stays client-side over
- * the current page, same reasoning as the other resources.
- */
 const ProtoList = () => {
   const { data, isLoading, refetch, pagination } = useProtoList();
   const { t } = useTranslation();

@@ -47,22 +47,6 @@ export type StreamRouteListProps = {
   defaultParams?: Partial<WithServiceIdFilter>;
 };
 
-/**
- * Reusable list — used both as the standalone "/stream_routes/" page
- * and embedded inside Service Detail's "Stream Routes" tab (via
- * routeKey + defaultParams.filter.service_id), same pattern RouteList
- * uses for Routes. Keep this signature stable: services/detail.$id/
- * stream_routes/index.tsx imports and calls it directly.
- *
- * Same visual language as Services/Global Rules/Plugin Configs/Protos
- * (Tailwind + lucide icons, black text, sortable headers, shared
- * Mantine ToAddPageBtn — not custom-styled). StreamRoute's schema
- * explicitly omits `name` and `status` (unlike Route/Service), so
- * there's no status filter row and ID stands in for Name. It does
- * have `plugins`, shown the same way as Global Rules/Plugin Configs.
- * Filtering/sorting stays client-side over the current page, same
- * reasoning as the other resources.
- */
 export const StreamRouteList = (props: StreamRouteListProps) => {
   const { routeKey, ToDetailBtn, defaultParams } = props;
   const { data, isLoading, refetch, pagination } = useStreamRouteList(
