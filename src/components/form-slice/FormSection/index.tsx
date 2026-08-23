@@ -108,37 +108,44 @@ export const FormSection = observer((props: FormSectionProps) => {
 
 const TOC = (props: Pick<TableOfContentsProps, 'reinitializeRef'>) => {
   return (
-    <TableOfContents
-      variant="light"
-      color="blue"
-      size="sm"
-      radius="sm"
+    <div
       style={{
         flexShrink: 0,
         position: 'sticky',
         top: APPSHELL_HEADER_HEIGHT + 20,
+        width: 200,
+        marginTop: 10,
+        background: '#fff',
+        border: '1px solid var(--mantine-color-gray-3)',
+        borderRadius: 10,
+        padding: 12,
       }}
-      w={200}
-      mt={10}
-      minDepthToOffset={0}
-      depthOffset={20}
-      scrollSpyOptions={{
-        selector: `.${tocSelector}`,
-        getDepth: (el) => Number(el.getAttribute(tocDepth)),
-        getValue: (el) => el.getAttribute(tocValue) || '',
-      }}
-      getControlProps={({ data }) => ({
-        onClick: () => {
-          return data.getNode().scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
-            inline: 'end',
-          });
-        },
-        children: data.value,
-      })}
-      {...props}
-    />
+    >
+      <TableOfContents
+        variant="light"
+        color="blue"
+        size="sm"
+        radius="sm"
+        minDepthToOffset={0}
+        depthOffset={20}
+        scrollSpyOptions={{
+          selector: `.${tocSelector}`,
+          getDepth: (el) => Number(el.getAttribute(tocDepth)),
+          getValue: (el) => el.getAttribute(tocValue) || '',
+        }}
+        getControlProps={({ data }) => ({
+          onClick: () => {
+            return data.getNode().scrollIntoView({
+              behavior: 'smooth',
+              block: 'start',
+              inline: 'end',
+            });
+          },
+          children: data.value,
+        })}
+        {...props}
+      />
+    </div>
   );
 };
 

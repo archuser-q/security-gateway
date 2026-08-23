@@ -25,7 +25,7 @@ const AuthenticatedLayout = () => {
     >
       <Header opened={opened} toggle={toggle} />
       <Navbar />
-      <AppShell.Main>
+      <AppShell.Main bg="gray.0">
         <Outlet />
       </AppShell.Main>
     </AppShell>
