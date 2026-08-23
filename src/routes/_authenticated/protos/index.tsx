@@ -26,6 +26,7 @@ import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { API_PROTOS } from '@/config/constant';
 import { queryClient } from '@/config/queryClient';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
+import dayjs from 'dayjs';
 
 type SortKey = 'update_time' | null;
 type SortDir = 'asc' | 'desc';
@@ -98,8 +99,8 @@ const ProtoList = () => {
         <table className="w-full text-left text-base">
           <thead>
             <tr className="border-b border-gray-100">
-              <th className="px-4 py-3 text-sm font-normal text-gray-700">ID</th>
-              <th className="px-4 py-3 text-sm font-normal text-gray-700">
+              <th className="px-4 py-3 text-sm font-normal">ID</th>
+              <th className="px-4 py-3 text-sm font-normal">
                 {t('form.protos.content')}
               </th>
               <SortableHeader
@@ -108,7 +109,7 @@ const ProtoList = () => {
                 dir={sortKey === 'update_time' ? sortDir : undefined}
                 onClick={() => toggleSort('update_time')}
               />
-              <th className="px-4 py-3 text-right font-normal text-sm text-gray-700">
+              <th className="px-4 py-3 text-right font-normal text-sm">
                 {t('table.actions')}
               </th>
             </tr>
@@ -139,8 +140,8 @@ const ProtoList = () => {
                     key={id}
                     className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/60"
                   >
-                    <td className="px-4 py-3 font-mono text-sm text-black">{id}</td>
-                    <td className="px-4 py-3 font-mono text-sm text-black">
+                    <td className="px-4 py-3 text-sm">{id}</td>
+                    <td className="px-4 py-3 text-sm">
                       {preview ? (
                         <>
                           {preview}
@@ -150,9 +151,9 @@ const ProtoList = () => {
                         <span className="text-gray-400">-</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-black">
+                    <td className="px-4 py-3 text-sm">
                       {update_time
-                        ? new Date(Number(update_time) * 1000).toLocaleString()
+                        ? dayjs(update_time * 1000).format('YYYY-MM-DD HH:mm:ss')
                         : '-'}
                     </td>
                     <td className="px-4 py-3">

@@ -32,6 +32,7 @@ import { ToAddPageBtn } from '@/components/page/ToAddPageBtn';
 import { API_GLOBAL_RULES } from '@/config/constant';
 import { queryClient } from '@/config/queryClient';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
+import dayjs from 'dayjs';
 
 type SortKey = 'update_time' | null;
 type SortDir = 'asc' | 'desc';
@@ -174,7 +175,7 @@ const GlobalRuleList = () => {
                     </td>
                     <td className="px-4 py-3 text-black">
                       {update_time
-                        ? new Date(Number(update_time) * 1000).toLocaleString()
+                        ? dayjs(update_time * 1000).format('YYYY-MM-DD HH:mm:ss')
                         : '-'}
                     </td>
                     <td className="px-4 py-3">

@@ -32,6 +32,7 @@ import { queryClient } from '@/config/queryClient';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import { PaginationBar } from '@/components/PaginationBar';
 import SortableHeader, { type SortDir } from '@/components/SortableHeader';
+import dayjs from 'dayjs';
 
 type SortKey = 'name' | 'status' | 'update_time' | null;
 type StatusFilter = 'all' | 'enabled' | 'disabled';
@@ -213,7 +214,7 @@ const ServiceList = () => {
                     </td>
                     <td className="px-4 py-3 text-black">
                       {update_time
-                        ? new Date(Number(update_time) * 1000).toLocaleString()
+                        ? dayjs(update_time * 1000).format('YYYY-MM-DD HH:mm:ss')
                         : '-'}
                     </td>
                     <td className="px-4 py-3">

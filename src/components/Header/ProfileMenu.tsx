@@ -35,6 +35,7 @@ export const ProfileMenu = () => {
             title: 'Personal Info',
             centered: true,
             size: 'xl',
+            radius: 'lg',
             children: <ProfileViewModal id={auth.user?.id || ''} />,
         });
     }

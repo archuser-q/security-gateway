@@ -32,6 +32,7 @@ import { pageSearchSchema } from '@/types/schema/pageSearch';
 import type { ListPageKeys } from '@/utils/useTablePagination';
 import { PaginationBar } from '@/components/PaginationBar';
 import SortableHeader from '@/components/SortableHeader';
+import dayjs from 'dayjs';
 
 type SortKey = 'server_addr' | 'update_time' | null;
 type SortDir = 'asc' | 'desc';
@@ -130,23 +131,20 @@ export const StreamRouteList = (props: StreamRouteListProps) => {
         <table className="w-full text-left text-base">
           <thead>
             <tr className="border-b border-gray-100">
-              <th className="px-4 py-3 text-sm font-normal text-gray-700">ID</th>
-              <SortableHeader
-                label={t('form.streamRoutes.serverAddr')}
-                active={sortKey === 'server_addr'}
-                dir={sortKey === 'server_addr' ? sortDir : undefined}
-                onClick={() => toggleSort('server_addr')}
-              />
-              <th className="px-4 py-3 text-sm font-normal text-gray-700">
+              <th className="px-4 py-3 text-sm">ID</th>
+              <th className="px-4 py-3 text-sm">
+                {t('form.streamRoutes.serverAddr')}
+              </th>
+              <th className="px-4 py-3 text-sm">
                 {t('form.streamRoutes.serverPort')}
               </th>
-              <th className="px-4 py-3 text-sm font-normal text-gray-700">
+              <th className="px-4 py-3 text-sm">
                 {t('form.streamRoutes.sni')}
               </th>
-              <th className="px-4 py-3 text-sm font-normal text-gray-700">
+              <th className="px-4 py-3 text-sm">
                 {t('form.basic.desc')}
               </th>
-              <th className="px-4 py-3 text-sm font-normal text-gray-700">
+              <th className="px-4 py-3 text-sm">
                 {t('form.plugins.label')}
               </th>
               <SortableHeader
@@ -155,7 +153,7 @@ export const StreamRouteList = (props: StreamRouteListProps) => {
                 dir={sortKey === 'update_time' ? sortDir : undefined}
                 onClick={() => toggleSort('update_time')}
               />
-              <th className="px-4 py-3 text-right font-normal text-sm text-gray-700">
+              <th className="px-4 py-3 text-right text-sm">
                 {t('table.actions')}
               </th>
             </tr>
@@ -185,11 +183,11 @@ export const StreamRouteList = (props: StreamRouteListProps) => {
                     key={id}
                     className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/60"
                   >
-                    <td className="px-4 py-3 font-mono text-sm text-black">{id}</td>
-                    <td className="px-4 py-3 text-black">{server_addr || '-'}</td>
-                    <td className="px-4 py-3 text-black">{server_port ?? '-'}</td>
-                    <td className="px-4 py-3 text-black">{sni || '-'}</td>
-                    <td className="px-4 py-3 text-black">{desc || '-'}</td>
+                    <td className="px-4 py-3 text-sm">{id}</td>
+                    <td className="px-4 py-3 text-sm">{server_addr || '-'}</td>
+                    <td className="px-4 py-3 text-sm">{server_port ?? '-'}</td>
+                    <td className="px-4 py-3 text-sm">{sni || '-'}</td>
+                    <td className="px-4 py-3 text-sm">{desc || '-'}</td>
                     <td className="px-4 py-3">
                       {pluginNames.length > 0 ? (
                         <div className="flex flex-wrap gap-1.5">
@@ -207,9 +205,9 @@ export const StreamRouteList = (props: StreamRouteListProps) => {
                         <span className="text-gray-400">-</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-black">
+                    <td className="px-4 py-3 text-sm">
                       {update_time
-                        ? new Date(Number(update_time) * 1000).toLocaleString()
+                        ? dayjs(update_time * 1000).format('YYYY-MM-DD HH:mm:ss')
                         : '-'}
                     </td>
                     <td className="px-4 py-3">

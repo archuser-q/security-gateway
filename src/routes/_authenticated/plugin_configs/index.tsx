@@ -33,6 +33,7 @@ import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { API_PLUGIN_CONFIGS } from '@/config/constant';
 import { queryClient } from '@/config/queryClient';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
+import dayjs from 'dayjs';
 
 type SortKey = 'name' | 'status' | 'update_time' | null;
 type SortDir = 'asc' | 'desc';
@@ -156,12 +157,9 @@ const PluginConfigList = () => {
         <table className="w-full text-left text-base">
           <thead>
             <tr className="border-b border-gray-100">
-              <SortableHeader
-                label={t('form.basic.name')}
-                active={sortKey === 'name'}
-                dir={sortKey === 'name' ? sortDir : undefined}
-                onClick={() => toggleSort('name')}
-              />
+              <th className="px-4 py-3 text-sm font-normal text-gray-700">
+                {t('form.basic.name')}
+              </th>
               <th className="px-4 py-3 text-sm font-normal text-gray-700">ID</th>
               <th className="px-4 py-3 text-sm font-normal text-gray-700">
                 {t('form.basic.desc')}
@@ -169,12 +167,9 @@ const PluginConfigList = () => {
               <th className="px-4 py-3 text-sm font-normal text-gray-700">
                 {t('form.plugins.label')}
               </th>
-              <SortableHeader
-                label={t('form.basic.status')}
-                active={sortKey === 'status'}
-                dir={sortKey === 'status' ? sortDir : undefined}
-                onClick={() => toggleSort('status')}
-              />
+              <th className="px-4 py-3 text-sm font-normal text-gray-700">
+                {t('form.basic.status')}
+              </th>
               <SortableHeader
                 label={t('form.info.update_time')}
                 active={sortKey === 'update_time'}
@@ -211,9 +206,9 @@ const PluginConfigList = () => {
                     key={id}
                     className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/60"
                   >
-                    <td className="px-4 py-3 font-medium text-black">{name || id}</td>
-                    <td className="px-4 py-3 font-mono text-sm text-black">{id}</td>
-                    <td className="px-4 py-3 text-black">{desc || '-'}</td>
+                    <td className="px-4 py-3 text-sm">{name || id}</td>
+                    <td className="px-4 py-3 text-sm">{id}</td>
+                    <td className="px-4 py-3 text-sm">{desc || '-'}</td>
                     <td className="px-4 py-3">
                       {pluginNames.length > 0 ? (
                         <div className="flex flex-wrap gap-1.5">
@@ -231,7 +226,7 @@ const PluginConfigList = () => {
                         <span className="text-gray-400">-</span>
                       )}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 text-sm">
                       {isEnabled ? (
                         <span className="inline-flex items-center gap-1.5 text-green-600">
                           <CheckCircle2 className="h-4 w-4" />
@@ -244,9 +239,9 @@ const PluginConfigList = () => {
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-black">
+                    <td className="px-4 py-3 text-sm">
                       {update_time
-                        ? new Date(Number(update_time) * 1000).toLocaleString()
+                        ? dayjs(update_time * 1000).format('YYYY-MM-DD HH:mm:ss')
                         : '-'}
                     </td>
                     <td className="px-4 py-3">
