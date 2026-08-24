@@ -27,7 +27,7 @@ import { InfoRow, SummaryField, SummaryGrid } from './OverviewField';
 
 type Field = { label: string; value: ReactNode };
 
-
+/** Normalizes `nodes`, which APISIX accepts either as an array of {host, port, weight} or as a {"host:port": weight} object. */
 const normalizeNodes = (nodes: unknown): { host: string; port: number }[] => {
   if (!nodes) return [];
   if (Array.isArray(nodes)) {
@@ -44,6 +44,36 @@ const normalizeNodes = (nodes: unknown): { host: string; port: number }[] => {
   });
 };
 
+/**
+ * "Overview" section: registers itself in the TOC sidebar (via the
+ * shared FormSection component — any FormSection with a `legend`
+ * auto-appears as a scroll-spy entry, same mechanism "General" /
+ * "Basic Information" use). Shows the Status/Type/Scheme/Pass Host
+ * summary plus an "Upstream" info card (key/value, LIMIT-REQ-card
+ * style) describing the upstream this service connects to.
+ *
+ * Both field lists (`summaryFields`, `infoRows`) are plain data —
+ * built once per render, then mapped into SummaryField/InfoRow. This
+ * replaced writing out each field's JSX by hand, which meant 7 nearly
+ * identical <InfoRow label=... value=... /> lines in the Upstream
+ * card alone. Reordering, adding, or removing a field is now a
+ * one-line array edit instead of a JSX edit.
+ *
+ * Fetches via the same query key as the form (getServiceQueryOptions
+ * (id)), so this adds no extra network call for the service itself.
+ * If the service references its upstream by `upstream_id` (a separate
+ * Upstream resource) rather than embedding it inline, these fields
+ * live on that Upstream, not on the Service — so this fetches the
+ * referenced Upstream too (only when there's no inline upstream) to
+ * fill them correctly instead of showing "-".
+ *
+ * Deliberately no per-node live health/status: APISIX's node config
+ * (host/port/weight) carries no live health field, and this project
+ * has no health-check runtime API wired up anywhere — a green check
+ * here would be fabricated data, not a real reading. "Health Check"
+ * below only reflects whether active/passive checks are *configured*
+ * (a real field), not whether nodes are currently up.
+ */
 export const ServiceSummaryBar = ({ id }: { id: string }) => {
   const { t } = useTranslation();
   const { data } = useSuspenseQuery(getServiceQueryOptions(id));
@@ -57,7 +87,9 @@ export const ServiceSummaryBar = ({ id }: { id: string }) => {
 
   if (!service) return null;
 
+  // APISIX: status omitted or 1 => enabled, 0 => explicitly disabled.
   const isEnabled = service.status !== 0;
+  // Prefer the inline upstream; fall back to the referenced one fetched above.
   const upstream = service.upstream ?? referencedUpstream?.value;
   const nodes = normalizeNodes(upstream?.nodes);
   const scheme = upstream?.scheme || 'http';
@@ -88,9 +120,12 @@ export const ServiceSummaryBar = ({ id }: { id: string }) => {
         </span>
       ),
     },
-    { label: t('form.upstreams.type'), value: upstream?.type },
-    { label: t('form.upstreams.scheme'), value: upstream?.scheme },
-    { label: t('form.upstreams.passHost'), value: upstream?.pass_host },
+    { label: t('form.upstreams.type'), value: <span className="font-normal">{upstream?.type}</span> },
+    { label: t('form.upstreams.scheme'), value: <span className="font-normal">{upstream?.scheme}</span> },
+    {
+      label: t('form.upstreams.passHost'),
+      value: <span className="font-normal">{upstream?.pass_host}</span>,
+    },
   ];
 
   const infoRows: Field[] = [
@@ -100,13 +135,19 @@ export const ServiceSummaryBar = ({ id }: { id: string }) => {
         <Link
           to="/upstreams/detail/$id"
           params={{ id: upstreamId }}
-          className="text-teal-600 hover:text-teal-700 hover:underline"
+          className="inline-flex items-center gap-1 text-teal-600 hover:text-teal-700 hover:underline"
         >
           {upstreamId}
+          <IconExternalLink size={12} stroke={2} />
         </Link>
       ) : undefined,
     },
-    { label: t('form.upstreams.upstreamHost'), value: upstream?.upstream_host },
+    {
+      label: t('form.upstreams.upstreamHost'),
+      value: upstream?.upstream_host ? (
+        <span className="font-normal">{upstream.upstream_host}</span>
+      ) : undefined,
+    },
     {
       label: `${t('form.upstreams.nodes.title')} (${nodes.length})`,
       value:
@@ -123,12 +164,31 @@ export const ServiceSummaryBar = ({ id }: { id: string }) => {
           </div>
         ) : undefined,
     },
-    { label: t('form.upstreams.retries'), value: upstream?.retries },
-    { label: t('form.upstreams.retryTimeout'), value: upstream?.retry_timeout },
-    { label: t('form.upstreams.timeout.title'), value: timeoutLabel },
+    {
+      label: t('form.upstreams.retries'),
+      value:
+        upstream?.retries !== undefined ? (
+          <span className="font-normal">{upstream.retries}</span>
+        ) : undefined,
+    },
+    {
+      label: t('form.upstreams.retryTimeout'),
+      value:
+        upstream?.retry_timeout !== undefined ? (
+          <span className="font-normal">{upstream.retry_timeout}</span>
+        ) : undefined,
+    },
+    {
+      label: t('form.upstreams.timeout.title'),
+      value: timeoutLabel ? <span className="font-normal">{timeoutLabel}</span> : undefined,
+    },
     {
       label: t('form.upstreams.checks.title'),
-      value: hasHealthCheck ? t('table.enabled') : t('table.disabled'),
+      value: (
+        <span className="font-normal">
+          {hasHealthCheck ? t('table.enabled') : t('table.disabled')}
+        </span>
+      ),
     },
   ];
 
@@ -145,25 +205,24 @@ export const ServiceSummaryBar = ({ id }: { id: string }) => {
 
         {upstream && (
           <div className="rounded-xl border border-gray-200 bg-white px-5 py-4">
-            {upstreamId ? (
-              <Link
-                to="/upstreams/detail/$id"
-                params={{ id: upstreamId }}
-                className="mb-3 inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold tracking-wide text-emerald-600 hover:bg-emerald-100"
-              >
-                <IconServer size={13} stroke={2} />
-                {t('form.upstreams.title').toUpperCase()}
-                <IconExternalLink size={12} stroke={2} />
-              </Link>
-            ) : (
-              <span className="mb-3 inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold tracking-wide text-emerald-600">
-                <IconServer size={13} stroke={2} />
-                {t('form.upstreams.title').toUpperCase()}
-              </span>
-            )}
-            {infoRows.map((r) => (
-              <InfoRow key={r.label} label={r.label} value={r.value} />
-            ))}
+            {/* Static header badge — the "Upstream ID" row below is the
+                only clickable link now, avoiding two controls that both
+                navigate to the exact same page. */}
+            <span className="mb-3 inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold tracking-wide text-emerald-600">
+              <IconServer size={13} stroke={2} />
+              {t('form.upstreams.title').toUpperCase()}
+            </span>
+            {/* Only rows with a real value render — an unconfigured
+                optional field (Retries, Timeout, ...) is omitted
+                entirely instead of showing a "-" placeholder, so the
+                card doesn't fill up with empty rows. Health Checks
+                always has a real Enabled/Disabled value, so it never
+                gets dropped here. */}
+            {infoRows
+              .filter((r) => r.value !== undefined && r.value !== null && r.value !== '')
+              .map((r) => (
+                <InfoRow key={r.label} label={r.label} value={r.value} />
+              ))}
           </div>
         )}
       </div>
