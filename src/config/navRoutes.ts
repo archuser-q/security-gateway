@@ -52,7 +52,6 @@ export const navRoutes: NavRoute[] = [
     label: 'overview',
     icon: IconHome,
   },
-  
   {
     to: '/routes',
     label: 'routes',
