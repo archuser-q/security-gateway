@@ -17,10 +17,12 @@
 import { AppShellNavbar, Badge, Divider, NavLink, ScrollArea, Text, type NavLinkProps } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { createLink } from '@tanstack/react-router';
+import { Collapse } from 'antd';
 import type { FC } from 'react';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { navRoutes, type NavGroup } from '@/config/navRoutes';
+import { navRoutes, type NavRoute } from '@/config/navRoutes';
+import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { getResourceStatsReq } from '@/apis/stats';
 import { req } from '@/config/req';
 
@@ -83,15 +85,40 @@ const NavCountBadge = ({ to }: { to: string }) => {
   );
 };
 
-const GROUP_LABELS: Record<NavGroup, string> = {
-  traffic: 'Traffic',
-  security: 'Security',
-  configuration: 'Configuration',
+const renderNavItem = (route: NavRoute, t: ReturnType<typeof useTranslation>['t']) => {
+  const Icon = route.icon;
+  if (!route.to && route.onClick) {
+    return (
+      <NavLink
+        key={route.label}
+        className="sg-navlink"
+        label={t(`sources.${route.label}`)}
+        leftSection={<Icon size={20} stroke={1.5} />}
+        onClick={route.onClick}
+      />
+    );
+  }
+  if (route.to) {
+    return (
+      <NavbarLink
+        key={route.to}
+        className="sg-navlink"
+        to={route.to}
+        label={t(`sources.${route.label}`)}
+        leftSection={<Icon size={20} stroke={1.5} />}
+        rightSection={<NavCountBadge to={route.to} />}
+      />
+    );
+  }
+  return null;
 };
 
 export const Navbar = () => {
   const { t } = useTranslation();
-  let lastGroup: NavGroup | undefined;
+
+  const overviewRoutes = navRoutes.filter((r) => !r.group);
+  const httpRoutes = navRoutes.filter((r) => r.group === 'http');
+  const managementRoutes = navRoutes.filter((r) => r.group === 'management');
 
   return (
     <AppShellNavbar className="sg-navbar">
@@ -101,48 +128,32 @@ export const Navbar = () => {
         scrollbarSize={6}
         classNames={{ viewport: 'sg-navbar__viewport' }}
       >
-        {navRoutes.map((route) => {
-          const Icon = route.icon;
-          const showGroupHeader = route.group && route.group !== lastGroup;
-          lastGroup = route.group;
+        {overviewRoutes.map((route) => renderNavItem(route, t))}
 
-          const groupHeader = showGroupHeader && (
-            <React.Fragment key={`${route.group}-header`}>
-              <Divider my={4} />
-              <Text className="sg-navgroup-label">{GROUP_LABELS[route.group as NavGroup]}</Text>
-            </React.Fragment>
-          );
+        {}
+        <Divider my={4} />
+        <Text className="sg-navgroup-label">HTTP</Text>
+        {httpRoutes.map((route) => renderNavItem(route, t))}
 
-          if (!route.to && route.onClick) {
-            return (
-              <React.Fragment key={route.label}>
-                {groupHeader}
-                <NavLink
-                  className="sg-navlink"
-                  label={t(`sources.${route.label}`)}
-                  leftSection={<Icon size={20} stroke={1.5} />}
-                  onClick={route.onClick}
-                />
-              </React.Fragment>
-            );
-          }
-          if (route.to) {
-            return (
-              <React.Fragment key={route.to}>
-                {groupHeader}
-                <NavbarLink
-                  className="sg-navlink"
-                  to={route.to}
-                  label={t(`sources.${route.label}`)}
-                  leftSection={<Icon size={20} stroke={1.5} />}
-                  rightSection={<NavCountBadge to={route.to} />}
-                />
-              </React.Fragment>
-            );
-          }
-
-          return null;
-        })}
+        {}
+        <Divider my={4} />
+        <AntdConfigProvider>
+          <Collapse
+            ghost
+            defaultActiveKey={[]}
+            items={[
+              {
+                key: 'management',
+                label: <span className="sg-navgroup-label sg-navgroup-label--collapse">Management</span>,
+                children: (
+                  <div className="sg-navgroup-body">
+                    {managementRoutes.map((route) => renderNavItem(route, t))}
+                  </div>
+                ),
+              },
+            ]}
+          />
+        </AntdConfigProvider>
       </ScrollArea>
 
       <style>{`
@@ -187,6 +198,28 @@ export const Navbar = () => {
         }
         .sg-navlink__badge {
           font-weight: 600;
+        }
+
+        /* --- antd Collapse (Management group) — strip its default
+           panel chrome so it blends into the plain sidebar look. --- */
+        .ant-collapse-ghost {
+          background: transparent !important;
+        }
+        .ant-collapse-ghost > .ant-collapse-item {
+          border: none !important;
+        }
+        .ant-collapse-ghost > .ant-collapse-item > .ant-collapse-header {
+          padding: 6px 12px !important;
+          align-items: center !important;
+        }
+        .sg-navgroup-label--collapse {
+          padding: 0 !important;
+        }
+        .ant-collapse-ghost > .ant-collapse-item > .ant-collapse-content > .ant-collapse-content-box {
+          padding: 4px 0 0 !important;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
         }
       `}</style>
     </AppShellNavbar>

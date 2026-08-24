@@ -113,7 +113,7 @@ const TOC = (props: Pick<TableOfContentsProps, 'reinitializeRef'>) => {
         flexShrink: 0,
         position: 'sticky',
         top: APPSHELL_HEADER_HEIGHT + 20,
-        width: 200,
+        width: 230,
         marginTop: 10,
         background: '#fff',
         border: '1px solid var(--mantine-color-gray-3)',
