@@ -131,15 +131,15 @@ function ConsumersList() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-2">
+                      <ToDetailPageBtn
+                        to="/consumers/detail/$username"
+                        params={{ username: record.value.username }}
+                      />
                       <DeleteResourceBtn
                         name={t('consumers.singular')}
                         target={record.value.username}
                         api={`${API_CONSUMERS}/${record.value.username}`}
                         onSuccess={refetch}
-                      />
-                      <ToDetailPageBtn
-                        to="/consumers/detail/$username"
-                        params={{ username: record.value.username }}
                       />
                     </div>
                   </td>

@@ -14,9 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import {
-  ArrowRight,
   ChevronDown,
   ChevronsUpDown,
   ChevronUp,
@@ -28,7 +27,7 @@ import { useTranslation } from 'react-i18next';
 import { getGlobalRuleListQueryOptions, useGlobalRuleList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn } from '@/components/page/ToAddPageBtn';
+import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { API_GLOBAL_RULES } from '@/config/constant';
 import { queryClient } from '@/config/queryClient';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
@@ -180,17 +179,12 @@ const GlobalRuleList = () => {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-3">
-                        <Link
-                          to="/global_rules/detail/$id"
-                          params={{ id }}
-                          className="inline-flex items-center gap-1 text-base font-medium
-                                     text-teal-600 hover:text-teal-700"
-                        >
-                          {t('form.btn.view')}
-                          <ArrowRight className="h-3.5 w-3.5" />
-                        </Link>
+                        <ToDetailPageBtn 
+                          to="/global_rules/detail/$id" 
+                          params={{ id: record.value.id }} 
+                        />
                         <DeleteResourceBtn
-                          variant="subtle"
+                          variant="light"
                           color="red"
                           size="compact-xs"
                           name={t('globalRules.singular')}

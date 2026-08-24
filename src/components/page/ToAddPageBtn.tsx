@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 
 import type { FileRoutesByTo } from '@/routeTree.gen';
 import IconPlus from '~icons/material-symbols/add';
-import IconArrowRight from '~icons/material-symbols/arrow-right-alt';
+import { RouteLinkBtn } from '../Btn';
 
 export type ToAddPageBtnProps = {
   to: keyof FilterKeys<FileRoutesByTo, 'add'>;
@@ -48,19 +48,12 @@ export type ToDetailPageBtnProps = {
     | keyof FilterKeys<FileRoutesByTo, '$routeId'>
     | keyof FilterKeys<FileRoutesByTo, '$username'>;
 } & Pick<LinkProps, 'params'>;
-
 export const ToDetailPageBtn = (props: ToDetailPageBtnProps) => {
   const { params, to } = props;
   const { t } = useTranslation();
   return (
-    <Link
-      to={to}
-      params={params}
-      className="group inline-flex items-center gap-1 rounded-md px-2.5 py-1 font-medium
-                 text-teal-600 transition-colors hover:bg-teal-50 hover:text-teal-700"
-    >
+    <RouteLinkBtn size="compact-xs" variant="light" color="teal" to={to} params={params}>
       {t('form.btn.view')}
-      <IconArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-    </Link>
+    </RouteLinkBtn>
   );
 };
