@@ -34,7 +34,7 @@ import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartGlobalRules } from '@/components/form-slice/FormPartGlobalRules';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
-import { GlobalRuleOverview } from '@/components/form-slice/GlobalRuleOverview';
+import { Overview } from '@/components/form-slice/Overview';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_GLOBAL_RULES } from '@/config/constant';
@@ -78,10 +78,39 @@ const GlobalRuleDetailForm = (props: Props) => {
     },
   });
 
+  const rule = detailReq.data?.value;
+  const pluginNames = rule?.plugins ? Object.keys(rule.plugins) : [];
+  const updatedLabel = rule?.update_time
+    ? new Date(Number(rule.update_time) * 1000).toLocaleString()
+    : '-';
+
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putGlobalRule.mutateAsync(d))}>
-        <GlobalRuleOverview id={id} />
+        <Overview
+          title={t('sources.overview')}
+          fields={[
+            {
+              label: `${t('form.plugins.label')} (${pluginNames.length})`,
+              value:
+                pluginNames.length > 0 ? (
+                  <div className="flex flex-wrap gap-1.5">
+                    {pluginNames.map((name) => (
+                      <span
+                        key={name}
+                        className="inline-block rounded-md bg-orange-50 px-2.5 py-0.5 font-mono text-[12.5px] font-semibold text-orange-700"
+                      >
+                        {name}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  '-'
+                ),
+            },
+            { label: t('form.info.update_time'), value: updatedLabel },
+          ]}
+        />
         <FormSectionGeneral readOnly />
         <FormPartGlobalRules />
         {!readOnly && (

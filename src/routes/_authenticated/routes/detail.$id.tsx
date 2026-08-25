@@ -20,9 +20,11 @@ import { notifications } from '@mantine/notifications';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   createFileRoute,
+  Link,
   useNavigate,
   useParams,
 } from '@tanstack/react-router';
+import { IconExternalLink, IconServer2, IconWorld } from '@tabler/icons-react';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -41,6 +43,7 @@ import {
   produceVarsToForm,
 } from '@/components/form-slice/FormPartRoute/util';
 import { produceToUpstreamForm } from '@/components/form-slice/FormPartUpstream/util';
+import { Flow, FlowRow, type FlowBoxItem } from '@/components/form-slice/Flow';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
@@ -97,9 +100,114 @@ const RouteDetailForm = (props: Props) => {
     return <Skeleton height={400} />;
   }
 
+  const route = routeData?.value;
+  const isEnabled = route?.status !== 0;
+  const service_id = route?.service_id;
+  const upstream_id = route?.upstream_id;
+  const upstream = route?.upstream;
+  const hasUpstream = !!upstream_id || !!upstream;
+
+  const boxes: FlowBoxItem[] = route
+    ? [
+        {
+          key: 'route',
+          title: t('routes.singular'),
+          content: (
+            <>
+              <div className="font-mono text-sm font-semibold text-gray-800">
+                {route.uri || '-'}
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                <span
+                  className={`inline-block rounded-md px-2 py-0.5 text-[11px] font-bold tracking-wide ${
+                    isEnabled ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-500'
+                  }`}
+                >
+                  {isEnabled
+                    ? t('form.basic.statusOption.1').toUpperCase()
+                    : t('form.basic.statusOption.0').toUpperCase()}
+                </span>
+                {(route.methods ?? []).map((m) => (
+                  <span
+                    key={m}
+                    className="inline-block rounded-md bg-blue-50 px-2 py-0.5 text-[11px] font-bold tracking-wide text-blue-700"
+                  >
+                    {m}
+                  </span>
+                ))}
+              </div>
+              <FlowRow label={t('form.routes.priority', 'Priority')} value={route.priority} />
+            </>
+          ),
+        },
+        ...(service_id
+          ? [
+              {
+                key: 'service',
+                title: t('sources.services'),
+                content: (
+                  <Link
+                    to="/services/detail/$id"
+                    params={{ id: service_id }}
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-teal-600 hover:text-teal-700 hover:underline"
+                  >
+                    <IconServer2 size={16} className="text-teal-600" />
+                    {service_id}
+                    <IconExternalLink size={12} stroke={2} />
+                  </Link>
+                ),
+              },
+            ]
+          : []),
+        ...(hasUpstream
+          ? [
+              {
+                key: 'upstream',
+                title: t('form.upstreams.title'),
+                content: (
+                  <>
+                    {upstream_id ? (
+                      <Link
+                        to="/upstreams/detail/$id"
+                        params={{ id: upstream_id }}
+                        className="inline-flex items-center gap-2 text-sm font-semibold text-teal-600 hover:text-teal-700 hover:underline"
+                      >
+                        <IconWorld size={16} className="text-teal-600" />
+                        {upstream_id}
+                        <IconExternalLink size={12} stroke={2} />
+                      </Link>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <IconWorld size={16} className="text-teal-600" />
+                        <span className="text-sm font-semibold text-gray-800">
+                          {t('form.upstreams.title')}
+                        </span>
+                      </div>
+                    )}
+                    {upstream?.type && (
+                      <div className="flex flex-wrap gap-1.5">
+                        <span className="inline-block rounded-md bg-violet-50 px-2 py-0.5 text-[11px] font-bold tracking-wide text-violet-700">
+                          {upstream.type.toUpperCase()}
+                        </span>
+                        {upstream.scheme && (
+                          <span className="inline-block rounded-md bg-gray-100 px-2 py-0.5 text-[11px] font-bold tracking-wide text-gray-600">
+                            {upstream.scheme.toUpperCase()}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </>
+                ),
+              },
+            ]
+          : []),
+      ]
+    : [];
+
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putRoute.mutateAsync(d))}>
+        {route && <Flow title={t('sources.overview')} boxes={boxes} />}
         <FormSectionGeneral readOnly />
         <FormPartRoute />
         {!readOnly && (
