@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import {
   createFileRoute,
   Outlet,
@@ -28,7 +27,8 @@ import { useTranslation } from 'react-i18next';
 import { Tabs, type TabsItem } from '@/components/page/Tabs';
 
 const defaultTab = 'detail';
-export const DetailTabs = () => {
+
+const ServiceDetailTabs = () => {
   const { t } = useTranslation();
   const { id } = useParams({ strict: false });
   const navigate = useNavigate();
@@ -53,13 +53,15 @@ export const DetailTabs = () => {
     ],
     [t]
   );
+
   return (
     <Tabs
       items={items}
       variant="default"
       classNames={{
         tab: 'group transition-all duration-300 ease-in-out aria-selected:text-blue-600',
-        tabLabel: 'transition-colors duration-300 ease-in-out group-aria-selected:text-blue-600',
+        tabLabel:
+          'transition-colors duration-300 ease-in-out group-aria-selected:text-blue-600',
       }}
       value={
         items
@@ -83,7 +85,7 @@ export const DetailTabs = () => {
 function RouteComponent() {
   return (
     <>
-      <DetailTabs />
+      <ServiceDetailTabs />
       <Outlet />
     </>
   );

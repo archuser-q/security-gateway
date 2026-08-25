@@ -20,9 +20,11 @@ import { notifications } from '@mantine/notifications';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   createFileRoute,
+  Link,
   useNavigate,
   useParams,
 } from '@tanstack/react-router';
+import { IconExternalLink, IconLock, IconServer2, IconWorld } from '@tabler/icons-react';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -33,9 +35,9 @@ import { putStreamRouteReq } from '@/apis/stream_routes';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { produceRoute } from '@/components/form-slice/FormPartRoute/util';
 import { FormPartStreamRoute } from '@/components/form-slice/FormPartStreamRoute';
+import { Flow, FlowRow, type FlowBoxItem } from '@/components/form-slice/Flow';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
-import { StreamRouteFlow } from '@/components/form-slice/StreamRouteFlow';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
@@ -87,10 +89,103 @@ const StreamRouteDetailForm = (props: Props) => {
     return <Skeleton height={400} />;
   }
 
+  const route = streamRouteData?.value;
+  const { server_addr, server_port, remote_addr, sni, service_id, upstream_id, upstream } =
+    route ?? {};
+  const isUdp = upstream?.scheme === 'udp';
+  const hasUpstream = !!upstream_id || !!upstream;
+
+  const boxes: FlowBoxItem[] = [
+    {
+      key: 'port',
+      title: t('form.streamRoutes.serverPort'),
+      content: (
+        <span className="font-mono text-lg font-semibold text-gray-800">
+          {server_port ? `:${server_port}` : <span className="text-gray-300">-</span>}
+        </span>
+      ),
+    },
+    {
+      key: 'router',
+      title: isUdp ? 'UDP Router' : 'TCP Router',
+      content: (
+        <>
+          <FlowRow label={t('form.streamRoutes.serverAddr')} value={server_addr} />
+          <FlowRow label={t('form.streamRoutes.remoteAddr')} value={remote_addr} />
+        </>
+      ),
+    },
+    ...(service_id
+      ? [
+          {
+            key: 'service',
+            title: t('form.streamRoutes.server'),
+            content: (
+              <Link
+                to="/services/detail/$id"
+                params={{ id: service_id }}
+                className="inline-flex items-center gap-2 text-sm font-semibold text-teal-600 hover:text-teal-700 hover:underline"
+              >
+                <IconServer2 size={16} className="text-teal-600" />
+                {service_id}
+                <IconExternalLink size={12} stroke={2} />
+              </Link>
+            ),
+          },
+        ]
+      : []),
+    ...(hasUpstream
+      ? [
+          {
+            key: 'upstream',
+            title: t('form.upstreams.title'),
+            content: upstream_id ? (
+              <Link
+                to="/upstreams/detail/$id"
+                params={{ id: upstream_id }}
+                className="inline-flex items-center gap-2 text-sm font-semibold text-teal-600 hover:text-teal-700 hover:underline"
+              >
+                <IconWorld size={16} className="text-teal-600" />
+                {upstream_id}
+                <IconExternalLink size={12} stroke={2} />
+              </Link>
+            ) : (
+              <div className="flex items-center gap-2">
+                <IconWorld size={16} className="text-teal-600" />
+                <span className="text-sm font-semibold text-gray-800">
+                  {t('form.upstreams.title')}
+                </span>
+              </div>
+            ),
+          },
+        ]
+      : []),
+  ];
+
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putStreamRoute.mutateAsync(d))}>
-        <StreamRouteFlow id={id} />
+        {route && (
+          <Flow
+            title={t('sources.overview')}
+            boxes={boxes}
+            extra={
+              !isUdp ? (
+                <div className="mt-4 rounded-xl border border-gray-200 bg-white p-4">
+                  <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700">
+                    <IconLock size={16} className="text-emerald-600" />
+                    TLS
+                  </div>
+                  {sni ? (
+                    <FlowRow label={t('form.streamRoutes.sni')} value={sni} />
+                  ) : (
+                    <p className="py-2 text-center text-sm text-gray-400">No TLS configured</p>
+                  )}
+                </div>
+              ) : undefined
+            }
+          />
+        )}
         <FormSectionGeneral readOnly />
         <FormPartStreamRoute />
         {!readOnly && (

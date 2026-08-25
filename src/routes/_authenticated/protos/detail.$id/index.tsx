@@ -34,13 +34,22 @@ import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartProto } from '@/components/form-slice/FormPartProto';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
-import { ProtoOverview } from '@/components/form-slice/ProtoOverview';
+import { Overview } from '@/components/form-slice/Overview';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_PROTOS } from '@/config/constant';
 import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
+
+const parseProto = (content: string) => {
+  const syntaxMatch = content.match(/syntax\s*=\s*"([^"]+)"/);
+  const packageMatch = content.match(/package\s+([\w.]+)\s*;/);
+  const serviceNames = [...content.matchAll(/service\s+(\w+)\s*\{/g)].map((m) => m[1]);
+  const messageCount = [...content.matchAll(/message\s+\w+\s*\{/g)].length;
+  const rpcCount = [...content.matchAll(/rpc\s+\w+\s*\(/g)].length;
+  return { syntax: syntaxMatch?.[1], pkg: packageMatch?.[1], serviceNames, messageCount, rpcCount };
+};
 
 type ProtoFormProps = {
   id: string;
@@ -75,7 +84,6 @@ const ProtoDetailForm = ({ id, readOnly, setReadOnly }: ProtoFormProps) => {
     },
   });
 
-  // Update form values when data is loaded
   useEffect(() => {
     if (protoData?.value) {
       form.reset(protoData.value);
@@ -86,10 +94,42 @@ const ProtoDetailForm = ({ id, readOnly, setReadOnly }: ProtoFormProps) => {
     return <Skeleton height={400} />;
   }
 
+  const proto = protoData?.value;
+  const parsed = proto?.content ? parseProto(proto.content) : undefined;
+
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putProto.mutateAsync(d))}>
-        <ProtoOverview id={id} />
+        {parsed && (
+          <Overview
+            title={t('sources.overview')}
+            fields={[
+              { label: 'Syntax', value: parsed.syntax ?? '-', bold: false },
+              { label: 'Package', value: parsed.pkg ?? '-' },
+              {
+                label: `Services (${parsed.serviceNames.length})`,
+                bold: false,
+                value:
+                  parsed.serviceNames.length > 0 ? (
+                    <div className="flex flex-wrap gap-1.5">
+                      {parsed.serviceNames.map((name) => (
+                        <span
+                          key={name}
+                          className="inline-block rounded-md bg-indigo-50 px-2.5 py-0.5 font-mono text-[12.5px] font-semibold text-indigo-700"
+                        >
+                          {name}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    '-'
+                  ),
+              },
+              { label: 'Messages', value: parsed.messageCount || '-', bold: false },
+              { label: 'RPC Methods', value: parsed.rpcCount || '-', bold: false },
+            ]}
+          />
+        )}
         <FormSectionGeneral readOnly />
         <FormPartProto allowUpload={!readOnly} />
         {!readOnly && (
