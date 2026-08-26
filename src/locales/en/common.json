@@ -3,6 +3,13 @@
     "dashboard": "Security Gateway",
     "logo": "APISIX Logo"
   },
+  "consumerGroupDetail": {
+    "memberCount": "{{count}} consumer in this group",
+    "memberCount_other": "{{count}} consumers in this group",
+    "overrideWarning": "{{count}} consumer has their own plugin overriding the group's setting",
+    "overrideWarning_other": "{{count}} consumers have their own plugin overriding the group's setting",
+    "overridesColumn": "Overrides"
+  },
   "consumerGroups": {
     "singular": "Consumer Group"
   },
@@ -85,6 +92,7 @@
     },
     "plugins": {
       "addPlugin": "Add Plugin",
+      "viaPrefix": "via",
       "configId": "Plugin Config ID",
       "editPlugin": "Edit Plugin",
       "label": "Plugins",
@@ -364,7 +372,8 @@
   "noData": "No Data",
   "or": "OR",
   "pluginConfigs": {
-    "singular": "Plugin Config"
+    "singular": "Plugin Config",
+    "pluginsCount": "Plugins ({{count}})"
   },
   "pluginMetadata": {
     "search": "Search Plugin Metadata",
@@ -373,8 +382,39 @@
   "protos": {
     "singular": "Proto"
   },
+  "routeFlow": {
+    "title": "Flow",
+    "noService": "No Service",
+    "nodeCount": "{{count}} node",
+    "nodeCount_other": "{{count}} nodes",
+    "notConfigured": "Not configured",
+    "tlsTitle": "SSL Certificate",
+    "tlsDisclaimer": "Computed by matching Route Host against SSL SNI on this page - not an authoritative APISIX confirmation of which cert is actually served.",
+    "noHostRestriction": "This route has no Host restriction, so TLS depends entirely on the incoming SNI - nothing to check here.",
+    "noMatchingSsl": "No matching SSL cert found",
+    "host": "Host: {{host}}",
+    "moreNodes": "+{{count}} more node",
+    "moreNodes_other": "+{{count}} more nodes",
+    "viewUpstream": "View upstream details",
+    "healthCheck": "Health check",
+    "pluginDetailsTitle": "Plugin Details",
+    "sourceRoute": "Route",
+    "defaultType": "roundrobin",
+    "defaultScheme": "http",
+    "defaultNote": "Not explicitly set - APISIX applies this default at runtime",
+    "overriddenByHigherPriority": "{{names}} on Service is overridden (Route/Plugin Config takes precedence per APISIX's merge order)"
+  },
   "routes": {
     "singular": "Route"
+  },
+  "secretDetail": {
+    "usedByTitle": "Used By",
+    "usedByEmpty": "No resource references this Secret yet (best-effort scan)",
+    "usedByDisclaimer": "Best-effort scan of plugin configs across Routes, Services, Consumers, Consumer Groups, Plugin Configs, and Global Rules for a matching $secret:// reference. Not an authoritative APISIX confirmation.",
+    "usageTitle": "How to reference this Secret",
+    "usageHint": "Paste this into any plugin field that should read from this Secret at runtime, replacing {{placeholder}} with the actual key path in {{manager}}.",
+    "copy": "Copy",
+    "copied": "Copied"
   },
   "seconds": "Seconds",
   "secrets": {
@@ -412,6 +452,35 @@
     "changePassword": "Change Password",
     "setting": "Setting"
   },
+  "certDetail": {
+    "status": "Status",
+    "type": "Type",
+    "typeServer": "Server",
+    "typeClient": "Client (mTLS)",
+    "clientTypeNote": "This is a client certificate used for mTLS (validating incoming client certs) - it does not serve HTTPS by SNI the way a server certificate does.",
+    "apisixConfigTitle": "APISIX Config",
+    "allowedProtocols": "Allowed TLS Versions",
+    "mtlsCa": "Client CA",
+    "mtlsCaSet": "Configured",
+    "mtlsDepth": "Verify Depth",
+    "sniMatch": "SNI (APISIX match)",
+    "commonNameInCert": "Common Name (in cert)",
+    "validUntil": "Valid Until",
+    "expiry": "Expiry",
+    "issuedTo": "Issued To",
+    "issuedBy": "Issued By",
+    "validity": "Validity",
+    "technicalDetails": "Technical Details",
+    "fingerprints": "SHA-256 Fingerprints",
+    "expired": "Expired",
+    "daysLeft": "{{count}} days"
+  },
+  "usedBy": {
+    "routesTitle": "Used by Routes",
+    "empty": "Not used by any route yet",
+    "status": "Status",
+    "name": "Name"
+  },
   "ssls": {
     "singular": "SSL"
   },
@@ -421,7 +490,14 @@
   "table": {
     "actions": "Actions",
     "disabled": "Disabled",
-    "enabled": "Enabled"
+    "enabled": "Enabled",
+    "allStatus": "All status",
+    "searchPlaceholder": "Search",
+    "totalItems": "Total {{count}} items",
+    "btn": {
+      "prev": "Prev",
+      "next": "Next"
+    }
   },
   "upstreams": {
     "singular": "Upstream"

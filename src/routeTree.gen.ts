@@ -8,6 +8,7 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+<<<<<<< HEAD
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
@@ -239,10 +240,102 @@ const AuthenticatedStream_routesAddRoute =
   } as any)
 const AuthenticatedUpstreamsIndexRoute =
   AuthenticatedUpstreamsIndexRouteImport.update({
+=======
+// Import Routes
+
+import { Route as rootRoute } from './routes/__root'
+import { Route as LoginImport } from './routes/login'
+import { Route as AuthenticatedImport } from './routes/_authenticated'
+import { Route as IndexImport } from './routes/index'
+import { Route as AuthenticatedUpstreamsIndexImport } from './routes/_authenticated/upstreams/index'
+import { Route as AuthenticatedStreamroutesIndexImport } from './routes/_authenticated/stream_routes/index'
+import { Route as AuthenticatedSslsIndexImport } from './routes/_authenticated/ssls/index'
+import { Route as AuthenticatedServicesIndexImport } from './routes/_authenticated/services/index'
+import { Route as AuthenticatedSecretsIndexImport } from './routes/_authenticated/secrets/index'
+import { Route as AuthenticatedRoutesIndexImport } from './routes/_authenticated/routes/index'
+import { Route as AuthenticatedProtosIndexImport } from './routes/_authenticated/protos/index'
+import { Route as AuthenticatedPluginmetadataIndexImport } from './routes/_authenticated/plugin_metadata/index'
+import { Route as AuthenticatedPluginconfigsIndexImport } from './routes/_authenticated/plugin_configs/index'
+import { Route as AuthenticatedOverviewIndexImport } from './routes/_authenticated/overview/index'
+import { Route as AuthenticatedLoginhistoriesIndexImport } from './routes/_authenticated/login_histories/index'
+import { Route as AuthenticatedLoghistoriesIndexImport } from './routes/_authenticated/log_histories/index'
+import { Route as AuthenticatedGlobalrulesIndexImport } from './routes/_authenticated/global_rules/index'
+import { Route as AuthenticatedConsumersIndexImport } from './routes/_authenticated/consumers/index'
+import { Route as AuthenticatedConsumergroupsIndexImport } from './routes/_authenticated/consumer_groups/index'
+import { Route as AuthenticatedCasdoorIndexImport } from './routes/_authenticated/casdoor/index'
+import { Route as AuthenticatedAdminsIndexImport } from './routes/_authenticated/admins/index'
+import { Route as AuthenticatedUpstreamsAddImport } from './routes/_authenticated/upstreams/add'
+import { Route as AuthenticatedStreamroutesAddImport } from './routes/_authenticated/stream_routes/add'
+import { Route as AuthenticatedSslsAddImport } from './routes/_authenticated/ssls/add'
+import { Route as AuthenticatedServicesAddImport } from './routes/_authenticated/services/add'
+import { Route as AuthenticatedSecretsAddImport } from './routes/_authenticated/secrets/add'
+import { Route as AuthenticatedRoutesAddImport } from './routes/_authenticated/routes/add'
+import { Route as AuthenticatedProtosAddImport } from './routes/_authenticated/protos/add'
+import { Route as AuthenticatedPluginconfigsAddImport } from './routes/_authenticated/plugin_configs/add'
+import { Route as AuthenticatedGlobalrulesAddImport } from './routes/_authenticated/global_rules/add'
+import { Route as AuthenticatedConsumersAddImport } from './routes/_authenticated/consumers/add'
+import { Route as AuthenticatedConsumergroupsAddImport } from './routes/_authenticated/consumer_groups/add'
+import { Route as AuthenticatedAdminsAddImport } from './routes/_authenticated/admins/add'
+import { Route as AuthenticatedUpstreamsDetailIdImport } from './routes/_authenticated/upstreams/detail.$id'
+import { Route as AuthenticatedStreamroutesDetailIdImport } from './routes/_authenticated/stream_routes/detail.$id'
+import { Route as AuthenticatedSslsDetailIdImport } from './routes/_authenticated/ssls/detail.$id'
+import { Route as AuthenticatedServicesDetailIdImport } from './routes/_authenticated/services/detail.$id'
+import { Route as AuthenticatedRoutesDetailIdImport } from './routes/_authenticated/routes/detail.$id'
+import { Route as AuthenticatedProtosDetailIdImport } from './routes/_authenticated/protos/detail.$id'
+import { Route as AuthenticatedPluginconfigsDetailIdImport } from './routes/_authenticated/plugin_configs/detail.$id'
+import { Route as AuthenticatedGlobalrulesDetailIdImport } from './routes/_authenticated/global_rules/detail.$id'
+import { Route as AuthenticatedConsumersDetailUsernameImport } from './routes/_authenticated/consumers/detail.$username'
+import { Route as AuthenticatedConsumergroupsDetailIdImport } from './routes/_authenticated/consumer_groups/detail.$id'
+import { Route as AuthenticatedAdminsDetailIdImport } from './routes/_authenticated/admins/detail.$id'
+import { Route as AuthenticatedServicesDetailIdIndexImport } from './routes/_authenticated/services/detail.$id/index'
+import { Route as AuthenticatedRoutesDetailIdIndexImport } from './routes/_authenticated/routes/detail.$id/index'
+import { Route as AuthenticatedPluginconfigsDetailIdIndexImport } from './routes/_authenticated/plugin_configs/detail.$id/index'
+import { Route as AuthenticatedConsumersDetailUsernameIndexImport } from './routes/_authenticated/consumers/detail.$username/index'
+import { Route as AuthenticatedConsumergroupsDetailIdIndexImport } from './routes/_authenticated/consumer_groups/detail.$id/index'
+import { Route as AuthenticatedSecretsDetailManagerIdImport } from './routes/_authenticated/secrets/detail.$manager.$id'
+import { Route as AuthenticatedServicesDetailIdStreamroutesIndexImport } from './routes/_authenticated/services/detail.$id/stream_routes/index'
+import { Route as AuthenticatedServicesDetailIdRoutesIndexImport } from './routes/_authenticated/services/detail.$id/routes/index'
+import { Route as AuthenticatedSecretsDetailManagerIdIndexImport } from './routes/_authenticated/secrets/detail.$manager.$id/index'
+import { Route as AuthenticatedRoutesDetailIdPluginsIndexImport } from './routes/_authenticated/routes/detail.$id/plugins/index'
+import { Route as AuthenticatedPluginconfigsDetailIdRoutesIndexImport } from './routes/_authenticated/plugin_configs/detail.$id/routes/index'
+import { Route as AuthenticatedPluginconfigsDetailIdPluginsIndexImport } from './routes/_authenticated/plugin_configs/detail.$id/plugins/index'
+import { Route as AuthenticatedConsumersDetailUsernameCredentialsIndexImport } from './routes/_authenticated/consumers/detail.$username/credentials/index'
+import { Route as AuthenticatedConsumergroupsDetailIdConsumersIndexImport } from './routes/_authenticated/consumer_groups/detail.$id/consumers/index'
+import { Route as AuthenticatedServicesDetailIdStreamroutesAddImport } from './routes/_authenticated/services/detail.$id/stream_routes/add'
+import { Route as AuthenticatedServicesDetailIdRoutesAddImport } from './routes/_authenticated/services/detail.$id/routes/add'
+import { Route as AuthenticatedConsumersDetailUsernameCredentialsAddImport } from './routes/_authenticated/consumers/detail.$username/credentials/add'
+import { Route as AuthenticatedSecretsDetailManagerIdUsedByIndexImport } from './routes/_authenticated/secrets/detail.$manager.$id/used-by/index'
+import { Route as AuthenticatedServicesDetailIdStreamroutesDetailRouteIdImport } from './routes/_authenticated/services/detail.$id/stream_routes/detail.$routeId'
+import { Route as AuthenticatedServicesDetailIdRoutesDetailRouteIdImport } from './routes/_authenticated/services/detail.$id/routes/detail.$routeId'
+import { Route as AuthenticatedConsumersDetailUsernameCredentialsDetailIdImport } from './routes/_authenticated/consumers/detail.$username/credentials/detail.$id'
+
+// Create/Update Routes
+
+const LoginRoute = LoginImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthenticatedRoute = AuthenticatedImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const IndexRoute = IndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthenticatedUpstreamsIndexRoute =
+  AuthenticatedUpstreamsIndexImport.update({
+>>>>>>> origin/tai
     id: '/upstreams/',
     path: '/upstreams/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+<<<<<<< HEAD
 const AuthenticatedUpstreamsAddRoute =
   AuthenticatedUpstreamsAddRouteImport.update({
     id: '/upstreams/add',
@@ -311,16 +404,302 @@ const AuthenticatedStream_routesDetailIdRoute =
   } as any)
 const AuthenticatedUpstreamsDetailIdRoute =
   AuthenticatedUpstreamsDetailIdRouteImport.update({
+=======
+
+const AuthenticatedStreamroutesIndexRoute =
+  AuthenticatedStreamroutesIndexImport.update({
+    id: '/stream_routes/',
+    path: '/stream_routes/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedSslsIndexRoute = AuthenticatedSslsIndexImport.update({
+  id: '/ssls/',
+  path: '/ssls/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedServicesIndexRoute = AuthenticatedServicesIndexImport.update(
+  {
+    id: '/services/',
+    path: '/services/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any,
+)
+
+const AuthenticatedSecretsIndexRoute = AuthenticatedSecretsIndexImport.update({
+  id: '/secrets/',
+  path: '/secrets/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedRoutesIndexRoute = AuthenticatedRoutesIndexImport.update({
+  id: '/routes/',
+  path: '/routes/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedProtosIndexRoute = AuthenticatedProtosIndexImport.update({
+  id: '/protos/',
+  path: '/protos/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedPluginmetadataIndexRoute =
+  AuthenticatedPluginmetadataIndexImport.update({
+    id: '/plugin_metadata/',
+    path: '/plugin_metadata/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedPluginconfigsIndexRoute =
+  AuthenticatedPluginconfigsIndexImport.update({
+    id: '/plugin_configs/',
+    path: '/plugin_configs/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedOverviewIndexRoute = AuthenticatedOverviewIndexImport.update(
+  {
+    id: '/overview/',
+    path: '/overview/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any,
+)
+
+const AuthenticatedLoginhistoriesIndexRoute =
+  AuthenticatedLoginhistoriesIndexImport.update({
+    id: '/login_histories/',
+    path: '/login_histories/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedLoghistoriesIndexRoute =
+  AuthenticatedLoghistoriesIndexImport.update({
+    id: '/log_histories/',
+    path: '/log_histories/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedGlobalrulesIndexRoute =
+  AuthenticatedGlobalrulesIndexImport.update({
+    id: '/global_rules/',
+    path: '/global_rules/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedConsumersIndexRoute =
+  AuthenticatedConsumersIndexImport.update({
+    id: '/consumers/',
+    path: '/consumers/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedConsumergroupsIndexRoute =
+  AuthenticatedConsumergroupsIndexImport.update({
+    id: '/consumer_groups/',
+    path: '/consumer_groups/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedCasdoorIndexRoute = AuthenticatedCasdoorIndexImport.update({
+  id: '/casdoor/',
+  path: '/casdoor/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedAdminsIndexRoute = AuthenticatedAdminsIndexImport.update({
+  id: '/admins/',
+  path: '/admins/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedUpstreamsAddRoute = AuthenticatedUpstreamsAddImport.update({
+  id: '/upstreams/add',
+  path: '/upstreams/add',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedStreamroutesAddRoute =
+  AuthenticatedStreamroutesAddImport.update({
+    id: '/stream_routes/add',
+    path: '/stream_routes/add',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedSslsAddRoute = AuthenticatedSslsAddImport.update({
+  id: '/ssls/add',
+  path: '/ssls/add',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedServicesAddRoute = AuthenticatedServicesAddImport.update({
+  id: '/services/add',
+  path: '/services/add',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedSecretsAddRoute = AuthenticatedSecretsAddImport.update({
+  id: '/secrets/add',
+  path: '/secrets/add',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedRoutesAddRoute = AuthenticatedRoutesAddImport.update({
+  id: '/routes/add',
+  path: '/routes/add',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedProtosAddRoute = AuthenticatedProtosAddImport.update({
+  id: '/protos/add',
+  path: '/protos/add',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedPluginconfigsAddRoute =
+  AuthenticatedPluginconfigsAddImport.update({
+    id: '/plugin_configs/add',
+    path: '/plugin_configs/add',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedGlobalrulesAddRoute =
+  AuthenticatedGlobalrulesAddImport.update({
+    id: '/global_rules/add',
+    path: '/global_rules/add',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedConsumersAddRoute = AuthenticatedConsumersAddImport.update({
+  id: '/consumers/add',
+  path: '/consumers/add',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedConsumergroupsAddRoute =
+  AuthenticatedConsumergroupsAddImport.update({
+    id: '/consumer_groups/add',
+    path: '/consumer_groups/add',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedAdminsAddRoute = AuthenticatedAdminsAddImport.update({
+  id: '/admins/add',
+  path: '/admins/add',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedUpstreamsDetailIdRoute =
+  AuthenticatedUpstreamsDetailIdImport.update({
+>>>>>>> origin/tai
     id: '/upstreams/detail/$id',
     path: '/upstreams/detail/$id',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+<<<<<<< HEAD
 const AuthenticatedConsumersDetailUsernameIndexRoute =
   AuthenticatedConsumersDetailUsernameIndexRouteImport.update({
+=======
+
+const AuthenticatedStreamroutesDetailIdRoute =
+  AuthenticatedStreamroutesDetailIdImport.update({
+    id: '/stream_routes/detail/$id',
+    path: '/stream_routes/detail/$id',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedSslsDetailIdRoute = AuthenticatedSslsDetailIdImport.update({
+  id: '/ssls/detail/$id',
+  path: '/ssls/detail/$id',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedServicesDetailIdRoute =
+  AuthenticatedServicesDetailIdImport.update({
+    id: '/services/detail/$id',
+    path: '/services/detail/$id',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedRoutesDetailIdRoute =
+  AuthenticatedRoutesDetailIdImport.update({
+    id: '/routes/detail/$id',
+    path: '/routes/detail/$id',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedProtosDetailIdRoute =
+  AuthenticatedProtosDetailIdImport.update({
+    id: '/protos/detail/$id',
+    path: '/protos/detail/$id',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedPluginconfigsDetailIdRoute =
+  AuthenticatedPluginconfigsDetailIdImport.update({
+    id: '/plugin_configs/detail/$id',
+    path: '/plugin_configs/detail/$id',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedGlobalrulesDetailIdRoute =
+  AuthenticatedGlobalrulesDetailIdImport.update({
+    id: '/global_rules/detail/$id',
+    path: '/global_rules/detail/$id',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedConsumersDetailUsernameRoute =
+  AuthenticatedConsumersDetailUsernameImport.update({
+    id: '/consumers/detail/$username',
+    path: '/consumers/detail/$username',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedConsumergroupsDetailIdRoute =
+  AuthenticatedConsumergroupsDetailIdImport.update({
+    id: '/consumer_groups/detail/$id',
+    path: '/consumer_groups/detail/$id',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedAdminsDetailIdRoute =
+  AuthenticatedAdminsDetailIdImport.update({
+    id: '/admins/detail/$id',
+    path: '/admins/detail/$id',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedServicesDetailIdIndexRoute =
+  AuthenticatedServicesDetailIdIndexImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedServicesDetailIdRoute,
+  } as any)
+
+const AuthenticatedRoutesDetailIdIndexRoute =
+  AuthenticatedRoutesDetailIdIndexImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedRoutesDetailIdRoute,
+  } as any)
+
+const AuthenticatedPluginconfigsDetailIdIndexRoute =
+  AuthenticatedPluginconfigsDetailIdIndexImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedPluginconfigsDetailIdRoute,
+  } as any)
+
+const AuthenticatedConsumersDetailUsernameIndexRoute =
+  AuthenticatedConsumersDetailUsernameIndexImport.update({
+>>>>>>> origin/tai
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedConsumersDetailUsernameRoute,
   } as any)
+<<<<<<< HEAD
 const AuthenticatedProtosDetailIdIndexRoute =
   AuthenticatedProtosDetailIdIndexRouteImport.update({
     id: '/',
@@ -335,10 +714,23 @@ const AuthenticatedProtosDetailIdUsedByRoute =
   } as any)
 const AuthenticatedSecretsDetailManagerIdRoute =
   AuthenticatedSecretsDetailManagerIdRouteImport.update({
+=======
+
+const AuthenticatedConsumergroupsDetailIdIndexRoute =
+  AuthenticatedConsumergroupsDetailIdIndexImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedConsumergroupsDetailIdRoute,
+  } as any)
+
+const AuthenticatedSecretsDetailManagerIdRoute =
+  AuthenticatedSecretsDetailManagerIdImport.update({
+>>>>>>> origin/tai
     id: '/secrets/detail/$manager/$id',
     path: '/secrets/detail/$manager/$id',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+<<<<<<< HEAD
 const AuthenticatedServicesDetailIdIndexRoute =
   AuthenticatedServicesDetailIdIndexRouteImport.update({
     id: '/',
@@ -371,16 +763,77 @@ const AuthenticatedServicesDetailIdRoutesAddRoute =
   } as any)
 const AuthenticatedServicesDetailIdStream_routesIndexRoute =
   AuthenticatedServicesDetailIdStream_routesIndexRouteImport.update({
+=======
+
+const AuthenticatedServicesDetailIdStreamroutesIndexRoute =
+  AuthenticatedServicesDetailIdStreamroutesIndexImport.update({
+>>>>>>> origin/tai
     id: '/stream_routes/',
     path: '/stream_routes/',
     getParentRoute: () => AuthenticatedServicesDetailIdRoute,
   } as any)
+<<<<<<< HEAD
 const AuthenticatedServicesDetailIdStream_routesAddRoute =
   AuthenticatedServicesDetailIdStream_routesAddRouteImport.update({
+=======
+
+const AuthenticatedServicesDetailIdRoutesIndexRoute =
+  AuthenticatedServicesDetailIdRoutesIndexImport.update({
+    id: '/routes/',
+    path: '/routes/',
+    getParentRoute: () => AuthenticatedServicesDetailIdRoute,
+  } as any)
+
+const AuthenticatedSecretsDetailManagerIdIndexRoute =
+  AuthenticatedSecretsDetailManagerIdIndexImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedSecretsDetailManagerIdRoute,
+  } as any)
+
+const AuthenticatedRoutesDetailIdPluginsIndexRoute =
+  AuthenticatedRoutesDetailIdPluginsIndexImport.update({
+    id: '/plugins/',
+    path: '/plugins/',
+    getParentRoute: () => AuthenticatedRoutesDetailIdRoute,
+  } as any)
+
+const AuthenticatedPluginconfigsDetailIdRoutesIndexRoute =
+  AuthenticatedPluginconfigsDetailIdRoutesIndexImport.update({
+    id: '/routes/',
+    path: '/routes/',
+    getParentRoute: () => AuthenticatedPluginconfigsDetailIdRoute,
+  } as any)
+
+const AuthenticatedPluginconfigsDetailIdPluginsIndexRoute =
+  AuthenticatedPluginconfigsDetailIdPluginsIndexImport.update({
+    id: '/plugins/',
+    path: '/plugins/',
+    getParentRoute: () => AuthenticatedPluginconfigsDetailIdRoute,
+  } as any)
+
+const AuthenticatedConsumersDetailUsernameCredentialsIndexRoute =
+  AuthenticatedConsumersDetailUsernameCredentialsIndexImport.update({
+    id: '/credentials/',
+    path: '/credentials/',
+    getParentRoute: () => AuthenticatedConsumersDetailUsernameRoute,
+  } as any)
+
+const AuthenticatedConsumergroupsDetailIdConsumersIndexRoute =
+  AuthenticatedConsumergroupsDetailIdConsumersIndexImport.update({
+    id: '/consumers/',
+    path: '/consumers/',
+    getParentRoute: () => AuthenticatedConsumergroupsDetailIdRoute,
+  } as any)
+
+const AuthenticatedServicesDetailIdStreamroutesAddRoute =
+  AuthenticatedServicesDetailIdStreamroutesAddImport.update({
+>>>>>>> origin/tai
     id: '/stream_routes/add',
     path: '/stream_routes/add',
     getParentRoute: () => AuthenticatedServicesDetailIdRoute,
   } as any)
+<<<<<<< HEAD
 const AuthenticatedConsumersDetailUsernameCredentialsDetailIdRoute =
   AuthenticatedConsumersDetailUsernameCredentialsDetailIdRouteImport.update({
     id: '/credentials/detail/$id',
@@ -395,11 +848,38 @@ const AuthenticatedServicesDetailIdRoutesDetailRouteIdRoute =
   } as any)
 const AuthenticatedServicesDetailIdStream_routesDetailRouteIdRoute =
   AuthenticatedServicesDetailIdStream_routesDetailRouteIdRouteImport.update({
+=======
+
+const AuthenticatedServicesDetailIdRoutesAddRoute =
+  AuthenticatedServicesDetailIdRoutesAddImport.update({
+    id: '/routes/add',
+    path: '/routes/add',
+    getParentRoute: () => AuthenticatedServicesDetailIdRoute,
+  } as any)
+
+const AuthenticatedConsumersDetailUsernameCredentialsAddRoute =
+  AuthenticatedConsumersDetailUsernameCredentialsAddImport.update({
+    id: '/credentials/add',
+    path: '/credentials/add',
+    getParentRoute: () => AuthenticatedConsumersDetailUsernameRoute,
+  } as any)
+
+const AuthenticatedSecretsDetailManagerIdUsedByIndexRoute =
+  AuthenticatedSecretsDetailManagerIdUsedByIndexImport.update({
+    id: '/used-by/',
+    path: '/used-by/',
+    getParentRoute: () => AuthenticatedSecretsDetailManagerIdRoute,
+  } as any)
+
+const AuthenticatedServicesDetailIdStreamroutesDetailRouteIdRoute =
+  AuthenticatedServicesDetailIdStreamroutesDetailRouteIdImport.update({
+>>>>>>> origin/tai
     id: '/stream_routes/detail/$routeId',
     path: '/stream_routes/detail/$routeId',
     getParentRoute: () => AuthenticatedServicesDetailIdRoute,
   } as any)
 
+<<<<<<< HEAD
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
@@ -408,11 +888,725 @@ export interface FileRoutesByFullPath {
   '/consumers/add': typeof AuthenticatedConsumersAddRoute
   '/global_rules/add': typeof AuthenticatedGlobal_rulesAddRoute
   '/plugin_configs/add': typeof AuthenticatedPlugin_configsAddRoute
+=======
+const AuthenticatedServicesDetailIdRoutesDetailRouteIdRoute =
+  AuthenticatedServicesDetailIdRoutesDetailRouteIdImport.update({
+    id: '/routes/detail/$routeId',
+    path: '/routes/detail/$routeId',
+    getParentRoute: () => AuthenticatedServicesDetailIdRoute,
+  } as any)
+
+const AuthenticatedConsumersDetailUsernameCredentialsDetailIdRoute =
+  AuthenticatedConsumersDetailUsernameCredentialsDetailIdImport.update({
+    id: '/credentials/detail/$id',
+    path: '/credentials/detail/$id',
+    getParentRoute: () => AuthenticatedConsumersDetailUsernameRoute,
+  } as any)
+
+// Populate the FileRoutesByPath interface
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedImport
+      parentRoute: typeof rootRoute
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginImport
+      parentRoute: typeof rootRoute
+    }
+    '/_authenticated/admins/add': {
+      id: '/_authenticated/admins/add'
+      path: '/admins/add'
+      fullPath: '/admins/add'
+      preLoaderRoute: typeof AuthenticatedAdminsAddImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/consumer_groups/add': {
+      id: '/_authenticated/consumer_groups/add'
+      path: '/consumer_groups/add'
+      fullPath: '/consumer_groups/add'
+      preLoaderRoute: typeof AuthenticatedConsumergroupsAddImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/consumers/add': {
+      id: '/_authenticated/consumers/add'
+      path: '/consumers/add'
+      fullPath: '/consumers/add'
+      preLoaderRoute: typeof AuthenticatedConsumersAddImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/global_rules/add': {
+      id: '/_authenticated/global_rules/add'
+      path: '/global_rules/add'
+      fullPath: '/global_rules/add'
+      preLoaderRoute: typeof AuthenticatedGlobalrulesAddImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/plugin_configs/add': {
+      id: '/_authenticated/plugin_configs/add'
+      path: '/plugin_configs/add'
+      fullPath: '/plugin_configs/add'
+      preLoaderRoute: typeof AuthenticatedPluginconfigsAddImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/protos/add': {
+      id: '/_authenticated/protos/add'
+      path: '/protos/add'
+      fullPath: '/protos/add'
+      preLoaderRoute: typeof AuthenticatedProtosAddImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/routes/add': {
+      id: '/_authenticated/routes/add'
+      path: '/routes/add'
+      fullPath: '/routes/add'
+      preLoaderRoute: typeof AuthenticatedRoutesAddImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/secrets/add': {
+      id: '/_authenticated/secrets/add'
+      path: '/secrets/add'
+      fullPath: '/secrets/add'
+      preLoaderRoute: typeof AuthenticatedSecretsAddImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/services/add': {
+      id: '/_authenticated/services/add'
+      path: '/services/add'
+      fullPath: '/services/add'
+      preLoaderRoute: typeof AuthenticatedServicesAddImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/ssls/add': {
+      id: '/_authenticated/ssls/add'
+      path: '/ssls/add'
+      fullPath: '/ssls/add'
+      preLoaderRoute: typeof AuthenticatedSslsAddImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/stream_routes/add': {
+      id: '/_authenticated/stream_routes/add'
+      path: '/stream_routes/add'
+      fullPath: '/stream_routes/add'
+      preLoaderRoute: typeof AuthenticatedStreamroutesAddImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/upstreams/add': {
+      id: '/_authenticated/upstreams/add'
+      path: '/upstreams/add'
+      fullPath: '/upstreams/add'
+      preLoaderRoute: typeof AuthenticatedUpstreamsAddImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/admins/': {
+      id: '/_authenticated/admins/'
+      path: '/admins'
+      fullPath: '/admins'
+      preLoaderRoute: typeof AuthenticatedAdminsIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/casdoor/': {
+      id: '/_authenticated/casdoor/'
+      path: '/casdoor'
+      fullPath: '/casdoor'
+      preLoaderRoute: typeof AuthenticatedCasdoorIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/consumer_groups/': {
+      id: '/_authenticated/consumer_groups/'
+      path: '/consumer_groups'
+      fullPath: '/consumer_groups'
+      preLoaderRoute: typeof AuthenticatedConsumergroupsIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/consumers/': {
+      id: '/_authenticated/consumers/'
+      path: '/consumers'
+      fullPath: '/consumers'
+      preLoaderRoute: typeof AuthenticatedConsumersIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/global_rules/': {
+      id: '/_authenticated/global_rules/'
+      path: '/global_rules'
+      fullPath: '/global_rules'
+      preLoaderRoute: typeof AuthenticatedGlobalrulesIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/log_histories/': {
+      id: '/_authenticated/log_histories/'
+      path: '/log_histories'
+      fullPath: '/log_histories'
+      preLoaderRoute: typeof AuthenticatedLoghistoriesIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/login_histories/': {
+      id: '/_authenticated/login_histories/'
+      path: '/login_histories'
+      fullPath: '/login_histories'
+      preLoaderRoute: typeof AuthenticatedLoginhistoriesIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/overview/': {
+      id: '/_authenticated/overview/'
+      path: '/overview'
+      fullPath: '/overview'
+      preLoaderRoute: typeof AuthenticatedOverviewIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/plugin_configs/': {
+      id: '/_authenticated/plugin_configs/'
+      path: '/plugin_configs'
+      fullPath: '/plugin_configs'
+      preLoaderRoute: typeof AuthenticatedPluginconfigsIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/plugin_metadata/': {
+      id: '/_authenticated/plugin_metadata/'
+      path: '/plugin_metadata'
+      fullPath: '/plugin_metadata'
+      preLoaderRoute: typeof AuthenticatedPluginmetadataIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/protos/': {
+      id: '/_authenticated/protos/'
+      path: '/protos'
+      fullPath: '/protos'
+      preLoaderRoute: typeof AuthenticatedProtosIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/routes/': {
+      id: '/_authenticated/routes/'
+      path: '/routes'
+      fullPath: '/routes'
+      preLoaderRoute: typeof AuthenticatedRoutesIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/secrets/': {
+      id: '/_authenticated/secrets/'
+      path: '/secrets'
+      fullPath: '/secrets'
+      preLoaderRoute: typeof AuthenticatedSecretsIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/services/': {
+      id: '/_authenticated/services/'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof AuthenticatedServicesIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/ssls/': {
+      id: '/_authenticated/ssls/'
+      path: '/ssls'
+      fullPath: '/ssls'
+      preLoaderRoute: typeof AuthenticatedSslsIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/stream_routes/': {
+      id: '/_authenticated/stream_routes/'
+      path: '/stream_routes'
+      fullPath: '/stream_routes'
+      preLoaderRoute: typeof AuthenticatedStreamroutesIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/upstreams/': {
+      id: '/_authenticated/upstreams/'
+      path: '/upstreams'
+      fullPath: '/upstreams'
+      preLoaderRoute: typeof AuthenticatedUpstreamsIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/admins/detail/$id': {
+      id: '/_authenticated/admins/detail/$id'
+      path: '/admins/detail/$id'
+      fullPath: '/admins/detail/$id'
+      preLoaderRoute: typeof AuthenticatedAdminsDetailIdImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/consumer_groups/detail/$id': {
+      id: '/_authenticated/consumer_groups/detail/$id'
+      path: '/consumer_groups/detail/$id'
+      fullPath: '/consumer_groups/detail/$id'
+      preLoaderRoute: typeof AuthenticatedConsumergroupsDetailIdImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/consumers/detail/$username': {
+      id: '/_authenticated/consumers/detail/$username'
+      path: '/consumers/detail/$username'
+      fullPath: '/consumers/detail/$username'
+      preLoaderRoute: typeof AuthenticatedConsumersDetailUsernameImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/global_rules/detail/$id': {
+      id: '/_authenticated/global_rules/detail/$id'
+      path: '/global_rules/detail/$id'
+      fullPath: '/global_rules/detail/$id'
+      preLoaderRoute: typeof AuthenticatedGlobalrulesDetailIdImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/plugin_configs/detail/$id': {
+      id: '/_authenticated/plugin_configs/detail/$id'
+      path: '/plugin_configs/detail/$id'
+      fullPath: '/plugin_configs/detail/$id'
+      preLoaderRoute: typeof AuthenticatedPluginconfigsDetailIdImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/protos/detail/$id': {
+      id: '/_authenticated/protos/detail/$id'
+      path: '/protos/detail/$id'
+      fullPath: '/protos/detail/$id'
+      preLoaderRoute: typeof AuthenticatedProtosDetailIdImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/routes/detail/$id': {
+      id: '/_authenticated/routes/detail/$id'
+      path: '/routes/detail/$id'
+      fullPath: '/routes/detail/$id'
+      preLoaderRoute: typeof AuthenticatedRoutesDetailIdImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/services/detail/$id': {
+      id: '/_authenticated/services/detail/$id'
+      path: '/services/detail/$id'
+      fullPath: '/services/detail/$id'
+      preLoaderRoute: typeof AuthenticatedServicesDetailIdImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/ssls/detail/$id': {
+      id: '/_authenticated/ssls/detail/$id'
+      path: '/ssls/detail/$id'
+      fullPath: '/ssls/detail/$id'
+      preLoaderRoute: typeof AuthenticatedSslsDetailIdImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/stream_routes/detail/$id': {
+      id: '/_authenticated/stream_routes/detail/$id'
+      path: '/stream_routes/detail/$id'
+      fullPath: '/stream_routes/detail/$id'
+      preLoaderRoute: typeof AuthenticatedStreamroutesDetailIdImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/upstreams/detail/$id': {
+      id: '/_authenticated/upstreams/detail/$id'
+      path: '/upstreams/detail/$id'
+      fullPath: '/upstreams/detail/$id'
+      preLoaderRoute: typeof AuthenticatedUpstreamsDetailIdImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/secrets/detail/$manager/$id': {
+      id: '/_authenticated/secrets/detail/$manager/$id'
+      path: '/secrets/detail/$manager/$id'
+      fullPath: '/secrets/detail/$manager/$id'
+      preLoaderRoute: typeof AuthenticatedSecretsDetailManagerIdImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/consumer_groups/detail/$id/': {
+      id: '/_authenticated/consumer_groups/detail/$id/'
+      path: '/'
+      fullPath: '/consumer_groups/detail/$id/'
+      preLoaderRoute: typeof AuthenticatedConsumergroupsDetailIdIndexImport
+      parentRoute: typeof AuthenticatedConsumergroupsDetailIdImport
+    }
+    '/_authenticated/consumers/detail/$username/': {
+      id: '/_authenticated/consumers/detail/$username/'
+      path: '/'
+      fullPath: '/consumers/detail/$username/'
+      preLoaderRoute: typeof AuthenticatedConsumersDetailUsernameIndexImport
+      parentRoute: typeof AuthenticatedConsumersDetailUsernameImport
+    }
+    '/_authenticated/plugin_configs/detail/$id/': {
+      id: '/_authenticated/plugin_configs/detail/$id/'
+      path: '/'
+      fullPath: '/plugin_configs/detail/$id/'
+      preLoaderRoute: typeof AuthenticatedPluginconfigsDetailIdIndexImport
+      parentRoute: typeof AuthenticatedPluginconfigsDetailIdImport
+    }
+    '/_authenticated/routes/detail/$id/': {
+      id: '/_authenticated/routes/detail/$id/'
+      path: '/'
+      fullPath: '/routes/detail/$id/'
+      preLoaderRoute: typeof AuthenticatedRoutesDetailIdIndexImport
+      parentRoute: typeof AuthenticatedRoutesDetailIdImport
+    }
+    '/_authenticated/services/detail/$id/': {
+      id: '/_authenticated/services/detail/$id/'
+      path: '/'
+      fullPath: '/services/detail/$id/'
+      preLoaderRoute: typeof AuthenticatedServicesDetailIdIndexImport
+      parentRoute: typeof AuthenticatedServicesDetailIdImport
+    }
+    '/_authenticated/consumers/detail/$username/credentials/add': {
+      id: '/_authenticated/consumers/detail/$username/credentials/add'
+      path: '/credentials/add'
+      fullPath: '/consumers/detail/$username/credentials/add'
+      preLoaderRoute: typeof AuthenticatedConsumersDetailUsernameCredentialsAddImport
+      parentRoute: typeof AuthenticatedConsumersDetailUsernameImport
+    }
+    '/_authenticated/services/detail/$id/routes/add': {
+      id: '/_authenticated/services/detail/$id/routes/add'
+      path: '/routes/add'
+      fullPath: '/services/detail/$id/routes/add'
+      preLoaderRoute: typeof AuthenticatedServicesDetailIdRoutesAddImport
+      parentRoute: typeof AuthenticatedServicesDetailIdImport
+    }
+    '/_authenticated/services/detail/$id/stream_routes/add': {
+      id: '/_authenticated/services/detail/$id/stream_routes/add'
+      path: '/stream_routes/add'
+      fullPath: '/services/detail/$id/stream_routes/add'
+      preLoaderRoute: typeof AuthenticatedServicesDetailIdStreamroutesAddImport
+      parentRoute: typeof AuthenticatedServicesDetailIdImport
+    }
+    '/_authenticated/consumer_groups/detail/$id/consumers/': {
+      id: '/_authenticated/consumer_groups/detail/$id/consumers/'
+      path: '/consumers'
+      fullPath: '/consumer_groups/detail/$id/consumers'
+      preLoaderRoute: typeof AuthenticatedConsumergroupsDetailIdConsumersIndexImport
+      parentRoute: typeof AuthenticatedConsumergroupsDetailIdImport
+    }
+    '/_authenticated/consumers/detail/$username/credentials/': {
+      id: '/_authenticated/consumers/detail/$username/credentials/'
+      path: '/credentials'
+      fullPath: '/consumers/detail/$username/credentials'
+      preLoaderRoute: typeof AuthenticatedConsumersDetailUsernameCredentialsIndexImport
+      parentRoute: typeof AuthenticatedConsumersDetailUsernameImport
+    }
+    '/_authenticated/plugin_configs/detail/$id/plugins/': {
+      id: '/_authenticated/plugin_configs/detail/$id/plugins/'
+      path: '/plugins'
+      fullPath: '/plugin_configs/detail/$id/plugins'
+      preLoaderRoute: typeof AuthenticatedPluginconfigsDetailIdPluginsIndexImport
+      parentRoute: typeof AuthenticatedPluginconfigsDetailIdImport
+    }
+    '/_authenticated/plugin_configs/detail/$id/routes/': {
+      id: '/_authenticated/plugin_configs/detail/$id/routes/'
+      path: '/routes'
+      fullPath: '/plugin_configs/detail/$id/routes'
+      preLoaderRoute: typeof AuthenticatedPluginconfigsDetailIdRoutesIndexImport
+      parentRoute: typeof AuthenticatedPluginconfigsDetailIdImport
+    }
+    '/_authenticated/routes/detail/$id/plugins/': {
+      id: '/_authenticated/routes/detail/$id/plugins/'
+      path: '/plugins'
+      fullPath: '/routes/detail/$id/plugins'
+      preLoaderRoute: typeof AuthenticatedRoutesDetailIdPluginsIndexImport
+      parentRoute: typeof AuthenticatedRoutesDetailIdImport
+    }
+    '/_authenticated/secrets/detail/$manager/$id/': {
+      id: '/_authenticated/secrets/detail/$manager/$id/'
+      path: '/'
+      fullPath: '/secrets/detail/$manager/$id/'
+      preLoaderRoute: typeof AuthenticatedSecretsDetailManagerIdIndexImport
+      parentRoute: typeof AuthenticatedSecretsDetailManagerIdImport
+    }
+    '/_authenticated/services/detail/$id/routes/': {
+      id: '/_authenticated/services/detail/$id/routes/'
+      path: '/routes'
+      fullPath: '/services/detail/$id/routes'
+      preLoaderRoute: typeof AuthenticatedServicesDetailIdRoutesIndexImport
+      parentRoute: typeof AuthenticatedServicesDetailIdImport
+    }
+    '/_authenticated/services/detail/$id/stream_routes/': {
+      id: '/_authenticated/services/detail/$id/stream_routes/'
+      path: '/stream_routes'
+      fullPath: '/services/detail/$id/stream_routes'
+      preLoaderRoute: typeof AuthenticatedServicesDetailIdStreamroutesIndexImport
+      parentRoute: typeof AuthenticatedServicesDetailIdImport
+    }
+    '/_authenticated/consumers/detail/$username/credentials/detail/$id': {
+      id: '/_authenticated/consumers/detail/$username/credentials/detail/$id'
+      path: '/credentials/detail/$id'
+      fullPath: '/consumers/detail/$username/credentials/detail/$id'
+      preLoaderRoute: typeof AuthenticatedConsumersDetailUsernameCredentialsDetailIdImport
+      parentRoute: typeof AuthenticatedConsumersDetailUsernameImport
+    }
+    '/_authenticated/services/detail/$id/routes/detail/$routeId': {
+      id: '/_authenticated/services/detail/$id/routes/detail/$routeId'
+      path: '/routes/detail/$routeId'
+      fullPath: '/services/detail/$id/routes/detail/$routeId'
+      preLoaderRoute: typeof AuthenticatedServicesDetailIdRoutesDetailRouteIdImport
+      parentRoute: typeof AuthenticatedServicesDetailIdImport
+    }
+    '/_authenticated/services/detail/$id/stream_routes/detail/$routeId': {
+      id: '/_authenticated/services/detail/$id/stream_routes/detail/$routeId'
+      path: '/stream_routes/detail/$routeId'
+      fullPath: '/services/detail/$id/stream_routes/detail/$routeId'
+      preLoaderRoute: typeof AuthenticatedServicesDetailIdStreamroutesDetailRouteIdImport
+      parentRoute: typeof AuthenticatedServicesDetailIdImport
+    }
+    '/_authenticated/secrets/detail/$manager/$id/used-by/': {
+      id: '/_authenticated/secrets/detail/$manager/$id/used-by/'
+      path: '/used-by'
+      fullPath: '/secrets/detail/$manager/$id/used-by'
+      preLoaderRoute: typeof AuthenticatedSecretsDetailManagerIdUsedByIndexImport
+      parentRoute: typeof AuthenticatedSecretsDetailManagerIdImport
+    }
+  }
+}
+
+// Create and export the route tree
+
+interface AuthenticatedConsumergroupsDetailIdRouteChildren {
+  AuthenticatedConsumergroupsDetailIdIndexRoute: typeof AuthenticatedConsumergroupsDetailIdIndexRoute
+  AuthenticatedConsumergroupsDetailIdConsumersIndexRoute: typeof AuthenticatedConsumergroupsDetailIdConsumersIndexRoute
+}
+
+const AuthenticatedConsumergroupsDetailIdRouteChildren: AuthenticatedConsumergroupsDetailIdRouteChildren =
+  {
+    AuthenticatedConsumergroupsDetailIdIndexRoute:
+      AuthenticatedConsumergroupsDetailIdIndexRoute,
+    AuthenticatedConsumergroupsDetailIdConsumersIndexRoute:
+      AuthenticatedConsumergroupsDetailIdConsumersIndexRoute,
+  }
+
+const AuthenticatedConsumergroupsDetailIdRouteWithChildren =
+  AuthenticatedConsumergroupsDetailIdRoute._addFileChildren(
+    AuthenticatedConsumergroupsDetailIdRouteChildren,
+  )
+
+interface AuthenticatedConsumersDetailUsernameRouteChildren {
+  AuthenticatedConsumersDetailUsernameIndexRoute: typeof AuthenticatedConsumersDetailUsernameIndexRoute
+  AuthenticatedConsumersDetailUsernameCredentialsAddRoute: typeof AuthenticatedConsumersDetailUsernameCredentialsAddRoute
+  AuthenticatedConsumersDetailUsernameCredentialsIndexRoute: typeof AuthenticatedConsumersDetailUsernameCredentialsIndexRoute
+  AuthenticatedConsumersDetailUsernameCredentialsDetailIdRoute: typeof AuthenticatedConsumersDetailUsernameCredentialsDetailIdRoute
+}
+
+const AuthenticatedConsumersDetailUsernameRouteChildren: AuthenticatedConsumersDetailUsernameRouteChildren =
+  {
+    AuthenticatedConsumersDetailUsernameIndexRoute:
+      AuthenticatedConsumersDetailUsernameIndexRoute,
+    AuthenticatedConsumersDetailUsernameCredentialsAddRoute:
+      AuthenticatedConsumersDetailUsernameCredentialsAddRoute,
+    AuthenticatedConsumersDetailUsernameCredentialsIndexRoute:
+      AuthenticatedConsumersDetailUsernameCredentialsIndexRoute,
+    AuthenticatedConsumersDetailUsernameCredentialsDetailIdRoute:
+      AuthenticatedConsumersDetailUsernameCredentialsDetailIdRoute,
+  }
+
+const AuthenticatedConsumersDetailUsernameRouteWithChildren =
+  AuthenticatedConsumersDetailUsernameRoute._addFileChildren(
+    AuthenticatedConsumersDetailUsernameRouteChildren,
+  )
+
+interface AuthenticatedPluginconfigsDetailIdRouteChildren {
+  AuthenticatedPluginconfigsDetailIdIndexRoute: typeof AuthenticatedPluginconfigsDetailIdIndexRoute
+  AuthenticatedPluginconfigsDetailIdPluginsIndexRoute: typeof AuthenticatedPluginconfigsDetailIdPluginsIndexRoute
+  AuthenticatedPluginconfigsDetailIdRoutesIndexRoute: typeof AuthenticatedPluginconfigsDetailIdRoutesIndexRoute
+}
+
+const AuthenticatedPluginconfigsDetailIdRouteChildren: AuthenticatedPluginconfigsDetailIdRouteChildren =
+  {
+    AuthenticatedPluginconfigsDetailIdIndexRoute:
+      AuthenticatedPluginconfigsDetailIdIndexRoute,
+    AuthenticatedPluginconfigsDetailIdPluginsIndexRoute:
+      AuthenticatedPluginconfigsDetailIdPluginsIndexRoute,
+    AuthenticatedPluginconfigsDetailIdRoutesIndexRoute:
+      AuthenticatedPluginconfigsDetailIdRoutesIndexRoute,
+  }
+
+const AuthenticatedPluginconfigsDetailIdRouteWithChildren =
+  AuthenticatedPluginconfigsDetailIdRoute._addFileChildren(
+    AuthenticatedPluginconfigsDetailIdRouteChildren,
+  )
+
+interface AuthenticatedRoutesDetailIdRouteChildren {
+  AuthenticatedRoutesDetailIdIndexRoute: typeof AuthenticatedRoutesDetailIdIndexRoute
+  AuthenticatedRoutesDetailIdPluginsIndexRoute: typeof AuthenticatedRoutesDetailIdPluginsIndexRoute
+}
+
+const AuthenticatedRoutesDetailIdRouteChildren: AuthenticatedRoutesDetailIdRouteChildren =
+  {
+    AuthenticatedRoutesDetailIdIndexRoute:
+      AuthenticatedRoutesDetailIdIndexRoute,
+    AuthenticatedRoutesDetailIdPluginsIndexRoute:
+      AuthenticatedRoutesDetailIdPluginsIndexRoute,
+  }
+
+const AuthenticatedRoutesDetailIdRouteWithChildren =
+  AuthenticatedRoutesDetailIdRoute._addFileChildren(
+    AuthenticatedRoutesDetailIdRouteChildren,
+  )
+
+interface AuthenticatedServicesDetailIdRouteChildren {
+  AuthenticatedServicesDetailIdIndexRoute: typeof AuthenticatedServicesDetailIdIndexRoute
+  AuthenticatedServicesDetailIdRoutesAddRoute: typeof AuthenticatedServicesDetailIdRoutesAddRoute
+  AuthenticatedServicesDetailIdStreamroutesAddRoute: typeof AuthenticatedServicesDetailIdStreamroutesAddRoute
+  AuthenticatedServicesDetailIdRoutesIndexRoute: typeof AuthenticatedServicesDetailIdRoutesIndexRoute
+  AuthenticatedServicesDetailIdStreamroutesIndexRoute: typeof AuthenticatedServicesDetailIdStreamroutesIndexRoute
+  AuthenticatedServicesDetailIdRoutesDetailRouteIdRoute: typeof AuthenticatedServicesDetailIdRoutesDetailRouteIdRoute
+  AuthenticatedServicesDetailIdStreamroutesDetailRouteIdRoute: typeof AuthenticatedServicesDetailIdStreamroutesDetailRouteIdRoute
+}
+
+const AuthenticatedServicesDetailIdRouteChildren: AuthenticatedServicesDetailIdRouteChildren =
+  {
+    AuthenticatedServicesDetailIdIndexRoute:
+      AuthenticatedServicesDetailIdIndexRoute,
+    AuthenticatedServicesDetailIdRoutesAddRoute:
+      AuthenticatedServicesDetailIdRoutesAddRoute,
+    AuthenticatedServicesDetailIdStreamroutesAddRoute:
+      AuthenticatedServicesDetailIdStreamroutesAddRoute,
+    AuthenticatedServicesDetailIdRoutesIndexRoute:
+      AuthenticatedServicesDetailIdRoutesIndexRoute,
+    AuthenticatedServicesDetailIdStreamroutesIndexRoute:
+      AuthenticatedServicesDetailIdStreamroutesIndexRoute,
+    AuthenticatedServicesDetailIdRoutesDetailRouteIdRoute:
+      AuthenticatedServicesDetailIdRoutesDetailRouteIdRoute,
+    AuthenticatedServicesDetailIdStreamroutesDetailRouteIdRoute:
+      AuthenticatedServicesDetailIdStreamroutesDetailRouteIdRoute,
+  }
+
+const AuthenticatedServicesDetailIdRouteWithChildren =
+  AuthenticatedServicesDetailIdRoute._addFileChildren(
+    AuthenticatedServicesDetailIdRouteChildren,
+  )
+
+interface AuthenticatedSecretsDetailManagerIdRouteChildren {
+  AuthenticatedSecretsDetailManagerIdIndexRoute: typeof AuthenticatedSecretsDetailManagerIdIndexRoute
+  AuthenticatedSecretsDetailManagerIdUsedByIndexRoute: typeof AuthenticatedSecretsDetailManagerIdUsedByIndexRoute
+}
+
+const AuthenticatedSecretsDetailManagerIdRouteChildren: AuthenticatedSecretsDetailManagerIdRouteChildren =
+  {
+    AuthenticatedSecretsDetailManagerIdIndexRoute:
+      AuthenticatedSecretsDetailManagerIdIndexRoute,
+    AuthenticatedSecretsDetailManagerIdUsedByIndexRoute:
+      AuthenticatedSecretsDetailManagerIdUsedByIndexRoute,
+  }
+
+const AuthenticatedSecretsDetailManagerIdRouteWithChildren =
+  AuthenticatedSecretsDetailManagerIdRoute._addFileChildren(
+    AuthenticatedSecretsDetailManagerIdRouteChildren,
+  )
+
+interface AuthenticatedRouteChildren {
+  AuthenticatedAdminsAddRoute: typeof AuthenticatedAdminsAddRoute
+  AuthenticatedConsumergroupsAddRoute: typeof AuthenticatedConsumergroupsAddRoute
+  AuthenticatedConsumersAddRoute: typeof AuthenticatedConsumersAddRoute
+  AuthenticatedGlobalrulesAddRoute: typeof AuthenticatedGlobalrulesAddRoute
+  AuthenticatedPluginconfigsAddRoute: typeof AuthenticatedPluginconfigsAddRoute
+  AuthenticatedProtosAddRoute: typeof AuthenticatedProtosAddRoute
+  AuthenticatedRoutesAddRoute: typeof AuthenticatedRoutesAddRoute
+  AuthenticatedSecretsAddRoute: typeof AuthenticatedSecretsAddRoute
+  AuthenticatedServicesAddRoute: typeof AuthenticatedServicesAddRoute
+  AuthenticatedSslsAddRoute: typeof AuthenticatedSslsAddRoute
+  AuthenticatedStreamroutesAddRoute: typeof AuthenticatedStreamroutesAddRoute
+  AuthenticatedUpstreamsAddRoute: typeof AuthenticatedUpstreamsAddRoute
+  AuthenticatedAdminsIndexRoute: typeof AuthenticatedAdminsIndexRoute
+  AuthenticatedCasdoorIndexRoute: typeof AuthenticatedCasdoorIndexRoute
+  AuthenticatedConsumergroupsIndexRoute: typeof AuthenticatedConsumergroupsIndexRoute
+  AuthenticatedConsumersIndexRoute: typeof AuthenticatedConsumersIndexRoute
+  AuthenticatedGlobalrulesIndexRoute: typeof AuthenticatedGlobalrulesIndexRoute
+  AuthenticatedLoghistoriesIndexRoute: typeof AuthenticatedLoghistoriesIndexRoute
+  AuthenticatedLoginhistoriesIndexRoute: typeof AuthenticatedLoginhistoriesIndexRoute
+  AuthenticatedOverviewIndexRoute: typeof AuthenticatedOverviewIndexRoute
+  AuthenticatedPluginconfigsIndexRoute: typeof AuthenticatedPluginconfigsIndexRoute
+  AuthenticatedPluginmetadataIndexRoute: typeof AuthenticatedPluginmetadataIndexRoute
+  AuthenticatedProtosIndexRoute: typeof AuthenticatedProtosIndexRoute
+  AuthenticatedRoutesIndexRoute: typeof AuthenticatedRoutesIndexRoute
+  AuthenticatedSecretsIndexRoute: typeof AuthenticatedSecretsIndexRoute
+  AuthenticatedServicesIndexRoute: typeof AuthenticatedServicesIndexRoute
+  AuthenticatedSslsIndexRoute: typeof AuthenticatedSslsIndexRoute
+  AuthenticatedStreamroutesIndexRoute: typeof AuthenticatedStreamroutesIndexRoute
+  AuthenticatedUpstreamsIndexRoute: typeof AuthenticatedUpstreamsIndexRoute
+  AuthenticatedAdminsDetailIdRoute: typeof AuthenticatedAdminsDetailIdRoute
+  AuthenticatedConsumergroupsDetailIdRoute: typeof AuthenticatedConsumergroupsDetailIdRouteWithChildren
+  AuthenticatedConsumersDetailUsernameRoute: typeof AuthenticatedConsumersDetailUsernameRouteWithChildren
+  AuthenticatedGlobalrulesDetailIdRoute: typeof AuthenticatedGlobalrulesDetailIdRoute
+  AuthenticatedPluginconfigsDetailIdRoute: typeof AuthenticatedPluginconfigsDetailIdRouteWithChildren
+  AuthenticatedProtosDetailIdRoute: typeof AuthenticatedProtosDetailIdRoute
+  AuthenticatedRoutesDetailIdRoute: typeof AuthenticatedRoutesDetailIdRouteWithChildren
+  AuthenticatedServicesDetailIdRoute: typeof AuthenticatedServicesDetailIdRouteWithChildren
+  AuthenticatedSslsDetailIdRoute: typeof AuthenticatedSslsDetailIdRoute
+  AuthenticatedStreamroutesDetailIdRoute: typeof AuthenticatedStreamroutesDetailIdRoute
+  AuthenticatedUpstreamsDetailIdRoute: typeof AuthenticatedUpstreamsDetailIdRoute
+  AuthenticatedSecretsDetailManagerIdRoute: typeof AuthenticatedSecretsDetailManagerIdRouteWithChildren
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAdminsAddRoute: AuthenticatedAdminsAddRoute,
+  AuthenticatedConsumergroupsAddRoute: AuthenticatedConsumergroupsAddRoute,
+  AuthenticatedConsumersAddRoute: AuthenticatedConsumersAddRoute,
+  AuthenticatedGlobalrulesAddRoute: AuthenticatedGlobalrulesAddRoute,
+  AuthenticatedPluginconfigsAddRoute: AuthenticatedPluginconfigsAddRoute,
+  AuthenticatedProtosAddRoute: AuthenticatedProtosAddRoute,
+  AuthenticatedRoutesAddRoute: AuthenticatedRoutesAddRoute,
+  AuthenticatedSecretsAddRoute: AuthenticatedSecretsAddRoute,
+  AuthenticatedServicesAddRoute: AuthenticatedServicesAddRoute,
+  AuthenticatedSslsAddRoute: AuthenticatedSslsAddRoute,
+  AuthenticatedStreamroutesAddRoute: AuthenticatedStreamroutesAddRoute,
+  AuthenticatedUpstreamsAddRoute: AuthenticatedUpstreamsAddRoute,
+  AuthenticatedAdminsIndexRoute: AuthenticatedAdminsIndexRoute,
+  AuthenticatedCasdoorIndexRoute: AuthenticatedCasdoorIndexRoute,
+  AuthenticatedConsumergroupsIndexRoute: AuthenticatedConsumergroupsIndexRoute,
+  AuthenticatedConsumersIndexRoute: AuthenticatedConsumersIndexRoute,
+  AuthenticatedGlobalrulesIndexRoute: AuthenticatedGlobalrulesIndexRoute,
+  AuthenticatedLoghistoriesIndexRoute: AuthenticatedLoghistoriesIndexRoute,
+  AuthenticatedLoginhistoriesIndexRoute: AuthenticatedLoginhistoriesIndexRoute,
+  AuthenticatedOverviewIndexRoute: AuthenticatedOverviewIndexRoute,
+  AuthenticatedPluginconfigsIndexRoute: AuthenticatedPluginconfigsIndexRoute,
+  AuthenticatedPluginmetadataIndexRoute: AuthenticatedPluginmetadataIndexRoute,
+  AuthenticatedProtosIndexRoute: AuthenticatedProtosIndexRoute,
+  AuthenticatedRoutesIndexRoute: AuthenticatedRoutesIndexRoute,
+  AuthenticatedSecretsIndexRoute: AuthenticatedSecretsIndexRoute,
+  AuthenticatedServicesIndexRoute: AuthenticatedServicesIndexRoute,
+  AuthenticatedSslsIndexRoute: AuthenticatedSslsIndexRoute,
+  AuthenticatedStreamroutesIndexRoute: AuthenticatedStreamroutesIndexRoute,
+  AuthenticatedUpstreamsIndexRoute: AuthenticatedUpstreamsIndexRoute,
+  AuthenticatedAdminsDetailIdRoute: AuthenticatedAdminsDetailIdRoute,
+  AuthenticatedConsumergroupsDetailIdRoute:
+    AuthenticatedConsumergroupsDetailIdRouteWithChildren,
+  AuthenticatedConsumersDetailUsernameRoute:
+    AuthenticatedConsumersDetailUsernameRouteWithChildren,
+  AuthenticatedGlobalrulesDetailIdRoute: AuthenticatedGlobalrulesDetailIdRoute,
+  AuthenticatedPluginconfigsDetailIdRoute:
+    AuthenticatedPluginconfigsDetailIdRouteWithChildren,
+  AuthenticatedProtosDetailIdRoute: AuthenticatedProtosDetailIdRoute,
+  AuthenticatedRoutesDetailIdRoute:
+    AuthenticatedRoutesDetailIdRouteWithChildren,
+  AuthenticatedServicesDetailIdRoute:
+    AuthenticatedServicesDetailIdRouteWithChildren,
+  AuthenticatedSslsDetailIdRoute: AuthenticatedSslsDetailIdRoute,
+  AuthenticatedStreamroutesDetailIdRoute:
+    AuthenticatedStreamroutesDetailIdRoute,
+  AuthenticatedUpstreamsDetailIdRoute: AuthenticatedUpstreamsDetailIdRoute,
+  AuthenticatedSecretsDetailManagerIdRoute:
+    AuthenticatedSecretsDetailManagerIdRouteWithChildren,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
+export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
+  '': typeof AuthenticatedRouteWithChildren
+  '/login': typeof LoginRoute
+  '/admins/add': typeof AuthenticatedAdminsAddRoute
+  '/consumer_groups/add': typeof AuthenticatedConsumergroupsAddRoute
+  '/consumers/add': typeof AuthenticatedConsumersAddRoute
+  '/global_rules/add': typeof AuthenticatedGlobalrulesAddRoute
+  '/plugin_configs/add': typeof AuthenticatedPluginconfigsAddRoute
+>>>>>>> origin/tai
   '/protos/add': typeof AuthenticatedProtosAddRoute
   '/routes/add': typeof AuthenticatedRoutesAddRoute
   '/secrets/add': typeof AuthenticatedSecretsAddRoute
   '/services/add': typeof AuthenticatedServicesAddRoute
   '/ssls/add': typeof AuthenticatedSslsAddRoute
+<<<<<<< HEAD
   '/stream_routes/add': typeof AuthenticatedStream_routesAddRoute
   '/upstreams/add': typeof AuthenticatedUpstreamsAddRoute
   '/admins/': typeof AuthenticatedAdminsIndexRoute
@@ -483,11 +1677,26 @@ export interface FileRoutesByTo {
   '/overview': typeof AuthenticatedOverviewIndexRoute
   '/plugin_configs': typeof AuthenticatedPlugin_configsIndexRoute
   '/plugin_metadata': typeof AuthenticatedPlugin_metadataIndexRoute
+=======
+  '/stream_routes/add': typeof AuthenticatedStreamroutesAddRoute
+  '/upstreams/add': typeof AuthenticatedUpstreamsAddRoute
+  '/admins': typeof AuthenticatedAdminsIndexRoute
+  '/casdoor': typeof AuthenticatedCasdoorIndexRoute
+  '/consumer_groups': typeof AuthenticatedConsumergroupsIndexRoute
+  '/consumers': typeof AuthenticatedConsumersIndexRoute
+  '/global_rules': typeof AuthenticatedGlobalrulesIndexRoute
+  '/log_histories': typeof AuthenticatedLoghistoriesIndexRoute
+  '/login_histories': typeof AuthenticatedLoginhistoriesIndexRoute
+  '/overview': typeof AuthenticatedOverviewIndexRoute
+  '/plugin_configs': typeof AuthenticatedPluginconfigsIndexRoute
+  '/plugin_metadata': typeof AuthenticatedPluginmetadataIndexRoute
+>>>>>>> origin/tai
   '/protos': typeof AuthenticatedProtosIndexRoute
   '/routes': typeof AuthenticatedRoutesIndexRoute
   '/secrets': typeof AuthenticatedSecretsIndexRoute
   '/services': typeof AuthenticatedServicesIndexRoute
   '/ssls': typeof AuthenticatedSslsIndexRoute
+<<<<<<< HEAD
   '/stream_routes': typeof AuthenticatedStream_routesIndexRoute
   '/upstreams': typeof AuthenticatedUpstreamsIndexRoute
   '/admins/detail/$id': typeof AuthenticatedAdminsDetailIdRoute
@@ -515,19 +1724,128 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+=======
+  '/stream_routes': typeof AuthenticatedStreamroutesIndexRoute
+  '/upstreams': typeof AuthenticatedUpstreamsIndexRoute
+  '/admins/detail/$id': typeof AuthenticatedAdminsDetailIdRoute
+  '/consumer_groups/detail/$id': typeof AuthenticatedConsumergroupsDetailIdRouteWithChildren
+  '/consumers/detail/$username': typeof AuthenticatedConsumersDetailUsernameRouteWithChildren
+  '/global_rules/detail/$id': typeof AuthenticatedGlobalrulesDetailIdRoute
+  '/plugin_configs/detail/$id': typeof AuthenticatedPluginconfigsDetailIdRouteWithChildren
+  '/protos/detail/$id': typeof AuthenticatedProtosDetailIdRoute
+  '/routes/detail/$id': typeof AuthenticatedRoutesDetailIdRouteWithChildren
+  '/services/detail/$id': typeof AuthenticatedServicesDetailIdRouteWithChildren
+  '/ssls/detail/$id': typeof AuthenticatedSslsDetailIdRoute
+  '/stream_routes/detail/$id': typeof AuthenticatedStreamroutesDetailIdRoute
+  '/upstreams/detail/$id': typeof AuthenticatedUpstreamsDetailIdRoute
+  '/secrets/detail/$manager/$id': typeof AuthenticatedSecretsDetailManagerIdRouteWithChildren
+  '/consumer_groups/detail/$id/': typeof AuthenticatedConsumergroupsDetailIdIndexRoute
+  '/consumers/detail/$username/': typeof AuthenticatedConsumersDetailUsernameIndexRoute
+  '/plugin_configs/detail/$id/': typeof AuthenticatedPluginconfigsDetailIdIndexRoute
+  '/routes/detail/$id/': typeof AuthenticatedRoutesDetailIdIndexRoute
+  '/services/detail/$id/': typeof AuthenticatedServicesDetailIdIndexRoute
+  '/consumers/detail/$username/credentials/add': typeof AuthenticatedConsumersDetailUsernameCredentialsAddRoute
+  '/services/detail/$id/routes/add': typeof AuthenticatedServicesDetailIdRoutesAddRoute
+  '/services/detail/$id/stream_routes/add': typeof AuthenticatedServicesDetailIdStreamroutesAddRoute
+  '/consumer_groups/detail/$id/consumers': typeof AuthenticatedConsumergroupsDetailIdConsumersIndexRoute
+  '/consumers/detail/$username/credentials': typeof AuthenticatedConsumersDetailUsernameCredentialsIndexRoute
+  '/plugin_configs/detail/$id/plugins': typeof AuthenticatedPluginconfigsDetailIdPluginsIndexRoute
+  '/plugin_configs/detail/$id/routes': typeof AuthenticatedPluginconfigsDetailIdRoutesIndexRoute
+  '/routes/detail/$id/plugins': typeof AuthenticatedRoutesDetailIdPluginsIndexRoute
+  '/secrets/detail/$manager/$id/': typeof AuthenticatedSecretsDetailManagerIdIndexRoute
+  '/services/detail/$id/routes': typeof AuthenticatedServicesDetailIdRoutesIndexRoute
+  '/services/detail/$id/stream_routes': typeof AuthenticatedServicesDetailIdStreamroutesIndexRoute
+  '/consumers/detail/$username/credentials/detail/$id': typeof AuthenticatedConsumersDetailUsernameCredentialsDetailIdRoute
+  '/services/detail/$id/routes/detail/$routeId': typeof AuthenticatedServicesDetailIdRoutesDetailRouteIdRoute
+  '/services/detail/$id/stream_routes/detail/$routeId': typeof AuthenticatedServicesDetailIdStreamroutesDetailRouteIdRoute
+  '/secrets/detail/$manager/$id/used-by': typeof AuthenticatedSecretsDetailManagerIdUsedByIndexRoute
+}
+
+export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '': typeof AuthenticatedRouteWithChildren
+  '/login': typeof LoginRoute
+  '/admins/add': typeof AuthenticatedAdminsAddRoute
+  '/consumer_groups/add': typeof AuthenticatedConsumergroupsAddRoute
+  '/consumers/add': typeof AuthenticatedConsumersAddRoute
+  '/global_rules/add': typeof AuthenticatedGlobalrulesAddRoute
+  '/plugin_configs/add': typeof AuthenticatedPluginconfigsAddRoute
+  '/protos/add': typeof AuthenticatedProtosAddRoute
+  '/routes/add': typeof AuthenticatedRoutesAddRoute
+  '/secrets/add': typeof AuthenticatedSecretsAddRoute
+  '/services/add': typeof AuthenticatedServicesAddRoute
+  '/ssls/add': typeof AuthenticatedSslsAddRoute
+  '/stream_routes/add': typeof AuthenticatedStreamroutesAddRoute
+  '/upstreams/add': typeof AuthenticatedUpstreamsAddRoute
+  '/admins': typeof AuthenticatedAdminsIndexRoute
+  '/casdoor': typeof AuthenticatedCasdoorIndexRoute
+  '/consumer_groups': typeof AuthenticatedConsumergroupsIndexRoute
+  '/consumers': typeof AuthenticatedConsumersIndexRoute
+  '/global_rules': typeof AuthenticatedGlobalrulesIndexRoute
+  '/log_histories': typeof AuthenticatedLoghistoriesIndexRoute
+  '/login_histories': typeof AuthenticatedLoginhistoriesIndexRoute
+  '/overview': typeof AuthenticatedOverviewIndexRoute
+  '/plugin_configs': typeof AuthenticatedPluginconfigsIndexRoute
+  '/plugin_metadata': typeof AuthenticatedPluginmetadataIndexRoute
+  '/protos': typeof AuthenticatedProtosIndexRoute
+  '/routes': typeof AuthenticatedRoutesIndexRoute
+  '/secrets': typeof AuthenticatedSecretsIndexRoute
+  '/services': typeof AuthenticatedServicesIndexRoute
+  '/ssls': typeof AuthenticatedSslsIndexRoute
+  '/stream_routes': typeof AuthenticatedStreamroutesIndexRoute
+  '/upstreams': typeof AuthenticatedUpstreamsIndexRoute
+  '/admins/detail/$id': typeof AuthenticatedAdminsDetailIdRoute
+  '/global_rules/detail/$id': typeof AuthenticatedGlobalrulesDetailIdRoute
+  '/protos/detail/$id': typeof AuthenticatedProtosDetailIdRoute
+  '/ssls/detail/$id': typeof AuthenticatedSslsDetailIdRoute
+  '/stream_routes/detail/$id': typeof AuthenticatedStreamroutesDetailIdRoute
+  '/upstreams/detail/$id': typeof AuthenticatedUpstreamsDetailIdRoute
+  '/consumer_groups/detail/$id': typeof AuthenticatedConsumergroupsDetailIdIndexRoute
+  '/consumers/detail/$username': typeof AuthenticatedConsumersDetailUsernameIndexRoute
+  '/plugin_configs/detail/$id': typeof AuthenticatedPluginconfigsDetailIdIndexRoute
+  '/routes/detail/$id': typeof AuthenticatedRoutesDetailIdIndexRoute
+  '/services/detail/$id': typeof AuthenticatedServicesDetailIdIndexRoute
+  '/consumers/detail/$username/credentials/add': typeof AuthenticatedConsumersDetailUsernameCredentialsAddRoute
+  '/services/detail/$id/routes/add': typeof AuthenticatedServicesDetailIdRoutesAddRoute
+  '/services/detail/$id/stream_routes/add': typeof AuthenticatedServicesDetailIdStreamroutesAddRoute
+  '/consumer_groups/detail/$id/consumers': typeof AuthenticatedConsumergroupsDetailIdConsumersIndexRoute
+  '/consumers/detail/$username/credentials': typeof AuthenticatedConsumersDetailUsernameCredentialsIndexRoute
+  '/plugin_configs/detail/$id/plugins': typeof AuthenticatedPluginconfigsDetailIdPluginsIndexRoute
+  '/plugin_configs/detail/$id/routes': typeof AuthenticatedPluginconfigsDetailIdRoutesIndexRoute
+  '/routes/detail/$id/plugins': typeof AuthenticatedRoutesDetailIdPluginsIndexRoute
+  '/secrets/detail/$manager/$id': typeof AuthenticatedSecretsDetailManagerIdIndexRoute
+  '/services/detail/$id/routes': typeof AuthenticatedServicesDetailIdRoutesIndexRoute
+  '/services/detail/$id/stream_routes': typeof AuthenticatedServicesDetailIdStreamroutesIndexRoute
+  '/consumers/detail/$username/credentials/detail/$id': typeof AuthenticatedConsumersDetailUsernameCredentialsDetailIdRoute
+  '/services/detail/$id/routes/detail/$routeId': typeof AuthenticatedServicesDetailIdRoutesDetailRouteIdRoute
+  '/services/detail/$id/stream_routes/detail/$routeId': typeof AuthenticatedServicesDetailIdStreamroutesDetailRouteIdRoute
+  '/secrets/detail/$manager/$id/used-by': typeof AuthenticatedSecretsDetailManagerIdUsedByIndexRoute
+}
+
+export interface FileRoutesById {
+  __root__: typeof rootRoute
+>>>>>>> origin/tai
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
   '/_authenticated/admins/add': typeof AuthenticatedAdminsAddRoute
+<<<<<<< HEAD
   '/_authenticated/consumer_groups/add': typeof AuthenticatedConsumer_groupsAddRoute
   '/_authenticated/consumers/add': typeof AuthenticatedConsumersAddRoute
   '/_authenticated/global_rules/add': typeof AuthenticatedGlobal_rulesAddRoute
   '/_authenticated/plugin_configs/add': typeof AuthenticatedPlugin_configsAddRoute
+=======
+  '/_authenticated/consumer_groups/add': typeof AuthenticatedConsumergroupsAddRoute
+  '/_authenticated/consumers/add': typeof AuthenticatedConsumersAddRoute
+  '/_authenticated/global_rules/add': typeof AuthenticatedGlobalrulesAddRoute
+  '/_authenticated/plugin_configs/add': typeof AuthenticatedPluginconfigsAddRoute
+>>>>>>> origin/tai
   '/_authenticated/protos/add': typeof AuthenticatedProtosAddRoute
   '/_authenticated/routes/add': typeof AuthenticatedRoutesAddRoute
   '/_authenticated/secrets/add': typeof AuthenticatedSecretsAddRoute
   '/_authenticated/services/add': typeof AuthenticatedServicesAddRoute
   '/_authenticated/ssls/add': typeof AuthenticatedSslsAddRoute
+<<<<<<< HEAD
   '/_authenticated/stream_routes/add': typeof AuthenticatedStream_routesAddRoute
   '/_authenticated/upstreams/add': typeof AuthenticatedUpstreamsAddRoute
   '/_authenticated/admins/': typeof AuthenticatedAdminsIndexRoute
@@ -540,11 +1858,26 @@ export interface FileRoutesById {
   '/_authenticated/overview/': typeof AuthenticatedOverviewIndexRoute
   '/_authenticated/plugin_configs/': typeof AuthenticatedPlugin_configsIndexRoute
   '/_authenticated/plugin_metadata/': typeof AuthenticatedPlugin_metadataIndexRoute
+=======
+  '/_authenticated/stream_routes/add': typeof AuthenticatedStreamroutesAddRoute
+  '/_authenticated/upstreams/add': typeof AuthenticatedUpstreamsAddRoute
+  '/_authenticated/admins/': typeof AuthenticatedAdminsIndexRoute
+  '/_authenticated/casdoor/': typeof AuthenticatedCasdoorIndexRoute
+  '/_authenticated/consumer_groups/': typeof AuthenticatedConsumergroupsIndexRoute
+  '/_authenticated/consumers/': typeof AuthenticatedConsumersIndexRoute
+  '/_authenticated/global_rules/': typeof AuthenticatedGlobalrulesIndexRoute
+  '/_authenticated/log_histories/': typeof AuthenticatedLoghistoriesIndexRoute
+  '/_authenticated/login_histories/': typeof AuthenticatedLoginhistoriesIndexRoute
+  '/_authenticated/overview/': typeof AuthenticatedOverviewIndexRoute
+  '/_authenticated/plugin_configs/': typeof AuthenticatedPluginconfigsIndexRoute
+  '/_authenticated/plugin_metadata/': typeof AuthenticatedPluginmetadataIndexRoute
+>>>>>>> origin/tai
   '/_authenticated/protos/': typeof AuthenticatedProtosIndexRoute
   '/_authenticated/routes/': typeof AuthenticatedRoutesIndexRoute
   '/_authenticated/secrets/': typeof AuthenticatedSecretsIndexRoute
   '/_authenticated/services/': typeof AuthenticatedServicesIndexRoute
   '/_authenticated/ssls/': typeof AuthenticatedSslsIndexRoute
+<<<<<<< HEAD
   '/_authenticated/stream_routes/': typeof AuthenticatedStream_routesIndexRoute
   '/_authenticated/upstreams/': typeof AuthenticatedUpstreamsIndexRoute
   '/_authenticated/admins/detail/$id': typeof AuthenticatedAdminsDetailIdRoute
@@ -573,10 +1906,49 @@ export interface FileRoutesById {
   '/_authenticated/services/detail/$id/routes/detail/$routeId': typeof AuthenticatedServicesDetailIdRoutesDetailRouteIdRoute
   '/_authenticated/services/detail/$id/stream_routes/detail/$routeId': typeof AuthenticatedServicesDetailIdStream_routesDetailRouteIdRoute
 }
+=======
+  '/_authenticated/stream_routes/': typeof AuthenticatedStreamroutesIndexRoute
+  '/_authenticated/upstreams/': typeof AuthenticatedUpstreamsIndexRoute
+  '/_authenticated/admins/detail/$id': typeof AuthenticatedAdminsDetailIdRoute
+  '/_authenticated/consumer_groups/detail/$id': typeof AuthenticatedConsumergroupsDetailIdRouteWithChildren
+  '/_authenticated/consumers/detail/$username': typeof AuthenticatedConsumersDetailUsernameRouteWithChildren
+  '/_authenticated/global_rules/detail/$id': typeof AuthenticatedGlobalrulesDetailIdRoute
+  '/_authenticated/plugin_configs/detail/$id': typeof AuthenticatedPluginconfigsDetailIdRouteWithChildren
+  '/_authenticated/protos/detail/$id': typeof AuthenticatedProtosDetailIdRoute
+  '/_authenticated/routes/detail/$id': typeof AuthenticatedRoutesDetailIdRouteWithChildren
+  '/_authenticated/services/detail/$id': typeof AuthenticatedServicesDetailIdRouteWithChildren
+  '/_authenticated/ssls/detail/$id': typeof AuthenticatedSslsDetailIdRoute
+  '/_authenticated/stream_routes/detail/$id': typeof AuthenticatedStreamroutesDetailIdRoute
+  '/_authenticated/upstreams/detail/$id': typeof AuthenticatedUpstreamsDetailIdRoute
+  '/_authenticated/secrets/detail/$manager/$id': typeof AuthenticatedSecretsDetailManagerIdRouteWithChildren
+  '/_authenticated/consumer_groups/detail/$id/': typeof AuthenticatedConsumergroupsDetailIdIndexRoute
+  '/_authenticated/consumers/detail/$username/': typeof AuthenticatedConsumersDetailUsernameIndexRoute
+  '/_authenticated/plugin_configs/detail/$id/': typeof AuthenticatedPluginconfigsDetailIdIndexRoute
+  '/_authenticated/routes/detail/$id/': typeof AuthenticatedRoutesDetailIdIndexRoute
+  '/_authenticated/services/detail/$id/': typeof AuthenticatedServicesDetailIdIndexRoute
+  '/_authenticated/consumers/detail/$username/credentials/add': typeof AuthenticatedConsumersDetailUsernameCredentialsAddRoute
+  '/_authenticated/services/detail/$id/routes/add': typeof AuthenticatedServicesDetailIdRoutesAddRoute
+  '/_authenticated/services/detail/$id/stream_routes/add': typeof AuthenticatedServicesDetailIdStreamroutesAddRoute
+  '/_authenticated/consumer_groups/detail/$id/consumers/': typeof AuthenticatedConsumergroupsDetailIdConsumersIndexRoute
+  '/_authenticated/consumers/detail/$username/credentials/': typeof AuthenticatedConsumersDetailUsernameCredentialsIndexRoute
+  '/_authenticated/plugin_configs/detail/$id/plugins/': typeof AuthenticatedPluginconfigsDetailIdPluginsIndexRoute
+  '/_authenticated/plugin_configs/detail/$id/routes/': typeof AuthenticatedPluginconfigsDetailIdRoutesIndexRoute
+  '/_authenticated/routes/detail/$id/plugins/': typeof AuthenticatedRoutesDetailIdPluginsIndexRoute
+  '/_authenticated/secrets/detail/$manager/$id/': typeof AuthenticatedSecretsDetailManagerIdIndexRoute
+  '/_authenticated/services/detail/$id/routes/': typeof AuthenticatedServicesDetailIdRoutesIndexRoute
+  '/_authenticated/services/detail/$id/stream_routes/': typeof AuthenticatedServicesDetailIdStreamroutesIndexRoute
+  '/_authenticated/consumers/detail/$username/credentials/detail/$id': typeof AuthenticatedConsumersDetailUsernameCredentialsDetailIdRoute
+  '/_authenticated/services/detail/$id/routes/detail/$routeId': typeof AuthenticatedServicesDetailIdRoutesDetailRouteIdRoute
+  '/_authenticated/services/detail/$id/stream_routes/detail/$routeId': typeof AuthenticatedServicesDetailIdStreamroutesDetailRouteIdRoute
+  '/_authenticated/secrets/detail/$manager/$id/used-by/': typeof AuthenticatedSecretsDetailManagerIdUsedByIndexRoute
+}
+
+>>>>>>> origin/tai
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+<<<<<<< HEAD
     | '/login'
     | '/admins/add'
     | '/consumer_groups/add'
@@ -635,6 +2007,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+=======
+    | ''
+>>>>>>> origin/tai
     | '/login'
     | '/admins/add'
     | '/consumer_groups/add'
@@ -667,6 +2042,7 @@ export interface FileRouteTypes {
     | '/upstreams'
     | '/admins/detail/$id'
     | '/consumer_groups/detail/$id'
+<<<<<<< HEAD
     | '/global_rules/detail/$id'
     | '/plugin_configs/detail/$id'
     | '/routes/detail/$id'
@@ -682,11 +2058,101 @@ export interface FileRouteTypes {
     | '/services/detail/$id/routes/add'
     | '/services/detail/$id/stream_routes/add'
     | '/consumers/detail/$username/credentials'
+=======
+    | '/consumers/detail/$username'
+    | '/global_rules/detail/$id'
+    | '/plugin_configs/detail/$id'
+    | '/protos/detail/$id'
+    | '/routes/detail/$id'
+    | '/services/detail/$id'
+    | '/ssls/detail/$id'
+    | '/stream_routes/detail/$id'
+    | '/upstreams/detail/$id'
+    | '/secrets/detail/$manager/$id'
+    | '/consumer_groups/detail/$id/'
+    | '/consumers/detail/$username/'
+    | '/plugin_configs/detail/$id/'
+    | '/routes/detail/$id/'
+    | '/services/detail/$id/'
+    | '/consumers/detail/$username/credentials/add'
+    | '/services/detail/$id/routes/add'
+    | '/services/detail/$id/stream_routes/add'
+    | '/consumer_groups/detail/$id/consumers'
+    | '/consumers/detail/$username/credentials'
+    | '/plugin_configs/detail/$id/plugins'
+    | '/plugin_configs/detail/$id/routes'
+    | '/routes/detail/$id/plugins'
+    | '/secrets/detail/$manager/$id/'
+>>>>>>> origin/tai
     | '/services/detail/$id/routes'
     | '/services/detail/$id/stream_routes'
     | '/consumers/detail/$username/credentials/detail/$id'
     | '/services/detail/$id/routes/detail/$routeId'
     | '/services/detail/$id/stream_routes/detail/$routeId'
+<<<<<<< HEAD
+=======
+    | '/secrets/detail/$manager/$id/used-by'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | ''
+    | '/login'
+    | '/admins/add'
+    | '/consumer_groups/add'
+    | '/consumers/add'
+    | '/global_rules/add'
+    | '/plugin_configs/add'
+    | '/protos/add'
+    | '/routes/add'
+    | '/secrets/add'
+    | '/services/add'
+    | '/ssls/add'
+    | '/stream_routes/add'
+    | '/upstreams/add'
+    | '/admins'
+    | '/casdoor'
+    | '/consumer_groups'
+    | '/consumers'
+    | '/global_rules'
+    | '/log_histories'
+    | '/login_histories'
+    | '/overview'
+    | '/plugin_configs'
+    | '/plugin_metadata'
+    | '/protos'
+    | '/routes'
+    | '/secrets'
+    | '/services'
+    | '/ssls'
+    | '/stream_routes'
+    | '/upstreams'
+    | '/admins/detail/$id'
+    | '/global_rules/detail/$id'
+    | '/protos/detail/$id'
+    | '/ssls/detail/$id'
+    | '/stream_routes/detail/$id'
+    | '/upstreams/detail/$id'
+    | '/consumer_groups/detail/$id'
+    | '/consumers/detail/$username'
+    | '/plugin_configs/detail/$id'
+    | '/routes/detail/$id'
+    | '/services/detail/$id'
+    | '/consumers/detail/$username/credentials/add'
+    | '/services/detail/$id/routes/add'
+    | '/services/detail/$id/stream_routes/add'
+    | '/consumer_groups/detail/$id/consumers'
+    | '/consumers/detail/$username/credentials'
+    | '/plugin_configs/detail/$id/plugins'
+    | '/plugin_configs/detail/$id/routes'
+    | '/routes/detail/$id/plugins'
+    | '/secrets/detail/$manager/$id'
+    | '/services/detail/$id/routes'
+    | '/services/detail/$id/stream_routes'
+    | '/consumers/detail/$username/credentials/detail/$id'
+    | '/services/detail/$id/routes/detail/$routeId'
+    | '/services/detail/$id/stream_routes/detail/$routeId'
+    | '/secrets/detail/$manager/$id/used-by'
+>>>>>>> origin/tai
   id:
     | '__root__'
     | '/'
@@ -732,28 +2198,53 @@ export interface FileRouteTypes {
     | '/_authenticated/ssls/detail/$id'
     | '/_authenticated/stream_routes/detail/$id'
     | '/_authenticated/upstreams/detail/$id'
+<<<<<<< HEAD
     | '/_authenticated/protos/detail/$id/used-by'
     | '/_authenticated/secrets/detail/$manager/$id'
     | '/_authenticated/consumers/detail/$username/'
     | '/_authenticated/protos/detail/$id/'
+=======
+    | '/_authenticated/secrets/detail/$manager/$id'
+    | '/_authenticated/consumer_groups/detail/$id/'
+    | '/_authenticated/consumers/detail/$username/'
+    | '/_authenticated/plugin_configs/detail/$id/'
+    | '/_authenticated/routes/detail/$id/'
+>>>>>>> origin/tai
     | '/_authenticated/services/detail/$id/'
     | '/_authenticated/consumers/detail/$username/credentials/add'
     | '/_authenticated/services/detail/$id/routes/add'
     | '/_authenticated/services/detail/$id/stream_routes/add'
+<<<<<<< HEAD
     | '/_authenticated/consumers/detail/$username/credentials/'
+=======
+    | '/_authenticated/consumer_groups/detail/$id/consumers/'
+    | '/_authenticated/consumers/detail/$username/credentials/'
+    | '/_authenticated/plugin_configs/detail/$id/plugins/'
+    | '/_authenticated/plugin_configs/detail/$id/routes/'
+    | '/_authenticated/routes/detail/$id/plugins/'
+    | '/_authenticated/secrets/detail/$manager/$id/'
+>>>>>>> origin/tai
     | '/_authenticated/services/detail/$id/routes/'
     | '/_authenticated/services/detail/$id/stream_routes/'
     | '/_authenticated/consumers/detail/$username/credentials/detail/$id'
     | '/_authenticated/services/detail/$id/routes/detail/$routeId'
     | '/_authenticated/services/detail/$id/stream_routes/detail/$routeId'
+<<<<<<< HEAD
   fileRoutesById: FileRoutesById
 }
+=======
+    | '/_authenticated/secrets/detail/$manager/$id/used-by/'
+  fileRoutesById: FileRoutesById
+}
+
+>>>>>>> origin/tai
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   LoginRoute: typeof LoginRoute
 }
 
+<<<<<<< HEAD
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
@@ -1336,11 +2827,363 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
 
+=======
+>>>>>>> origin/tai
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   LoginRoute: LoginRoute,
 }
+<<<<<<< HEAD
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+=======
+
+export const routeTree = rootRoute
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
+
+/* ROUTE_MANIFEST_START
+{
+  "routes": {
+    "__root__": {
+      "filePath": "__root.tsx",
+      "children": [
+        "/",
+        "/_authenticated",
+        "/login"
+      ]
+    },
+    "/": {
+      "filePath": "index.tsx"
+    },
+    "/_authenticated": {
+      "filePath": "_authenticated.tsx",
+      "children": [
+        "/_authenticated/admins/add",
+        "/_authenticated/consumer_groups/add",
+        "/_authenticated/consumers/add",
+        "/_authenticated/global_rules/add",
+        "/_authenticated/plugin_configs/add",
+        "/_authenticated/protos/add",
+        "/_authenticated/routes/add",
+        "/_authenticated/secrets/add",
+        "/_authenticated/services/add",
+        "/_authenticated/ssls/add",
+        "/_authenticated/stream_routes/add",
+        "/_authenticated/upstreams/add",
+        "/_authenticated/admins/",
+        "/_authenticated/casdoor/",
+        "/_authenticated/consumer_groups/",
+        "/_authenticated/consumers/",
+        "/_authenticated/global_rules/",
+        "/_authenticated/log_histories/",
+        "/_authenticated/login_histories/",
+        "/_authenticated/overview/",
+        "/_authenticated/plugin_configs/",
+        "/_authenticated/plugin_metadata/",
+        "/_authenticated/protos/",
+        "/_authenticated/routes/",
+        "/_authenticated/secrets/",
+        "/_authenticated/services/",
+        "/_authenticated/ssls/",
+        "/_authenticated/stream_routes/",
+        "/_authenticated/upstreams/",
+        "/_authenticated/admins/detail/$id",
+        "/_authenticated/consumer_groups/detail/$id",
+        "/_authenticated/consumers/detail/$username",
+        "/_authenticated/global_rules/detail/$id",
+        "/_authenticated/plugin_configs/detail/$id",
+        "/_authenticated/protos/detail/$id",
+        "/_authenticated/routes/detail/$id",
+        "/_authenticated/services/detail/$id",
+        "/_authenticated/ssls/detail/$id",
+        "/_authenticated/stream_routes/detail/$id",
+        "/_authenticated/upstreams/detail/$id",
+        "/_authenticated/secrets/detail/$manager/$id"
+      ]
+    },
+    "/login": {
+      "filePath": "login.tsx"
+    },
+    "/_authenticated/admins/add": {
+      "filePath": "_authenticated/admins/add.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/consumer_groups/add": {
+      "filePath": "_authenticated/consumer_groups/add.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/consumers/add": {
+      "filePath": "_authenticated/consumers/add.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/global_rules/add": {
+      "filePath": "_authenticated/global_rules/add.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/plugin_configs/add": {
+      "filePath": "_authenticated/plugin_configs/add.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/protos/add": {
+      "filePath": "_authenticated/protos/add.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/routes/add": {
+      "filePath": "_authenticated/routes/add.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/secrets/add": {
+      "filePath": "_authenticated/secrets/add.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/services/add": {
+      "filePath": "_authenticated/services/add.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/ssls/add": {
+      "filePath": "_authenticated/ssls/add.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/stream_routes/add": {
+      "filePath": "_authenticated/stream_routes/add.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/upstreams/add": {
+      "filePath": "_authenticated/upstreams/add.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/admins/": {
+      "filePath": "_authenticated/admins/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/casdoor/": {
+      "filePath": "_authenticated/casdoor/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/consumer_groups/": {
+      "filePath": "_authenticated/consumer_groups/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/consumers/": {
+      "filePath": "_authenticated/consumers/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/global_rules/": {
+      "filePath": "_authenticated/global_rules/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/log_histories/": {
+      "filePath": "_authenticated/log_histories/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/login_histories/": {
+      "filePath": "_authenticated/login_histories/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/overview/": {
+      "filePath": "_authenticated/overview/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/plugin_configs/": {
+      "filePath": "_authenticated/plugin_configs/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/plugin_metadata/": {
+      "filePath": "_authenticated/plugin_metadata/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/protos/": {
+      "filePath": "_authenticated/protos/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/routes/": {
+      "filePath": "_authenticated/routes/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/secrets/": {
+      "filePath": "_authenticated/secrets/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/services/": {
+      "filePath": "_authenticated/services/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/ssls/": {
+      "filePath": "_authenticated/ssls/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/stream_routes/": {
+      "filePath": "_authenticated/stream_routes/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/upstreams/": {
+      "filePath": "_authenticated/upstreams/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/admins/detail/$id": {
+      "filePath": "_authenticated/admins/detail.$id.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/consumer_groups/detail/$id": {
+      "filePath": "_authenticated/consumer_groups/detail.$id.tsx",
+      "parent": "/_authenticated",
+      "children": [
+        "/_authenticated/consumer_groups/detail/$id/",
+        "/_authenticated/consumer_groups/detail/$id/consumers/"
+      ]
+    },
+    "/_authenticated/consumers/detail/$username": {
+      "filePath": "_authenticated/consumers/detail.$username.tsx",
+      "parent": "/_authenticated",
+      "children": [
+        "/_authenticated/consumers/detail/$username/",
+        "/_authenticated/consumers/detail/$username/credentials/add",
+        "/_authenticated/consumers/detail/$username/credentials/",
+        "/_authenticated/consumers/detail/$username/credentials/detail/$id"
+      ]
+    },
+    "/_authenticated/global_rules/detail/$id": {
+      "filePath": "_authenticated/global_rules/detail.$id.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/plugin_configs/detail/$id": {
+      "filePath": "_authenticated/plugin_configs/detail.$id.tsx",
+      "parent": "/_authenticated",
+      "children": [
+        "/_authenticated/plugin_configs/detail/$id/",
+        "/_authenticated/plugin_configs/detail/$id/plugins/",
+        "/_authenticated/plugin_configs/detail/$id/routes/"
+      ]
+    },
+    "/_authenticated/protos/detail/$id": {
+      "filePath": "_authenticated/protos/detail.$id.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/routes/detail/$id": {
+      "filePath": "_authenticated/routes/detail.$id.tsx",
+      "parent": "/_authenticated",
+      "children": [
+        "/_authenticated/routes/detail/$id/",
+        "/_authenticated/routes/detail/$id/plugins/"
+      ]
+    },
+    "/_authenticated/services/detail/$id": {
+      "filePath": "_authenticated/services/detail.$id.tsx",
+      "parent": "/_authenticated",
+      "children": [
+        "/_authenticated/services/detail/$id/",
+        "/_authenticated/services/detail/$id/routes/add",
+        "/_authenticated/services/detail/$id/stream_routes/add",
+        "/_authenticated/services/detail/$id/routes/",
+        "/_authenticated/services/detail/$id/stream_routes/",
+        "/_authenticated/services/detail/$id/routes/detail/$routeId",
+        "/_authenticated/services/detail/$id/stream_routes/detail/$routeId"
+      ]
+    },
+    "/_authenticated/ssls/detail/$id": {
+      "filePath": "_authenticated/ssls/detail.$id.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/stream_routes/detail/$id": {
+      "filePath": "_authenticated/stream_routes/detail.$id.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/upstreams/detail/$id": {
+      "filePath": "_authenticated/upstreams/detail.$id.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/secrets/detail/$manager/$id": {
+      "filePath": "_authenticated/secrets/detail.$manager.$id.tsx",
+      "parent": "/_authenticated",
+      "children": [
+        "/_authenticated/secrets/detail/$manager/$id/",
+        "/_authenticated/secrets/detail/$manager/$id/used-by/"
+      ]
+    },
+    "/_authenticated/consumer_groups/detail/$id/": {
+      "filePath": "_authenticated/consumer_groups/detail.$id/index.tsx",
+      "parent": "/_authenticated/consumer_groups/detail/$id"
+    },
+    "/_authenticated/consumers/detail/$username/": {
+      "filePath": "_authenticated/consumers/detail.$username/index.tsx",
+      "parent": "/_authenticated/consumers/detail/$username"
+    },
+    "/_authenticated/plugin_configs/detail/$id/": {
+      "filePath": "_authenticated/plugin_configs/detail.$id/index.tsx",
+      "parent": "/_authenticated/plugin_configs/detail/$id"
+    },
+    "/_authenticated/routes/detail/$id/": {
+      "filePath": "_authenticated/routes/detail.$id/index.tsx",
+      "parent": "/_authenticated/routes/detail/$id"
+    },
+    "/_authenticated/services/detail/$id/": {
+      "filePath": "_authenticated/services/detail.$id/index.tsx",
+      "parent": "/_authenticated/services/detail/$id"
+    },
+    "/_authenticated/consumers/detail/$username/credentials/add": {
+      "filePath": "_authenticated/consumers/detail.$username/credentials/add.tsx",
+      "parent": "/_authenticated/consumers/detail/$username"
+    },
+    "/_authenticated/services/detail/$id/routes/add": {
+      "filePath": "_authenticated/services/detail.$id/routes/add.tsx",
+      "parent": "/_authenticated/services/detail/$id"
+    },
+    "/_authenticated/services/detail/$id/stream_routes/add": {
+      "filePath": "_authenticated/services/detail.$id/stream_routes/add.tsx",
+      "parent": "/_authenticated/services/detail/$id"
+    },
+    "/_authenticated/consumer_groups/detail/$id/consumers/": {
+      "filePath": "_authenticated/consumer_groups/detail.$id/consumers/index.tsx",
+      "parent": "/_authenticated/consumer_groups/detail/$id"
+    },
+    "/_authenticated/consumers/detail/$username/credentials/": {
+      "filePath": "_authenticated/consumers/detail.$username/credentials/index.tsx",
+      "parent": "/_authenticated/consumers/detail/$username"
+    },
+    "/_authenticated/plugin_configs/detail/$id/plugins/": {
+      "filePath": "_authenticated/plugin_configs/detail.$id/plugins/index.tsx",
+      "parent": "/_authenticated/plugin_configs/detail/$id"
+    },
+    "/_authenticated/plugin_configs/detail/$id/routes/": {
+      "filePath": "_authenticated/plugin_configs/detail.$id/routes/index.tsx",
+      "parent": "/_authenticated/plugin_configs/detail/$id"
+    },
+    "/_authenticated/routes/detail/$id/plugins/": {
+      "filePath": "_authenticated/routes/detail.$id/plugins/index.tsx",
+      "parent": "/_authenticated/routes/detail/$id"
+    },
+    "/_authenticated/secrets/detail/$manager/$id/": {
+      "filePath": "_authenticated/secrets/detail.$manager.$id/index.tsx",
+      "parent": "/_authenticated/secrets/detail/$manager/$id"
+    },
+    "/_authenticated/services/detail/$id/routes/": {
+      "filePath": "_authenticated/services/detail.$id/routes/index.tsx",
+      "parent": "/_authenticated/services/detail/$id"
+    },
+    "/_authenticated/services/detail/$id/stream_routes/": {
+      "filePath": "_authenticated/services/detail.$id/stream_routes/index.tsx",
+      "parent": "/_authenticated/services/detail/$id"
+    },
+    "/_authenticated/consumers/detail/$username/credentials/detail/$id": {
+      "filePath": "_authenticated/consumers/detail.$username/credentials/detail.$id.tsx",
+      "parent": "/_authenticated/consumers/detail/$username"
+    },
+    "/_authenticated/services/detail/$id/routes/detail/$routeId": {
+      "filePath": "_authenticated/services/detail.$id/routes/detail.$routeId.tsx",
+      "parent": "/_authenticated/services/detail/$id"
+    },
+    "/_authenticated/services/detail/$id/stream_routes/detail/$routeId": {
+      "filePath": "_authenticated/services/detail.$id/stream_routes/detail.$routeId.tsx",
+      "parent": "/_authenticated/services/detail/$id"
+    },
+    "/_authenticated/secrets/detail/$manager/$id/used-by/": {
+      "filePath": "_authenticated/secrets/detail.$manager.$id/used-by/index.tsx",
+      "parent": "/_authenticated/secrets/detail/$manager/$id"
+    }
+  }
+}
+ROUTE_MANIFEST_END */
+>>>>>>> origin/tai

@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+<<<<<<< HEAD
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Group,Skeleton } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
@@ -99,10 +100,71 @@ const ConsumerGroupDetailForm = (props: Props) => {
         )}
       </form>
     </FormProvider>
+=======
+
+import {
+  createFileRoute,
+  Outlet,
+  useLocation,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { Tabs, type TabsItem } from '@/components/page/Tabs';
+
+// Cùng kiến trúc file đã dùng cho Plugin Configs (copy nguyên pattern
+// gốc từ Services): detail.$id.tsx là layout có tab, detail.$id/index.tsx
+// là tab General, detail.$id/consumers/index.tsx là tab Consumers.
+const defaultTab = 'detail';
+export const DetailTabs = () => {
+  const { t } = useTranslation();
+  const { id } = useParams({ strict: false });
+  const navigate = useNavigate();
+  const pathname = useLocation({
+    select: (location) => location.pathname,
+  });
+
+  const items = useMemo(
+    (): TabsItem[] => [
+      {
+        value: 'detail',
+        label: t('info.detail.title', { name: t('consumerGroups.singular') }),
+      },
+      {
+        value: 'consumers',
+        label: t('sources.consumers'),
+      },
+    ],
+    [t]
+  );
+  return (
+    <Tabs
+      items={items}
+      variant="outline"
+      value={
+        items
+          .slice()
+          .reverse()
+          .find((v) => pathname.includes(v.value))?.value || defaultTab
+      }
+      onChange={(v) => {
+        navigate({
+          to:
+            v === defaultTab
+              ? '/consumer_groups/detail/$id/'
+              : `/consumer_groups/detail/$id/${v}/`,
+          params: { id: id as string },
+        });
+      }}
+    />
+>>>>>>> origin/tai
   );
 };
 
 function RouteComponent() {
+<<<<<<< HEAD
   const { id } = useParams({ from: '/_authenticated/consumer_groups/detail/$id' });
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
@@ -141,6 +203,12 @@ function RouteComponent() {
           setReadOnly={setReadOnly}
         />
       </FormTOCBox>
+=======
+  return (
+    <>
+      <DetailTabs />
+      <Outlet />
+>>>>>>> origin/tai
     </>
   );
 }

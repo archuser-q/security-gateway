@@ -3,6 +3,13 @@
     "dashboard": "Cổng Bảo Mật",
     "logo": "Logo APISIX"
   },
+  "consumerGroupDetail": {
+    "memberCount": "{{count}} consumer trong nhóm này",
+    "memberCount_other": "{{count}} consumer trong nhóm này",
+    "overrideWarning": "{{count}} consumer đang tự đặt plugin ghi đè cấu hình nhóm",
+    "overrideWarning_other": "{{count}} consumer đang tự đặt plugin ghi đè cấu hình nhóm",
+    "overridesColumn": "Ghi đè"
+  },
   "consumerGroups": {
     "singular": "Nhóm Người Dùng"
   },
@@ -85,6 +92,7 @@
     },
     "plugins": {
       "addPlugin": "Thêm Plugin",
+      "viaPrefix": "qua",
       "configId": "ID Cấu Hình Plugin",
       "editPlugin": "Chỉnh Sửa Plugin",
       "label": "Plugin",
@@ -364,7 +372,8 @@
   "noData": "Không Có Dữ Liệu",
   "or": "HOẶC",
   "pluginConfigs": {
-    "singular": "Cấu Hình Plugin"
+    "singular": "Cấu Hình Plugin",
+    "pluginsCount": "Plugins ({{count}})"
   },
   "pluginMetadata": {
     "search": "Tìm Kiếm Metadata Plugin",
@@ -373,8 +382,39 @@
   "protos": {
     "singular": "Proto"
   },
+  "routeFlow": {
+    "title": "Luồng Xử Lý",
+    "noService": "Không có Service",
+    "nodeCount": "{{count}} node",
+    "nodeCount_other": "{{count}} node",
+    "notConfigured": "Chưa cấu hình",
+    "tlsTitle": "Chứng Chỉ SSL",
+    "tlsDisclaimer": "Được tính bằng cách so khớp Host của Route với SNI của SSL ngay trên trang này - không phải xác nhận chính thức từ APISIX về cert nào thực sự được dùng.",
+    "noHostRestriction": "Route này không giới hạn Host, nên TLS phụ thuộc hoàn toàn vào SNI của request gửi tới - không có gì để kiểm tra ở đây.",
+    "noMatchingSsl": "Không tìm thấy SSL cert khớp",
+    "host": "Host: {{host}}",
+    "moreNodes": "+{{count}} node khác",
+    "moreNodes_other": "+{{count}} node khác",
+    "viewUpstream": "Xem chi tiết Upstream",
+    "healthCheck": "Có kiểm tra sức khoẻ",
+    "pluginDetailsTitle": "Chi Tiết Plugin",
+    "sourceRoute": "Route",
+    "defaultType": "roundrobin",
+    "defaultScheme": "http",
+    "defaultNote": "Chưa khai báo rõ - APISIX tự áp giá trị mặc định này lúc chạy",
+    "overriddenByHigherPriority": "{{names}} trên Service bị ghi đè (Route/Plugin Config có độ ưu tiên cao hơn theo thứ tự merge của APISIX)"
+  },
   "routes": {
     "singular": "Tuyến Đường"
+  },
+  "secretDetail": {
+    "usedByTitle": "Đang Được Dùng Bởi",
+    "usedByEmpty": "Chưa có resource nào tham chiếu Secret này (quét best-effort)",
+    "usedByDisclaimer": "Quét best-effort qua cấu hình plugin của Routes, Services, Consumers, Consumer Groups, Plugin Configs và Global Rules để tìm chuỗi tham chiếu $secret:// khớp. Không phải xác nhận chính thức từ APISIX.",
+    "usageTitle": "Cách tham chiếu Secret này",
+    "usageHint": "Dán đoạn này vào field bất kỳ của plugin cần đọc từ Secret lúc chạy, thay {{placeholder}} bằng đường dẫn key thật trong {{manager}}.",
+    "copy": "Copy",
+    "copied": "Đã copy"
   },
   "seconds": "Giây",
   "secrets": {
@@ -412,6 +452,35 @@
     "changePassword": "Đổi mật khẩu",
     "setting": "Cài đặt"
   },
+  "certDetail": {
+    "status": "Trạng thái",
+    "type": "Loại",
+    "typeServer": "Server",
+    "typeClient": "Client (mTLS)",
+    "clientTypeNote": "Đây là client certificate dùng cho mTLS (xác thực cert phía client gửi lên) - không phục vụ HTTPS theo SNI như cert loại server.",
+    "apisixConfigTitle": "Cấu Hình APISIX",
+    "allowedProtocols": "Phiên Bản TLS Cho Phép",
+    "mtlsCa": "Client CA",
+    "mtlsCaSet": "Đã cấu hình",
+    "mtlsDepth": "Độ Sâu Xác Minh",
+    "sniMatch": "SNI (khai trong APISIX)",
+    "commonNameInCert": "Common Name (trong cert)",
+    "validUntil": "Hết hạn lúc",
+    "expiry": "Thời hạn còn lại",
+    "issuedTo": "Cấp Cho",
+    "issuedBy": "Cấp Bởi",
+    "validity": "Hiệu Lực",
+    "technicalDetails": "Chi Tiết Kỹ Thuật",
+    "fingerprints": "Vân Tay SHA-256",
+    "expired": "Đã hết hạn",
+    "daysLeft": "còn {{count}} ngày"
+  },
+  "usedBy": {
+    "routesTitle": "Được dùng bởi Routes",
+    "empty": "Chưa có Route nào dùng",
+    "status": "Trạng thái",
+    "name": "Tên"
+  },
   "ssls": {
     "singular": "SSL"
   },
@@ -421,7 +490,14 @@
   "table": {
     "actions": "Hành Động",
     "disabled": "Vô Hiệu",
-    "enabled": "Hoạt Động"
+    "enabled": "Hoạt Động",
+    "allStatus": "Tất cả trạng thái",
+    "searchPlaceholder": "Tìm kiếm",
+    "totalItems": "Tổng {{count}} mục",
+    "btn": {
+      "prev": "Trước",
+      "next": "Sau"
+    }
   },
   "upstreams": {
     "singular": "Upstream"

@@ -14,128 +14,74 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Group } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import {
   createFileRoute,
+  Outlet,
+  useLocation,
   useNavigate,
   useParams,
 } from '@tanstack/react-router';
-import { FormProvider, useForm } from 'react-hook-form';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useBoolean } from 'react-use';
 
-import { getSecretQueryOptions } from '@/apis/hooks';
-import { putSecretReq } from '@/apis/secrets';
-import { FormSubmitBtn } from '@/components/form/Btn';
-import { FormPartSecret } from '@/components/form-slice/FormPartSecret';
-import { FormTOCBox } from '@/components/form-slice/FormSection';
-import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
-import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
-import PageHeader from '@/components/page/PageHeader';
-import { API_SECRETS } from '@/config/constant';
-import { req } from '@/config/req';
-import { APISIX, type APISIXType } from '@/types/schema/apisix';
-import { pipeProduce } from '@/utils/producer';
+import { Tabs, type TabsItem } from '@/components/page/Tabs';
 
-type Props = {
-  readOnly: boolean;
-  setReadOnly: (v: boolean) => void;
-};
-
-const SecretDetailForm = (props: Props) => {
-  const { readOnly, setReadOnly } = props;
+// Secret được tham chiếu bằng CHUỖI tự do (không phải foreign key) nên
+// SecretUsedByPanel phải quét toàn bộ Route/Service/Consumer/Consumer
+// Group/Plugin Config/Global Rule - nếu 1 Secret bị dùng ở rất nhiều nơi,
+// danh sách kết quả có thể dài. Tách sang tab riêng như đã làm với
+// Routes tab của Plugin Config Detail, cùng lý do: tránh trang General
+// dài vô hạn.
+const defaultTab = 'detail';
+export const DetailTabs = () => {
   const { t } = useTranslation();
-  const { manager, id } = useParams({
-    from: '/_authenticated/secrets/detail/$manager/$id',
+  const { manager, id } = useParams({ strict: false });
+  const navigate = useNavigate();
+  const pathname = useLocation({
+    select: (location) => location.pathname,
   });
 
-  const { data: secretData, refetch } = useSuspenseQuery(
-    getSecretQueryOptions({
-      id,
-      manager: manager as APISIXType['Secret']['manager'],
-    })
+  const items = useMemo(
+    (): TabsItem[] => [
+      {
+        value: 'detail',
+        label: t('info.detail.title', { name: t('secrets.singular') }),
+      },
+      {
+        value: 'used-by',
+        label: t('secretDetail.usedByTitle'),
+      },
+    ],
+    [t]
   );
-
-  const form = useForm<APISIXType['Secret']>({
-    resolver: zodResolver(APISIX.Secret),
-    defaultValues: secretData.value as APISIXType['Secret'],
-    mode: 'all',
-    disabled: readOnly,
-  });
-
-  const putSecret = useMutation({
-    mutationFn: (d: APISIXType['Secret']) =>
-      putSecretReq(req, pipeProduce()(d)),
-    async onSuccess() {
-      notifications.show({
-        message: t('info.edit.success', {
-          name: t('secrets.singular'),
-        }),
-        color: 'green',
-      });
-
-      await refetch();
-      setReadOnly(true);
-    },
-  });
-
   return (
-    <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit((d) => putSecret.mutateAsync(d))}>
-        <FormSectionGeneral readOnly />
-        <FormPartSecret readOnlyManager />
-
-        {!readOnly && (
-          <Group>
-            <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
-            <Button variant="outline" onClick={() => setReadOnly(true)}>
-              {t('form.btn.cancel')}
-            </Button>
-          </Group>
-        )}
-      </form>
-    </FormProvider>
+    <Tabs
+      items={items}
+      variant="outline"
+      value={
+        items
+          .slice()
+          .reverse()
+          .find((v) => pathname.includes(v.value))?.value || defaultTab
+      }
+      onChange={(v) => {
+        navigate({
+          to:
+            v === defaultTab
+              ? '/secrets/detail/$manager/$id/'
+              : `/secrets/detail/$manager/$id/${v}/`,
+          params: { manager: manager as string, id: id as string },
+        });
+      }}
+    />
   );
 };
 
 function RouteComponent() {
-  const { t } = useTranslation();
-  const [readOnly, setReadOnly] = useBoolean(true);
-  const { manager, id } = useParams({ from: '/_authenticated/secrets/detail/$manager/$id' });
-  const navigate = useNavigate();
-
   return (
     <>
-      <PageHeader
-        title={t('info.edit.title', { name: t('secrets.singular') })}
-        {...(readOnly && {
-          title: t('info.detail.title', { name: t('secrets.singular') }),
-          extra: (
-            <Group>
-              <Button
-                onClick={() => setReadOnly(false)}
-                size="compact-sm"
-                variant="gradient"
-              >
-                {t('form.btn.edit')}
-              </Button>
-              <DeleteResourceBtn
-                mode="detail"
-                name={t('secrets.singular')}
-                target={id}
-                api={`${API_SECRETS}/${manager}/${id}`}
-                onSuccess={() => navigate({ to: '/secrets' })}
-              />
-            </Group>
-          ),
-        })}
-      />
-      <FormTOCBox>
-        <SecretDetailForm readOnly={readOnly} setReadOnly={setReadOnly} />
-      </FormTOCBox>
+      <DetailTabs />
+      <Outlet />
     </>
   );
 }

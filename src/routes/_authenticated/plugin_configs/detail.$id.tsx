@@ -14,131 +14,73 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Group,Skeleton } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
+
 import {
   createFileRoute,
+  Outlet,
+  useLocation,
   useNavigate,
   useParams,
 } from '@tanstack/react-router';
-import { useEffect } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useBoolean } from 'react-use';
 
-import { getPluginConfigQueryOptions } from '@/apis/hooks';
-import { putPluginConfigReq } from '@/apis/plugin_configs';
-import { FormSubmitBtn } from '@/components/form/Btn';
-import { FormPartPluginConfig } from '@/components/form-slice/FormPartPluginConfig';
-import { FormTOCBox } from '@/components/form-slice/FormSection';
-import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
-import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
-import PageHeader from '@/components/page/PageHeader';
-import { API_PLUGIN_CONFIGS } from '@/config/constant';
-import { req } from '@/config/req';
-import { APISIX, type APISIXType } from '@/types/schema/apisix';
+import { Tabs, type TabsItem } from '@/components/page/Tabs';
 
-type Props = {
-  id: string;
-  readOnly: boolean;
-  setReadOnly: (v: boolean) => void;
-};
-
-const PluginConfigDetailForm = (props: Props) => {
-  const { id, readOnly, setReadOnly } = props;
+const defaultTab = 'detail';
+export const DetailTabs = () => {
   const { t } = useTranslation();
-
-  const pluginConfigQuery = useSuspenseQuery(getPluginConfigQueryOptions(id));
-  const { data } = pluginConfigQuery;
-  const initialValue = data.value;
-
-  const putPluginConfig = useMutation({
-    mutationFn: (d: APISIXType['PluginConfigPut']) =>
-      putPluginConfigReq(req, d),
-    async onSuccess() {
-      notifications.show({
-        message: t('info.edit.success', { name: t('pluginConfigs.singular') }),
-        color: 'green',
-      });
-      pluginConfigQuery.refetch();
-      setReadOnly(true);
-    },
+  const { id } = useParams({ strict: false });
+  const navigate = useNavigate();
+  const pathname = useLocation({
+    select: (location) => location.pathname,
   });
 
-  const form = useForm({
-    resolver: zodResolver(APISIX.PluginConfigPut),
-    shouldUnregister: true,
-    shouldFocusError: true,
-    mode: 'all',
-    disabled: readOnly,
-  });
-
-  // Reset form when initialValue changes
-  useEffect(() => {
-    form.reset(initialValue);
-  }, [form, initialValue]);
-
-  if (!data) return <Skeleton height={200} />;
-
+  const items = useMemo(
+    (): TabsItem[] => [
+      {
+        value: 'detail',
+        label: t('info.detail.title', { name: t('pluginConfigs.singular') }),
+      },
+      {
+        value: 'plugins',
+        label: t('form.plugins.label'),
+      },
+      {
+        value: 'routes',
+        label: t('sources.routes'),
+      },
+    ],
+    [t]
+  );
   return (
-    <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit((d) => putPluginConfig.mutateAsync(d))}>
-        <FormSectionGeneral readOnly />
-        <FormPartPluginConfig />
-        {!readOnly && (
-          <Group>
-            <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
-            <Button variant="outline" onClick={() => setReadOnly(true)}>
-              {t('form.btn.cancel')}
-            </Button>
-          </Group>
-        )}
-      </form>
-    </FormProvider>
+    <Tabs
+      items={items}
+      variant="outline"
+      value={
+        items
+          .slice()
+          .reverse()
+          .find((v) => pathname.includes(v.value))?.value || defaultTab
+      }
+      onChange={(v) => {
+        navigate({
+          to:
+            v === defaultTab
+              ? '/plugin_configs/detail/$id/'
+              : `/plugin_configs/detail/$id/${v}/`,
+          params: { id: id as string },
+        });
+      }}
+    />
   );
 };
 
 function RouteComponent() {
-  const { id } = useParams({ from: '/_authenticated/plugin_configs/detail/$id' });
-  const { t } = useTranslation();
-  const [readOnly, setReadOnly] = useBoolean(true);
-  const navigate = useNavigate();
-
   return (
     <>
-      <PageHeader
-        title={t('info.edit.title', { name: t('pluginConfigs.singular') })}
-        {...(readOnly && {
-          title: t('info.detail.title', { name: t('pluginConfigs.singular') }),
-          extra: (
-            <Group>
-              <Button
-                onClick={() => setReadOnly(false)}
-                size="compact-sm"
-                variant="gradient"
-              >
-                {t('form.btn.edit')}
-              </Button>
-              <DeleteResourceBtn
-                mode="detail"
-                name={t('pluginConfigs.singular')}
-                target={id}
-                api={`${API_PLUGIN_CONFIGS}/${id}`}
-                onSuccess={() => navigate({ to: '/plugin_configs' })}
-              />
-            </Group>
-          ),
-        })}
-      />
-      <FormTOCBox>
-        <PluginConfigDetailForm
-          id={id}
-          readOnly={readOnly}
-          setReadOnly={setReadOnly}
-        />
-      </FormTOCBox>
+      <DetailTabs />
+      <Outlet />
     </>
   );
 }

@@ -16,31 +16,102 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
+import { Group } from '@mantine/core';
 import { createFileRoute } from '@tanstack/react-router';
-import { useMemo } from 'react';
+import { Tag } from 'antd';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getSSLListQueryOptions, useSSLList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { ListSearchBox } from '@/components/page/ListSearchBox';
+import { ListTableCard } from '@/components/page/ListTableCard';
 import PageHeader from '@/components/page/PageHeader';
+import { StatusBadge } from '@/components/page/StatusBadge';
+import { StatusFilterTabs } from '@/components/page/StatusFilterTabs';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import { useListTablePagination } from '@/components/page/useListTablePagination';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_SSLS } from '@/config/constant';
 import { queryClient } from '@/config/queryClient';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
+import { type CertInfo,parseCertInfo } from '@/utils/certParser';
+import { filterByStatus, type StatusFilterValue } from '@/utils/statusFilter';
+import IconArrowRight from '~icons/material-symbols/arrow-right-alt';
+
+type SSLListItem = APISIXType['RespSSLItem'] & { certInfo: CertInfo | null };
+
+const formatDate = (d: Date) =>
+  `${d.getUTCDate()}/${d.getUTCMonth() + 1}/${d.getUTCFullYear()}`;
+
+const ExpiryTag = ({ info }: { info: CertInfo | null }) => {
+  const { t } = useTranslation();
+  if (!info) return <>-</>;
+  const daysLeft = Math.floor(
+    (info.notAfter.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+  );
+  if (daysLeft < 0) return <Tag color="red">{t('certDetail.expired')}</Tag>;
+  if (daysLeft <= 30)
+    return <Tag color="orange">{t('certDetail.daysLeft', { count: daysLeft })}</Tag>;
+  return <Tag color="green">{t('certDetail.daysLeft', { count: daysLeft })}</Tag>;
+};
+
+const ValidUntilText = ({ info }: { info: CertInfo | null }) => {
+  if (!info) return <>-</>;
+  return <>{formatDate(info.notAfter)}</>;
+};
+
+const IssuerText = ({ info }: { info: CertInfo | null }) => {
+  if (!info || !info.issuer.cn) return <>-</>;
+  return <>{info.issuer.cn}</>;
+};
+
+const SansText = ({ info }: { info: CertInfo | null }) => {
+  if (!info || info.sans.length === 0) return <>-</>;
+  return <>{info.sans.join(', ')}</>;
+};
 
 function RouteComponent() {
   const { t } = useTranslation();
   const { data, isLoading, refetch, pagination } = useSSLList();
+  const [statusFilter, setStatusFilter] = useState<StatusFilterValue>('all');
+  const [search, setSearch] = useState('');
 
-  const columns = useMemo<ProColumns<APISIXType['RespSSLItem']>[]>(() => {
+  // Parse DER 1 lần/cert duy nhất ở đây, thay vì để 3 cột
+  // (Issuer/Valid Until/Expiry) tự gọi parseCertInfo() 3 lần trên cùng 1 dòng.
+  const listWithCertInfo = useMemo<SSLListItem[]>(() => {
+    return (data?.list ?? []).map((item) => ({
+      ...item,
+      certInfo: item.value.cert ? parseCertInfo(item.value.cert) : null,
+    }));
+  }, [data?.list]);
+
+  // Khác với Routes (search theo name gọi thẳng APISIX Admin API), SSL
+  // không có field "name" nên không có gì để server lọc hộ - search ở
+  // đây lọc theo SNI ngay trên mảng đã tải, chỉ áp dụng cho trang dữ
+  // liệu hiện đang có (đủ dùng vì số lượng SSL trong 1 trang thường nhỏ).
+  const filteredList = useMemo(() => {
+    const byStatus = filterByStatus(listWithCertInfo, statusFilter);
+    if (!search.trim()) return byStatus;
+    const q = search.trim().toLowerCase();
+    return byStatus.filter((item) => {
+      const sni = item.value.sni ?? '';
+      const snis = item.value.snis?.join(' ') ?? '';
+      const certSans = item.certInfo?.sans.join(' ') ?? '';
+      const certCn = item.certInfo?.subject.cn ?? '';
+      return `${sni} ${snis} ${certSans} ${certCn}`.toLowerCase().includes(q);
+    });
+  }, [listWithCertInfo, statusFilter, search]);
+
+  const columns = useMemo<ProColumns<SSLListItem>[]>(() => {
     return [
       {
-        dataIndex: ['value', 'id'],
-        title: 'ID',
-        key: 'id',
-        valueType: 'text',
+        dataIndex: ['value', 'status'],
+        title: t('form.basic.status'),
+        key: 'status',
+        width: 110,
+        render: (_, record) => <StatusBadge enabled={record.value.status !== 0} />,
       },
       {
         dataIndex: ['value', 'sni'],
@@ -48,7 +119,6 @@ function RouteComponent() {
         key: 'sni',
         valueType: 'text',
         render: (_, record) => {
-          // Show sni if available, otherwise show the first snis entry
           const sni = record.value.sni;
           const snis = record.value.snis;
           if (sni) return sni;
@@ -57,24 +127,48 @@ function RouteComponent() {
         },
       },
       {
-        dataIndex: ['value', 'status'],
-        title: t('form.basic.status'),
-        key: 'status',
-        valueEnum: {
-          1: { text: t('table.enabled'), status: 'Success' },
-          0: { text: t('table.disabled'), status: 'Error' },
-        },
+        title: 'SANs',
+        key: 'sans',
+        render: (_, record) => <SansText info={record.certInfo} />,
+      },
+      {
+        dataIndex: ['value', 'cert'],
+        title: 'Issuer',
+        key: 'issuer',
+        render: (_, record) => <IssuerText info={record.certInfo} />,
+      },
+      {
+        dataIndex: ['value', 'cert'],
+        title: 'Valid Until',
+        key: 'valid_until',
+        width: 120,
+        render: (_, record) => <ValidUntilText info={record.certInfo} />,
+      },
+      {
+        dataIndex: ['value', 'cert'],
+        title: 'Expiry',
+        key: 'expiry',
+        width: 130,
+        render: (_, record) => <ExpiryTag info={record.certInfo} />,
+      },
+      {
+        dataIndex: ['value', 'id'],
+        title: 'ID',
+        key: 'id',
+        valueType: 'text',
       },
       {
         title: t('table.actions'),
         valueType: 'option',
         key: 'option',
-        width: 120,
+        width: 140,
         render: (_, record) => [
           <ToDetailPageBtn
             key="detail"
             to="/ssls/detail/$id"
             params={{ id: record.value.id }}
+            variant="subtle"
+            rightSection={<IconArrowRight />}
           />,
           <DeleteResourceBtn
             key="delete"
@@ -87,43 +181,44 @@ function RouteComponent() {
       },
     ];
   }, [t, refetch]);
-
   return (
     <>
       <PageHeader title={t('sources.ssls')} />
       <AntdConfigProvider>
-        <ProTable
-          columns={columns}
-          dataSource={data?.list}
-          rowKey="id"
-          loading={isLoading}
-          search={false}
-          options={false}
-          pagination={pagination}
-          cardProps={{ bodyStyle: { padding: 0 } }}
-          toolbar={{
-            menu: {
-              type: 'inline',
-              items: [
-                {
-                  key: 'add',
-                  label: (
-                    <ToAddPageBtn
-                      key="add"
-                      to="/ssls/add"
-                      label={t('info.add.title', { name: t('ssls.singular') })}
-                    />
-                  ),
-                },
-              ],
-            },
-          }}
-        />
+        <Group justify="space-between" mb="md" wrap="wrap">
+          <Group gap="sm" wrap="wrap">
+            <StatusFilterTabs value={statusFilter} onChange={setStatusFilter} />
+            <ToAddPageBtn
+              to="/ssls/add"
+              label={t('info.add.title', { name: t('ssls.singular') })}
+              variant="filled"
+              color="teal"
+              radius="xl"
+            />
+          </Group>
+          <ListSearchBox
+            value={search}
+            onSearch={setSearch}
+            placeholder="SNI..."
+            w={300}
+          />
+        </Group>
+        <ListTableCard>
+          <ProTable
+            columns={columns}
+            dataSource={filteredList}
+            rowKey="id"
+            loading={isLoading}
+            search={false}
+            options={false}
+            pagination={useListTablePagination(pagination)}
+            cardProps={{ bodyStyle: { padding: 0 } }}
+          />
+        </ListTableCard>
       </AntdConfigProvider>
     </>
   );
 }
-
 export const Route = createFileRoute('/_authenticated/ssls/')({
   component: RouteComponent,
   validateSearch: pageSearchSchema,
