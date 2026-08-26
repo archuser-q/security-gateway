@@ -15,11 +15,7 @@
  * limitations under the License.
  */
 import { zodResolver } from '@hookform/resolvers/zod';
-<<<<<<< HEAD
-import { Button, Group,Skeleton } from '@mantine/core';
-=======
 import { Badge, Button, Card, CopyButton, Group, Skeleton, Stack, Text } from '@mantine/core';
->>>>>>> origin/tai
 import { notifications } from '@mantine/notifications';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import {
@@ -27,11 +23,7 @@ import {
   useNavigate,
   useParams,
 } from '@tanstack/react-router';
-<<<<<<< HEAD
-import { useEffect } from 'react';
-=======
 import { useEffect, useState } from 'react';
->>>>>>> origin/tai
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useBoolean } from 'react-use';
@@ -51,11 +43,8 @@ import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_SSLS } from '@/config/constant';
 import { req } from '@/config/req';
-<<<<<<< HEAD
-=======
 import type { APISIXType } from '@/types/schema/apisix';
 import { computeCertFingerprints, parseCertInfo } from '@/utils/certParser';
->>>>>>> origin/tai
 import { pipeProduce } from '@/utils/producer';
 
 type Props = {
@@ -63,8 +52,6 @@ type Props = {
   setReadOnly: (v: boolean) => void;
 };
 
-<<<<<<< HEAD
-=======
 const formatDateTime = (d: Date) =>
   `${d.getUTCHours().toString().padStart(2, '0')}:${d.getUTCMinutes().toString().padStart(2, '0')} ${d.getUTCDate()}/${d.getUTCMonth() + 1}/${d.getUTCFullYear()} UTC`;
 
@@ -292,7 +279,6 @@ const SSLSummaryCard = (props: {
   );
 };
 
->>>>>>> origin/tai
 const SSLDetailForm = (props: Props & { id: string }) => {
   const { id, readOnly, setReadOnly } = props;
   const { t } = useTranslation();
@@ -335,28 +321,6 @@ const SSLDetailForm = (props: Props & { id: string }) => {
   }
 
   return (
-<<<<<<< HEAD
-    <FormTOCBox>
-      <FormProvider {...form}>
-        <form
-          onSubmit={form.handleSubmit((d) =>
-            putSSL.mutateAsync(pipeProduce()(d))
-          )}
-        >
-          <FormSectionGeneral readOnly />
-          <FormPartSSL />
-          {!readOnly && (
-            <Group>
-              <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
-              <Button variant="outline" onClick={() => setReadOnly(true)}>
-                {t('form.btn.cancel')}
-              </Button>
-            </Group>
-          )}
-        </form>
-      </FormProvider>
-    </FormTOCBox>
-=======
     <>
       <SSLSummaryCard data={sslData} />
       <FormTOCBox>
@@ -380,7 +344,6 @@ const SSLDetailForm = (props: Props & { id: string }) => {
         </FormProvider>
       </FormTOCBox>
     </>
->>>>>>> origin/tai
   );
 };
 

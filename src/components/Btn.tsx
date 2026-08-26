@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Button, type ButtonProps } from '@mantine/core';
+import { Anchor, type AnchorProps, Button, type ButtonProps } from '@mantine/core';
 import { createLink } from '@tanstack/react-router';
 import { forwardRef } from 'react';
 
@@ -26,3 +26,12 @@ const MantineBtnLinkComponent = forwardRef<HTMLButtonElement, ButtonProps>(
 MantineBtnLinkComponent.displayName = 'RouteLinkBtn';
 
 export const RouteLinkBtn = createLink(MantineBtnLinkComponent);
+
+const MantineAnchorLinkComponent = forwardRef<HTMLAnchorElement, AnchorProps>(
+  (props, ref) => {
+    return <Anchor ref={ref} {...props} />;
+  }
+);
+MantineAnchorLinkComponent.displayName = 'RouteLinkAnchor';
+
+export const RouteLinkAnchor = createLink(MantineAnchorLinkComponent);

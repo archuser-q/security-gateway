@@ -7,7 +7,7 @@ import PageHeader from '@/components/page/PageHeader'
 import { AntdConfigProvider } from '@/config/antdConfigProvider'
 import type { ClickHouseLog } from '@/types/chart/log'
 import { fetchLoginLogs, fetchLoginLogsForTimeline } from '@/apis/log'
-import { TimelineBar } from '@/components/chart/config/columnConfig/log/column'
+import { TimelineBar } from '@/components/chart/config/columnConfig/column'
 import { DatePicker, Input, Space, Tag } from 'antd'
 import type { Dayjs } from 'dayjs'
 

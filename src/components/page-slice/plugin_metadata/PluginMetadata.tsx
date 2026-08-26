@@ -14,16 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-<<<<<<< HEAD
 import { Drawer } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
 import { Search } from 'lucide-react';
-=======
-import { Drawer, Group } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
-import { useMutation } from '@tanstack/react-query';
->>>>>>> origin/tai
 import { observable, toJS } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { difference } from 'rambdax';
@@ -32,14 +26,7 @@ import { useDeepCompareEffect } from 'react-use';
 
 import { deletePluginMetadataReq, putPluginMetadataReq } from '@/apis/plugins';
 import type { PluginCardProps } from '@/components/form-slice/FormItemPlugins/PluginCard';
-<<<<<<< HEAD
 import { PluginCardList } from '@/components/form-slice/FormItemPlugins/PluginCardList';
-=======
-import {
-  PluginCardList,
-  PluginCardListSearch,
-} from '@/components/form-slice/FormItemPlugins/PluginCardList';
->>>>>>> origin/tai
 import {
   type PluginConfig,
   PluginEditorDrawer,
@@ -146,7 +133,6 @@ export const PluginMetadata = observer(() => {
 
   return (
     <Drawer.Stack>
-<<<<<<< HEAD
       {/* Only this toolbar is custom-styled (Tailwind) — PluginCardList
           itself (the actual card grid) is untouched, and stays the
           shared component used by Route/Service/Global Rules/Consumer/
@@ -174,24 +160,12 @@ export const PluginMetadata = observer(() => {
         </button>
         <SelectPluginsDrawer
           disabled
-=======
-      <Group>
-        <PluginCardListSearch
-          search={pluginsOb.search}
-          setSearch={pluginsOb.setSearch}
-        />
-        <SelectPluginsDrawer
->>>>>>> origin/tai
           plugins={pluginsOb.unSelected}
           onAdd={(name) => pluginsOb.on('add', name)}
           opened={pluginsOb.selectPluginsOpened}
           setOpened={pluginsOb.setSelectPluginsOpened}
         />
-<<<<<<< HEAD
       </div>
-=======
-      </Group>
->>>>>>> origin/tai
       <PluginCardList
         mode="edit"
         placeholder={t('pluginMetadata.search')}
@@ -211,8 +185,4 @@ export const PluginMetadata = observer(() => {
       />
     </Drawer.Stack>
   );
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> origin/tai

@@ -16,48 +16,29 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-<<<<<<< HEAD
-import { createFileRoute } from '@tanstack/react-router';
-import { useMemo } from 'react';
-=======
 import { Group } from '@mantine/core';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMemo, useState } from 'react';
->>>>>>> origin/tai
 import { useTranslation } from 'react-i18next';
 
 import { getConsumerGroupListQueryOptions, useConsumerGroupList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
-<<<<<<< HEAD
-import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
-=======
 import { ListSearchBox } from '@/components/page/ListSearchBox';
 import { ListTableCard } from '@/components/page/ListTableCard';
 import PageHeader from '@/components/page/PageHeader';
 import { PluginBadges } from '@/components/page/PluginBadges';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { useListTablePagination } from '@/components/page/useListTablePagination';
->>>>>>> origin/tai
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_CONSUMER_GROUPS } from '@/config/constant';
 import { queryClient } from '@/config/queryClient';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
-<<<<<<< HEAD
-=======
 import IconArrowRight from '~icons/material-symbols/arrow-right-alt';
->>>>>>> origin/tai
 
 function ConsumerGroupsList() {
   const { t } = useTranslation();
   const { data, isLoading, refetch, pagination } = useConsumerGroupList();
-<<<<<<< HEAD
-
-  const columns = useMemo<
-    ProColumns<APISIXType['RespConsumerGroupItem']>[]
-  >(() => {
-=======
   const [search, setSearch] = useState('');
 
   // ConsumerGroup không có field "name" nên server không có gì để lọc
@@ -81,7 +62,6 @@ function ConsumerGroupsList() {
   // ConsumerGroup = APISIXPluginConfigs.PluginConfig.omit({name:true})
   // trong types/schema/apisix/consumer_groups.ts.
   const columns = useMemo<ProColumns<APISIXType['RespConsumerGroupItem']>[]>(() => {
->>>>>>> origin/tai
     return [
       {
         dataIndex: ['value', 'id'],
@@ -90,16 +70,9 @@ function ConsumerGroupsList() {
         valueType: 'text',
       },
       {
-<<<<<<< HEAD
-        dataIndex: ['value', 'name'],
-        title: t('form.basic.name'),
-        key: 'name',
-        valueType: 'text',
-=======
         title: t('form.plugins.label'),
         key: 'plugins',
         render: (_, record) => <PluginBadges plugins={record.value.plugins} />,
->>>>>>> origin/tai
       },
       {
         dataIndex: ['value', 'desc'],
@@ -122,21 +95,14 @@ function ConsumerGroupsList() {
         title: t('table.actions'),
         valueType: 'option',
         key: 'option',
-<<<<<<< HEAD
-        width: 120,
-=======
         width: 140,
->>>>>>> origin/tai
         render: (_, record) => [
           <ToDetailPageBtn
             key="detail"
             to="/consumer_groups/detail/$id"
             params={{ id: record.value.id }}
-<<<<<<< HEAD
-=======
             variant="subtle"
             rightSection={<IconArrowRight />}
->>>>>>> origin/tai
           />,
           <DeleteResourceBtn
             key="delete"
@@ -152,37 +118,6 @@ function ConsumerGroupsList() {
 
   return (
     <AntdConfigProvider>
-<<<<<<< HEAD
-      <ProTable
-        columns={columns}
-        dataSource={data.list}
-        rowKey="id"
-        loading={isLoading}
-        search={false}
-        options={false}
-        pagination={pagination}
-        cardProps={{ bodyStyle: { padding: 0 } }}
-        toolbar={{
-          menu: {
-            type: 'inline',
-            items: [
-              {
-                key: 'add',
-                label: (
-                  <ToAddPageBtn
-                    key="add"
-                    to="/consumer_groups/add"
-                    label={t('info.add.title', {
-                      name: t('consumerGroups.singular'),
-                    })}
-                  />
-                ),
-              },
-            ],
-          },
-        }}
-      />
-=======
       <Group justify="space-between" mb="md" wrap="wrap">
         <ToAddPageBtn
           to="/consumer_groups/add"
@@ -205,7 +140,6 @@ function ConsumerGroupsList() {
           cardProps={{ bodyStyle: { padding: 0 } }}
         />
       </ListTableCard>
->>>>>>> origin/tai
     </AntdConfigProvider>
   );
 }
