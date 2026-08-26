@@ -16,7 +16,7 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { Badge, Group } from '@mantine/core';
+import { Group } from '@mantine/core';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,32 +24,17 @@ import { useTranslation } from 'react-i18next';
 import { getPluginConfigListQueryOptions, usePluginConfigList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import { ListSearchBox } from '@/components/page/ListSearchBox';
+import { ListTableCard } from '@/components/page/ListTableCard';
 import PageHeader from '@/components/page/PageHeader';
+import { PluginBadges } from '@/components/page/PluginBadges';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import { useListTablePagination } from '@/components/page/useListTablePagination';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_PLUGIN_CONFIGS } from '@/config/constant';
 import { queryClient } from '@/config/queryClient';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
-
-// Badge liệt kê tên các plugin trong 1 Plugin Config. Đây là điểm khác
-// với "Type" của Traefik Middlewares: 1 middleware chỉ có 1 type
-// (basicauth/ratelimit/...), còn 1 Plugin Config của APISIX gộp NHIỀU
-// plugin lại với nhau - nên không thể dùng 1 cột Type đơn giản, phải
-// liệt kê hết bằng badge.
-const PluginBadges = ({ plugins }: { plugins?: Record<string, unknown> }) => {
-  const names = Object.keys(plugins ?? {});
-  if (names.length === 0) return <>-</>;
-  return (
-    <Group gap={4} wrap="wrap">
-      {names.map((name) => (
-        <Badge key={name} variant="light" color="teal" size="sm">
-          {name}
-        </Badge>
-      ))}
-    </Group>
-  );
-};
+import IconArrowRight from '~icons/material-symbols/arrow-right-alt';
 
 function PluginConfigsList() {
   const { t } = useTranslation();
@@ -72,6 +57,10 @@ function PluginConfigsList() {
         valueType: 'text',
       },
       {
+        // Khác với "Type" của Traefik Middlewares (1 middleware chỉ có 1
+        // type basicauth/ratelimit/...), 1 Plugin Config của APISIX gộp
+        // NHIỀU plugin lại với nhau nên liệt kê hết bằng badge thay vì
+        // 1 cột Type đơn giản.
         title: 'Plugins',
         key: 'plugins',
         render: (_, record) => <PluginBadges plugins={record.value.plugins} />,
@@ -97,12 +86,14 @@ function PluginConfigsList() {
         title: t('table.actions'),
         valueType: 'option',
         key: 'option',
-        width: 120,
+        width: 140,
         render: (_, record) => [
           <ToDetailPageBtn
             key="detail"
             to="/plugin_configs/detail/$id"
             params={{ id: record.value.id }}
+            variant="subtle"
+            rightSection={<IconArrowRight />}
           />,
           <DeleteResourceBtn
             key="delete"
@@ -118,41 +109,32 @@ function PluginConfigsList() {
 
   return (
     <AntdConfigProvider>
-      <Group justify="flex-end" mb="sm">
+      <Group justify="space-between" mb="md" wrap="wrap">
+        <ToAddPageBtn
+          to="/plugin_configs/add"
+          label={t('info.add.title', { name: t('pluginConfigs.singular') })}
+          variant="filled"
+          color="teal"
+          radius="xl"
+        />
         <ListSearchBox
           value={params?.name}
           onSearch={(v) => setParams({ name: v || undefined, page: 1 })}
+          w={300}
         />
       </Group>
-      <ProTable
-        columns={columns}
-        dataSource={data.list}
-        rowKey="id"
-        loading={isLoading}
-        search={false}
-        options={false}
-        pagination={pagination}
-        cardProps={{ bodyStyle: { padding: 0 } }}
-        toolbar={{
-          menu: {
-            type: 'inline',
-            items: [
-              {
-                key: 'add',
-                label: (
-                  <ToAddPageBtn
-                    key="add"
-                    to="/plugin_configs/add"
-                    label={t('info.add.title', {
-                      name: t('pluginConfigs.singular'),
-                    })}
-                  />
-                ),
-              },
-            ],
-          },
-        }}
-      />
+      <ListTableCard>
+        <ProTable
+          columns={columns}
+          dataSource={data.list}
+          rowKey="id"
+          loading={isLoading}
+          search={false}
+          options={false}
+          pagination={useListTablePagination(pagination)}
+          cardProps={{ bodyStyle: { padding: 0 } }}
+        />
+      </ListTableCard>
     </AntdConfigProvider>
   );
 }

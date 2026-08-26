@@ -50,6 +50,10 @@ export const DetailTabs = () => {
         label: t('info.detail.title', { name: t('pluginConfigs.singular') }),
       },
       {
+        value: 'plugins',
+        label: t('form.plugins.label'),
+      },
+      {
         value: 'routes',
         label: t('sources.routes'),
       },

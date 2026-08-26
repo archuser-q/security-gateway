@@ -36,6 +36,8 @@ export const StatusFilterTabs = (props: StatusFilterTabsProps) => {
   return (
     <SegmentedControl
       size="sm"
+      radius="xl"
+      color="teal"
       value={value}
       onChange={(v) => onChange(v as StatusFilterValue)}
       data={[

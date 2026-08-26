@@ -18,7 +18,7 @@ import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { Group } from '@mantine/core';
 import { createFileRoute } from '@tanstack/react-router';
-import { Badge, Space, Tag } from 'antd';
+import { Space, Tag } from 'antd';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -26,9 +26,12 @@ import { getRouteListQueryOptions, useRouteList } from '@/apis/hooks';
 import type { WithServiceIdFilter } from '@/apis/routes';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import { ListSearchBox } from '@/components/page/ListSearchBox';
+import { ListTableCard } from '@/components/page/ListTableCard';
 import PageHeader from '@/components/page/PageHeader';
+import { StatusBadge } from '@/components/page/StatusBadge';
 import { StatusFilterTabs } from '@/components/page/StatusFilterTabs';
-import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import { ToAddPageBtn, type ToAddPageBtnProps,ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import { useListTablePagination } from '@/components/page/useListTablePagination';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_ROUTES } from '@/config/constant';
 import { queryClient } from '@/config/queryClient';
@@ -36,6 +39,7 @@ import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import { filterByStatus, type StatusFilterValue } from '@/utils/statusFilter';
 import type { ListPageKeys } from '@/utils/useTablePagination';
+import IconArrowRight from '~icons/material-symbols/arrow-right-alt';
 
 export type RouteListProps = {
   routeKey: Extract<ListPageKeys, '/_authenticated/routes/' | '/_authenticated/services/detail/$id/routes/'>;
@@ -74,12 +78,7 @@ export const RouteList = (props: RouteListProps) => {
         title: t('form.basic.status'),
         key: 'status',
         width: 110,
-        render: (_, record) =>
-          record.value.status === 0 ? (
-            <Badge status="default" text={t('form.basic.statusOption.0')} />
-          ) : (
-            <Badge status="success" text={t('form.basic.statusOption.1')} />
-          ),
+        render: (_, record) => <StatusBadge enabled={record.value.status !== 0} />,
       },
       {
         dataIndex: ['value', 'uri'],
@@ -152,7 +151,7 @@ export const RouteList = (props: RouteListProps) => {
         title: t('table.actions'),
         valueType: 'option',
         key: 'option',
-        width: 120,
+        width: 140,
         render: (_, record) => [
           <ToDetailBtn key="detail" record={record} />,
           <DeleteResourceBtn
@@ -169,45 +168,38 @@ export const RouteList = (props: RouteListProps) => {
 
   return (
     <AntdConfigProvider>
-      <Group justify="space-between" mb="sm" wrap="wrap">
-        <StatusFilterTabs value={statusFilter} onChange={setStatusFilter} />
+      <Group justify="space-between" mb="md" wrap="wrap">
+        <Group gap="sm" wrap="wrap">
+          <StatusFilterTabs value={statusFilter} onChange={setStatusFilter} />
+          <ToAddPageBtn
+            label={t('info.add.title', { name: t('routes.singular') })}
+            to={addRoute as ToAddPageBtnProps['to']}
+            variant="filled"
+            color="teal"
+            radius="xl"
+          />
+        </Group>
         <ListSearchBox
           value={params?.name}
           onSearch={(v) =>
             setParams({ name: v || undefined, page: 1 } as Partial<WithServiceIdFilter>)
           }
           placeholder={t('table.searchPlaceholder')}
+          w={300}
         />
       </Group>
-      <ProTable
-        columns={columns}
-        dataSource={filteredList}
-        rowKey="id"
-        loading={isLoading}
-        search={false}
-        options={false}
-        pagination={pagination}
-        cardProps={{ bodyStyle: { padding: 0 } }}
-        toolbar={{
-          menu: {
-            type: 'inline',
-            items: [
-              {
-                key: 'add',
-                label: (
-                  <ToAddPageBtn
-                    key="add"
-                    label={t('info.add.title', {
-                      name: t('routes.singular'),
-                    })}
-                    to={addRoute as any}
-                  />
-                ),
-              },
-            ],
-          },
-        }}
-      />
+      <ListTableCard>
+        <ProTable
+          columns={columns}
+          dataSource={filteredList}
+          rowKey="id"
+          loading={isLoading}
+          search={false}
+          options={false}
+          pagination={useListTablePagination(pagination)}
+          cardProps={{ bodyStyle: { padding: 0 } }}
+        />
+      </ListTableCard>
     </AntdConfigProvider>
   );
 };
@@ -224,6 +216,8 @@ function RouteComponent() {
             key="detail"
             to="/routes/detail/$id"
             params={{ id: record.value.id }}
+            variant="subtle"
+            rightSection={<IconArrowRight />}
           />
         )}
       />

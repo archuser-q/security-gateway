@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Badge, Button,Card, CopyButton, Divider, Grid, Group, Skeleton, Stack, Text  } from '@mantine/core';
+import { Badge, Button, Card, CopyButton, Group, Skeleton, Stack, Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import {
@@ -68,13 +68,14 @@ const InfoRow = ({ label, value }: { label: string; value: React.ReactNode }) =>
 );
 
 const InfoSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
-  <Card withBorder radius="md" p="md" mb="md">
-    <Text fw={600} size="sm" mb="xs">
+  <Stack gap={6}>
+    <Text fw={600} size="sm">
       {title}
     </Text>
-    <Divider mb="xs" />
-    <Stack gap={0}>{children}</Stack>
-  </Card>
+    <Card withBorder radius="md" p="md">
+      <Stack gap={0}>{children}</Stack>
+    </Card>
+  </Stack>
 );
 
 /** Hex ngắn gọn + nút copy - dùng cho 2 dòng vân tay SHA-256, vì chuỗi hex 64 ký tự khó đọc/khó bấm chọn tay. */
@@ -220,71 +221,59 @@ const SSLSummaryCard = (props: {
       </Card>
 
       {certInfo && (
-        <Grid mb="md">
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <InfoSection title={t('certDetail.issuedTo')}>
-              <InfoRow label="Common Name" value={certInfo.subject.cn ?? '-'} />
-              <InfoRow
-                label="Subject Alternative Names"
-                value={certInfo.sans.length ? certInfo.sans.join(', ') : '-'}
-              />
-              <InfoRow label="Organization" value={certInfo.subject.o ?? '-'} />
-              <InfoRow label="Country" value={certInfo.subject.c ?? '-'} />
-            </InfoSection>
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <InfoSection title={t('certDetail.issuedBy')}>
-              <InfoRow label="Common Name" value={certInfo.issuer.cn ?? '-'} />
-              <InfoRow label="Organization" value={certInfo.issuer.o ?? '-'} />
-              <InfoRow label="Country" value={certInfo.issuer.c ?? '-'} />
-            </InfoSection>
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <InfoSection title={t('certDetail.validity')}>
-              <InfoRow label="Valid From" value={formatDateTime(certInfo.notBefore)} />
-              <InfoRow label="Valid Until" value={formatDateTime(certInfo.notAfter)} />
-              <InfoRow label="Expiry" value={<Badge color={expiryColor} variant="light">{expiryLabel}</Badge>} />
-            </InfoSection>
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <InfoSection title={t('certDetail.technicalDetails')}>
-              <InfoRow label="Version" value={`v${certInfo.version}`} />
-              <InfoRow label="Serial Number" value={certInfo.serialNumberDecimal ?? '-'} />
-              <InfoRow label="Key Type" value={certInfo.publicKey.algorithm} />
-              <InfoRow label="Key Size" value={keySizeLabel} />
-              <InfoRow label="Signature Algorithm" value={certInfo.signatureAlgorithm} />
-            </InfoSection>
-          </Grid.Col>
-          <Grid.Col span={12}>
-            <InfoSection title={t('certDetail.fingerprints')}>
-              <FingerprintRow label="Certificate" value={fingerprints?.certificate ?? null} />
-              <FingerprintRow label="Public Key" value={fingerprints?.publicKey ?? null} />
-            </InfoSection>
-          </Grid.Col>
+        <Stack gap="md" mb="md">
+          <InfoSection title={t('certDetail.issuedTo')}>
+            <InfoRow label="Common Name" value={certInfo.subject.cn ?? '-'} />
+            <InfoRow
+              label="Subject Alternative Names"
+              value={certInfo.sans.length ? certInfo.sans.join(', ') : '-'}
+            />
+            <InfoRow label="Organization" value={certInfo.subject.o ?? '-'} />
+            <InfoRow label="Country" value={certInfo.subject.c ?? '-'} />
+          </InfoSection>
+          <InfoSection title={t('certDetail.issuedBy')}>
+            <InfoRow label="Common Name" value={certInfo.issuer.cn ?? '-'} />
+            <InfoRow label="Organization" value={certInfo.issuer.o ?? '-'} />
+            <InfoRow label="Country" value={certInfo.issuer.c ?? '-'} />
+          </InfoSection>
+          <InfoSection title={t('certDetail.validity')}>
+            <InfoRow label="Valid From" value={formatDateTime(certInfo.notBefore)} />
+            <InfoRow label="Valid Until" value={formatDateTime(certInfo.notAfter)} />
+            <InfoRow label="Expiry" value={<Badge color={expiryColor} variant="light">{expiryLabel}</Badge>} />
+          </InfoSection>
+          <InfoSection title={t('certDetail.technicalDetails')}>
+            <InfoRow label="Version" value={`v${certInfo.version}`} />
+            <InfoRow label="Serial Number" value={certInfo.serialNumberDecimal ?? '-'} />
+            <InfoRow label="Key Type" value={certInfo.publicKey.algorithm} />
+            <InfoRow label="Key Size" value={keySizeLabel} />
+            <InfoRow label="Signature Algorithm" value={certInfo.signatureAlgorithm} />
+          </InfoSection>
+          <InfoSection title={t('certDetail.fingerprints')}>
+            <FingerprintRow label="Certificate" value={fingerprints?.certificate ?? null} />
+            <FingerprintRow label="Public Key" value={fingerprints?.publicKey ?? null} />
+          </InfoSection>
           {(value.ssl_protocols?.length || value.client) && (
-            <Grid.Col span={12}>
-              <InfoSection title={t('certDetail.apisixConfigTitle')}>
-                {value.ssl_protocols?.length ? (
+            <InfoSection title={t('certDetail.apisixConfigTitle')}>
+              {value.ssl_protocols?.length ? (
+                <InfoRow
+                  label={t('certDetail.allowedProtocols')}
+                  value={value.ssl_protocols.join(', ')}
+                />
+              ) : null}
+              {value.client && (
+                <>
                   <InfoRow
-                    label={t('certDetail.allowedProtocols')}
-                    value={value.ssl_protocols.join(', ')}
+                    label={t('certDetail.mtlsCa')}
+                    value={value.client.ca ? t('certDetail.mtlsCaSet') : '-'}
                   />
-                ) : null}
-                {value.client && (
-                  <>
-                    <InfoRow
-                      label={t('certDetail.mtlsCa')}
-                      value={value.client.ca ? t('certDetail.mtlsCaSet') : '-'}
-                    />
-                    {typeof value.client.depth === 'number' && (
-                      <InfoRow label={t('certDetail.mtlsDepth')} value={value.client.depth} />
-                    )}
-                  </>
-                )}
-              </InfoSection>
-            </Grid.Col>
+                  {typeof value.client.depth === 'number' && (
+                    <InfoRow label={t('certDetail.mtlsDepth')} value={value.client.depth} />
+                  )}
+                </>
+              )}
+            </InfoSection>
           )}
-        </Grid>
+        </Stack>
       )}
     </>
   );

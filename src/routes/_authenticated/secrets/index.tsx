@@ -24,14 +24,17 @@ import { useTranslation } from 'react-i18next';
 import { getSecretListQueryOptions, useSecretList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import { ListSearchBox } from '@/components/page/ListSearchBox';
+import { ListTableCard } from '@/components/page/ListTableCard';
 import PageHeader from '@/components/page/PageHeader';
 import { SecretManagerBadge } from '@/components/page/SecretManagerBadge';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import { useListTablePagination } from '@/components/page/useListTablePagination';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_SECRETS } from '@/config/constant';
 import { queryClient } from '@/config/queryClient';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
+import IconArrowRight from '~icons/material-symbols/arrow-right-alt';
 
 function SecretList() {
   const { t } = useTranslation();
@@ -71,7 +74,7 @@ function SecretList() {
         title: t('table.actions'),
         valueType: 'option',
         key: 'option',
-        width: 120,
+        width: 140,
         render: (_, record) => [
           <ToDetailPageBtn
             key="detail"
@@ -80,6 +83,8 @@ function SecretList() {
               manager: record.value.manager,
               id: record.value.id,
             }}
+            variant="subtle"
+            rightSection={<IconArrowRight />}
           />,
           <DeleteResourceBtn
             key="delete"
@@ -95,36 +100,28 @@ function SecretList() {
 
   return (
     <AntdConfigProvider>
-      <Group justify="flex-end" mb="sm">
-        <ListSearchBox value={search} onSearch={setSearch} />
+      <Group justify="space-between" mb="md" wrap="wrap">
+        <ToAddPageBtn
+          to="/secrets/add"
+          label={t('info.add.title', { name: t('secrets.singular') })}
+          variant="filled"
+          color="teal"
+          radius="xl"
+        />
+        <ListSearchBox value={search} onSearch={setSearch} w={300} />
       </Group>
-      <ProTable
-        columns={columns}
-        dataSource={filteredList}
-        rowKey="id"
-        loading={isLoading}
-        search={false}
-        options={false}
-        pagination={pagination}
-        cardProps={{ bodyStyle: { padding: 0 } }}
-        toolbar={{
-          menu: {
-            type: 'inline',
-            items: [
-              {
-                key: 'add',
-                label: (
-                  <ToAddPageBtn
-                    key="add"
-                    to="/secrets/add"
-                    label={t('info.add.title', { name: t('secrets.singular') })}
-                  />
-                ),
-              },
-            ],
-          },
-        }}
-      />
+      <ListTableCard>
+        <ProTable
+          columns={columns}
+          dataSource={filteredList}
+          rowKey="id"
+          loading={isLoading}
+          search={false}
+          options={false}
+          pagination={useListTablePagination(pagination)}
+          cardProps={{ bodyStyle: { padding: 0 } }}
+        />
+      </ListTableCard>
     </AntdConfigProvider>
   );
 }

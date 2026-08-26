@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Badge, Button, Card, Grid, Group, Skeleton, Stack, Text } from '@mantine/core';
+import { Badge, Button, Card, Group, Skeleton, Stack, Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import {
@@ -40,59 +40,13 @@ import { API_PLUGIN_CONFIGS } from '@/config/constant';
 import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 
-const formatConfigValue = (v: unknown): string => {
-  if (v === null || v === undefined || v === '') return '-';
-  if (typeof v === 'object') return JSON.stringify(v);
-  return String(v);
-};
-
 // Traefik hiện thẳng Average/Period/Burst (tham số riêng của middleware
-// ratelimit) ngay đầu trang chi tiết, không bắt người xem phải bấm thêm.
-// Plugin Config của APISIX có thể chứa NHIỀU plugin cùng lúc (khác với
-// Traefik chỉ 1 type/middleware), nên ở đây liệt kê từng plugin thành 1
-// khối riêng, mỗi khối hiện hết key/value cấu hình của đúng plugin đó -
-// giữ đúng tinh thần "xem được ngay, không cần bấm vào tab Plugins".
-const PluginParamsList = ({
-  plugins,
-}: {
-  plugins?: Record<string, Record<string, unknown>>;
-}) => {
-  const entries = Object.entries(plugins ?? {});
-  if (entries.length === 0) return null;
-
-  return (
-    <Grid mb="md">
-      {entries.map(([name, config]) => (
-        <Grid.Col key={name} span={{ base: 12, md: 6 }}>
-          <Card withBorder radius="md" p="md">
-            <Badge variant="light" color="teal" size="sm" mb="xs">
-              {name}
-            </Badge>
-            <Stack gap={0}>
-              {Object.entries(config).length === 0 ? (
-                <Text size="sm" c="dimmed">
-                  -
-                </Text>
-              ) : (
-                Object.entries(config).map(([key, val]) => (
-                  <Group key={key} justify="space-between" py={4} wrap="nowrap" gap="md">
-                    <Text size="sm" c="dimmed" style={{ flexShrink: 0 }}>
-                      {key}
-                    </Text>
-                    <Text size="sm" ta="right" style={{ wordBreak: 'break-all' }}>
-                      {formatConfigValue(val)}
-                    </Text>
-                  </Group>
-                ))
-              )}
-            </Stack>
-          </Card>
-        </Grid.Col>
-      ))}
-    </Grid>
-  );
-};
-
+// ratelimit) ngay đầu trang chi tiết. Plugin Config của APISIX có thể
+// chứa NHIỀU plugin cùng lúc (khác với Traefik chỉ 1 type/middleware) -
+// danh sách chi tiết từng plugin (trước đây nằm ngay đây) đã tách sang
+// tab Plugins riêng (xem detail.$id/plugins/index.tsx +
+// components/page/PluginConfigGrid.tsx) để tránh trang General dài ra
+// khi 1 Plugin Config gộp nhiều plugin.
 // Cùng phong cách tóm tắt nhanh đã dùng cho Route/SSL. Không có Status
 // (Plugin Config không thật sự có trạng thái bật/tắt như Route/SSL, xem
 // giải thích trong chat) nên khối tóm tắt chỉ còn ID/Name/Desc + danh
@@ -194,7 +148,6 @@ const PluginConfigDetailForm = (props: Props) => {
   return (
     <>
       <PluginConfigSummaryCard data={initialValue} />
-      <PluginParamsList plugins={initialValue.plugins} />
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit((d) => putPluginConfig.mutateAsync(d))}>
           <FormSectionGeneral readOnly />

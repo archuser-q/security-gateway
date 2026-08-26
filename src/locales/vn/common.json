@@ -494,7 +494,12 @@
     "disabled": "Vô Hiệu",
     "enabled": "Hoạt Động",
     "allStatus": "Tất cả trạng thái",
-    "searchPlaceholder": "Tìm kiếm"
+    "searchPlaceholder": "Tìm kiếm",
+    "totalItems": "Tổng {{count}} mục",
+    "btn": {
+      "prev": "Trước",
+      "next": "Sau"
+    }
   },
   "upstreams": {
     "singular": "Upstream"

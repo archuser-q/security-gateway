@@ -494,7 +494,12 @@
     "disabled": "Disabled",
     "enabled": "Enabled",
     "allStatus": "All status",
-    "searchPlaceholder": "Search"
+    "searchPlaceholder": "Search",
+    "totalItems": "Total {{count}} items",
+    "btn": {
+      "prev": "Prev",
+      "next": "Next"
+    }
   },
   "upstreams": {
     "singular": "Upstream"

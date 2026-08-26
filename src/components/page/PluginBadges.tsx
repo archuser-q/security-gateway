@@ -14,20 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Badge, Group } from '@mantine/core';
 
-export type StatusFilterValue = 'all' | 'enabled' | 'disabled';
-
-/** Helper dùng chung: lọc 1 mảng item có value.status theo StatusFilterValue. */
-export const filterByStatus = <T extends { value: { status?: 0 | 1 } }>(
-  list: T[],
-  status: StatusFilterValue
-): T[] => {
-  if (status === 'all') return list;
-  // Theo tài liệu APISIX: status mặc định là 1 (enabled) nếu không set,
-  // 0 mới là disabled - không phải "phải đúng bằng 1 mới enabled". Bản
-  // cũ lọc Enabled bằng "=== 1" nên bỏ sót mọi resource không có field
-  // status (undefined) dù APISIX coi các resource đó là đang enabled.
-  return list.filter((item) =>
-    status === 'enabled' ? item.value.status !== 0 : item.value.status === 0
+// Trước đây component này bị định nghĩa lặp lại y hệt ở cả
+// consumer_groups/index.tsx lẫn plugin_configs/index.tsx (vì
+// ConsumerGroup thực chất là PluginConfig thiếu field name - xem
+// comment gốc trong consumer_groups/index.tsx). Gộp về đây để 2 trang
+// dùng chung, hành vi render giữ nguyên như cũ.
+export const PluginBadges = ({ plugins }: { plugins?: Record<string, unknown> }) => {
+  const names = Object.keys(plugins ?? {});
+  if (names.length === 0) return <>-</>;
+  return (
+    <Group gap={4} wrap="wrap">
+      {names.map((name) => (
+        <Badge key={name} variant="light" color="teal" size="sm">
+          {name}
+        </Badge>
+      ))}
+    </Group>
   );
 };

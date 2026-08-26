@@ -33,6 +33,10 @@ export const AntdConfigProvider = (props: PropsWithChildren) => {
       theme={{
         token: {
           borderRadiusSM: 2,
+          // Đồng bộ màu chính của antd (Pagination, sorter, Tag "processing",...)
+          // với teal của Mantine theme ở main.tsx (teal-600 #0d9488 - đã đổi
+          // từ teal mặc định của Mantine vì ngả xanh lá hơn ảnh mẫu).
+          colorPrimary: '#0d9488',
         },
       }}
     >

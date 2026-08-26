@@ -18,16 +18,19 @@ import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { Group } from '@mantine/core';
 import { createFileRoute } from '@tanstack/react-router';
-import { Badge, Tag } from 'antd';
+import { Tag } from 'antd';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getSSLListQueryOptions, useSSLList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import { ListSearchBox } from '@/components/page/ListSearchBox';
+import { ListTableCard } from '@/components/page/ListTableCard';
 import PageHeader from '@/components/page/PageHeader';
+import { StatusBadge } from '@/components/page/StatusBadge';
 import { StatusFilterTabs } from '@/components/page/StatusFilterTabs';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import { useListTablePagination } from '@/components/page/useListTablePagination';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_SSLS } from '@/config/constant';
 import { queryClient } from '@/config/queryClient';
@@ -35,6 +38,7 @@ import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import { type CertInfo,parseCertInfo } from '@/utils/certParser';
 import { filterByStatus, type StatusFilterValue } from '@/utils/statusFilter';
+import IconArrowRight from '~icons/material-symbols/arrow-right-alt';
 
 type SSLListItem = APISIXType['RespSSLItem'] & { certInfo: CertInfo | null };
 
@@ -107,12 +111,7 @@ function RouteComponent() {
         title: t('form.basic.status'),
         key: 'status',
         width: 110,
-        render: (_, record) =>
-          record.value.status === 0 ? (
-            <Badge status="default" text={t('form.basic.statusOption.0')} />
-          ) : (
-            <Badge status="success" text={t('form.basic.statusOption.1')} />
-          ),
+        render: (_, record) => <StatusBadge enabled={record.value.status !== 0} />,
       },
       {
         dataIndex: ['value', 'sni'],
@@ -168,12 +167,14 @@ function RouteComponent() {
         title: t('table.actions'),
         valueType: 'option',
         key: 'option',
-        width: 120,
+        width: 140,
         render: (_, record) => [
           <ToDetailPageBtn
             key="detail"
             to="/ssls/detail/$id"
             params={{ id: record.value.id }}
+            variant="subtle"
+            rightSection={<IconArrowRight />}
           />,
           <DeleteResourceBtn
             key="delete"
@@ -190,41 +191,36 @@ function RouteComponent() {
     <>
       <PageHeader title={t('sources.ssls')} />
       <AntdConfigProvider>
-        <Group justify="space-between" mb="sm" wrap="wrap">
-          <StatusFilterTabs value={statusFilter} onChange={setStatusFilter} />
+        <Group justify="space-between" mb="md" wrap="wrap">
+          <Group gap="sm" wrap="wrap">
+            <StatusFilterTabs value={statusFilter} onChange={setStatusFilter} />
+            <ToAddPageBtn
+              to="/ssls/add"
+              label={t('info.add.title', { name: t('ssls.singular') })}
+              variant="filled"
+              color="teal"
+              radius="xl"
+            />
+          </Group>
           <ListSearchBox
             value={search}
             onSearch={setSearch}
             placeholder="SNI..."
+            w={300}
           />
         </Group>
-        <ProTable
-          columns={columns}
-          dataSource={filteredList}
-          rowKey="id"
-          loading={isLoading}
-          search={false}
-          options={false}
-          pagination={pagination}
-          cardProps={{ bodyStyle: { padding: 0 } }}
-          toolbar={{
-            menu: {
-              type: 'inline',
-              items: [
-                {
-                  key: 'add',
-                  label: (
-                    <ToAddPageBtn
-                      key="add"
-                      to="/ssls/add"
-                      label={t('info.add.title', { name: t('ssls.singular') })}
-                    />
-                  ),
-                },
-              ],
-            },
-          }}
-        />
+        <ListTableCard>
+          <ProTable
+            columns={columns}
+            dataSource={filteredList}
+            rowKey="id"
+            loading={isLoading}
+            search={false}
+            options={false}
+            pagination={useListTablePagination(pagination)}
+            cardProps={{ bodyStyle: { padding: 0 } }}
+          />
+        </ListTableCard>
       </AntdConfigProvider>
     </>
   );

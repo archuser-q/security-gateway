@@ -20,7 +20,7 @@ import {
   useParams,
 } from '@tanstack/react-router';
 
-import { RouteDetail } from '@/routes/_authenticated/routes/detail.$id';
+import { RouteDetail } from '@/routes/_authenticated/routes/detail.$id/index';
 import { CommonFormContext } from '@/utils/form-context';
 
 function RouteComponent() {

@@ -36,13 +36,32 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 // trung tính, accent xanh teal, bo góc mềm, chữ không quá đậm. Đây là
 // lớp "học phong cách nhìn" - chỉ đổi ở 1 chỗ này, toàn bộ trang tự
 // đồng bộ theo, không cần sửa từng trang.
+// Teal mặc định của Mantine (#0ca678) ngả xanh LÁ hơn ảnh mẫu - đổi
+// sang đúng thang teal của Tailwind (teal-50 -> teal-900) để khớp ảnh,
+// đồng thời khớp luôn với các class Tailwind "teal-600" dùng rải rác
+// trong app (StatusBadge, ListTableCard,...) - chỉ 1 màu teal duy nhất
+// cho toàn bộ Mantine + Tailwind + antd (xem antdConfigProvider.tsx).
 const theme = createTheme({
   primaryColor: 'teal',
+  colors: {
+    teal: [
+      '#f0fdfa',
+      '#ccfbf1',
+      '#99f6e4',
+      '#5eead4',
+      '#2dd4bf',
+      '#14b8a6',
+      '#0d9488',
+      '#0f766e',
+      '#115e59',
+      '#134e4a',
+    ],
+  },
   defaultRadius: 'md',
   fontFamily:
-    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+    'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
   headings: {
-    fontWeight: '600',
+    fontWeight: '700',
   },
   components: {
     Card: {

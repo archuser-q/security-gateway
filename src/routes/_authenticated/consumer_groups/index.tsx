@@ -16,7 +16,7 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { Badge, Group } from '@mantine/core';
+import { Group } from '@mantine/core';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,33 +24,17 @@ import { useTranslation } from 'react-i18next';
 import { getConsumerGroupListQueryOptions, useConsumerGroupList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import { ListSearchBox } from '@/components/page/ListSearchBox';
+import { ListTableCard } from '@/components/page/ListTableCard';
 import PageHeader from '@/components/page/PageHeader';
+import { PluginBadges } from '@/components/page/PluginBadges';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import { useListTablePagination } from '@/components/page/useListTablePagination';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_CONSUMER_GROUPS } from '@/config/constant';
 import { queryClient } from '@/config/queryClient';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
-
-// Cùng cách hiển thị plugin dạng badge như Plugin Configs, vì
-// ConsumerGroup bản chất CHÍNH LÀ PluginConfig (chỉ thiếu field name) -
-// xem ConsumerGroup = APISIXPluginConfigs.PluginConfig.omit({name:true})
-// trong types/schema/apisix/consumer_groups.ts. Không có cột Name vì
-// resource này không có field đó (bản cũ có cột Name nhưng luôn rỗng vì
-// đọc nhầm field không tồn tại - đã bỏ).
-const PluginBadges = ({ plugins }: { plugins?: Record<string, unknown> }) => {
-  const names = Object.keys(plugins ?? {});
-  if (names.length === 0) return <>-</>;
-  return (
-    <Group gap={4} wrap="wrap">
-      {names.map((name) => (
-        <Badge key={name} variant="light" color="teal" size="sm">
-          {name}
-        </Badge>
-      ))}
-    </Group>
-  );
-};
+import IconArrowRight from '~icons/material-symbols/arrow-right-alt';
 
 function ConsumerGroupsList() {
   const { t } = useTranslation();
@@ -71,6 +55,12 @@ function ConsumerGroupsList() {
     });
   }, [data.list, search]);
 
+  // Không có cột Name vì ConsumerGroup không có field đó (bản cũ có cột
+  // Name nhưng luôn rỗng vì đọc nhầm field không tồn tại - đã bỏ). Badge
+  // plugin dùng chung PluginBadges với Plugin Configs vì ConsumerGroup
+  // bản chất CHÍNH LÀ PluginConfig (chỉ thiếu field name) - xem
+  // ConsumerGroup = APISIXPluginConfigs.PluginConfig.omit({name:true})
+  // trong types/schema/apisix/consumer_groups.ts.
   const columns = useMemo<ProColumns<APISIXType['RespConsumerGroupItem']>[]>(() => {
     return [
       {
@@ -105,12 +95,14 @@ function ConsumerGroupsList() {
         title: t('table.actions'),
         valueType: 'option',
         key: 'option',
-        width: 120,
+        width: 140,
         render: (_, record) => [
           <ToDetailPageBtn
             key="detail"
             to="/consumer_groups/detail/$id"
             params={{ id: record.value.id }}
+            variant="subtle"
+            rightSection={<IconArrowRight />}
           />,
           <DeleteResourceBtn
             key="delete"
@@ -126,38 +118,28 @@ function ConsumerGroupsList() {
 
   return (
     <AntdConfigProvider>
-      <Group justify="flex-end" mb="sm">
-        <ListSearchBox value={search} onSearch={setSearch} />
+      <Group justify="space-between" mb="md" wrap="wrap">
+        <ToAddPageBtn
+          to="/consumer_groups/add"
+          label={t('info.add.title', { name: t('consumerGroups.singular') })}
+          variant="filled"
+          color="teal"
+          radius="xl"
+        />
+        <ListSearchBox value={search} onSearch={setSearch} w={300} />
       </Group>
-      <ProTable
-        columns={columns}
-        dataSource={filteredList}
-        rowKey="id"
-        loading={isLoading}
-        search={false}
-        options={false}
-        pagination={pagination}
-        cardProps={{ bodyStyle: { padding: 0 } }}
-        toolbar={{
-          menu: {
-            type: 'inline',
-            items: [
-              {
-                key: 'add',
-                label: (
-                  <ToAddPageBtn
-                    key="add"
-                    to="/consumer_groups/add"
-                    label={t('info.add.title', {
-                      name: t('consumerGroups.singular'),
-                    })}
-                  />
-                ),
-              },
-            ],
-          },
-        }}
-      />
+      <ListTableCard>
+        <ProTable
+          columns={columns}
+          dataSource={filteredList}
+          rowKey="id"
+          loading={isLoading}
+          search={false}
+          options={false}
+          pagination={useListTablePagination(pagination)}
+          cardProps={{ bodyStyle: { padding: 0 } }}
+        />
+      </ListTableCard>
     </AntdConfigProvider>
   );
 }
