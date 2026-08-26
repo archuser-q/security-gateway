@@ -14,43 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { ButtonProps } from '@mantine/core';
-import type { LinkProps } from '@tanstack/react-router';
+import { Link, type LinkProps } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
-import { RouteLinkBtn } from '@/components/Btn';
 import type { FileRoutesByTo } from '@/routeTree.gen';
 import IconPlus from '~icons/material-symbols/add';
+import { RouteLinkBtn } from '../Btn';
 
 export type ToAddPageBtnProps = {
   to: keyof FilterKeys<FileRoutesByTo, 'add'>;
   label: string;
-} & Pick<LinkProps, 'params'> &
-  Partial<Pick<ButtonProps, 'variant' | 'color' | 'radius'>>;
+} & Pick<LinkProps, 'params'>;
 
-// variant/color/radius có default giữ nguyên như cũ (gradient) để các
-// trang khác không đổi giao diện; chỉ trang nào truyền riêng (vd
-// Routes/SSLs/... theo ảnh mẫu) mới đổi sang nút teal bo tròn hẳn.
-export const ToAddPageBtn = ({
-  to,
-  params,
-  label,
-  variant = 'gradient',
-  color,
-  radius,
-}: ToAddPageBtnProps) => {
+export const ToAddPageBtn = ({ to, params, label }: ToAddPageBtnProps) => {
   return (
-    <RouteLinkBtn
-      leftSection={<IconPlus />}
-      size="compact-sm"
-      variant={variant}
-      color={color}
-      radius={radius}
+    <Link
       to={to}
       params={params}
+      className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-teal-600 to-teal-500
+                 px-3.5 py-2 text-sm font-medium text-white shadow-sm
+                 transition-all hover:from-teal-700 hover:to-teal-600 hover:shadow-md
+                 active:scale-[0.98]"
     >
+      <IconPlus className="h-4 w-4" />
       {label}
-    </RouteLinkBtn>
+    </Link>
   );
 };
 
@@ -59,22 +47,12 @@ export type ToDetailPageBtnProps = {
     | keyof FilterKeys<FileRoutesByTo, '$id'>
     | keyof FilterKeys<FileRoutesByTo, '$routeId'>
     | keyof FilterKeys<FileRoutesByTo, '$username'>;
-} & Pick<LinkProps, 'params'> &
-  Partial<Pick<ButtonProps, 'variant' | 'rightSection'>>;
-
-// Tương tự ToAddPageBtn: variant/rightSection có default giữ nguyên
-// như cũ (nút "light" không mũi tên), chỉ đổi khi nơi gọi truyền vào.
+} & Pick<LinkProps, 'params'>;
 export const ToDetailPageBtn = (props: ToDetailPageBtnProps) => {
-  const { params, to, variant = 'light', rightSection } = props;
+  const { params, to } = props;
   const { t } = useTranslation();
   return (
-    <RouteLinkBtn
-      size="compact-xs"
-      variant={variant}
-      rightSection={rightSection}
-      to={to}
-      params={params}
-    >
+    <RouteLinkBtn size="compact-xs" variant="light" color="teal" to={to} params={params}>
       {t('form.btn.view')}
     </RouteLinkBtn>
   );
