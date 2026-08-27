@@ -115,92 +115,12 @@ function RouteComponent() {
     });
   }, [listWithCertInfo, statusFilter, search]);
 
-<<<<<<< HEAD
-  const columns = useMemo<ProColumns<SSLListItem>[]>(() => {
-    return [
-      {
-        dataIndex: ['value', 'status'],
-        title: t('form.basic.status'),
-        key: 'status',
-        width: 110,
-        render: (_, record) => <StatusBadge enabled={record.value.status !== 0} />,
-      },
-      {
-        dataIndex: ['value', 'sni'],
-        title: 'SNI',
-        key: 'sni',
-        valueType: 'text',
-        render: (_, record) => {
-          const sni = record.value.sni;
-          const snis = record.value.snis;
-          if (sni) return sni;
-          if (snis && snis.length > 0) return snis.join(', ');
-          return '-';
-        },
-      },
-      {
-        title: 'SANs',
-        key: 'sans',
-        render: (_, record) => <SansText info={record.certInfo} />,
-      },
-      {
-        dataIndex: ['value', 'cert'],
-        title: 'Issuer',
-        key: 'issuer',
-        render: (_, record) => <IssuerText info={record.certInfo} />,
-      },
-      {
-        dataIndex: ['value', 'cert'],
-        title: 'Valid Until',
-        key: 'valid_until',
-        width: 120,
-        render: (_, record) => <ValidUntilText info={record.certInfo} />,
-      },
-      {
-        dataIndex: ['value', 'cert'],
-        title: 'Expiry',
-        key: 'expiry',
-        width: 130,
-        render: (_, record) => <ExpiryTag info={record.certInfo} />,
-      },
-      {
-        dataIndex: ['value', 'id'],
-        title: 'ID',
-        key: 'id',
-        valueType: 'text',
-      },
-      {
-        title: t('table.actions'),
-        valueType: 'option',
-        key: 'option',
-        width: 140,
-        render: (_, record) => [
-          <ToDetailPageBtn
-            key="detail"
-            to="/ssls/detail/$id"
-            params={{ id: record.value.id }}
-            variant="subtle"
-            rightSection={<IconArrowRight />}
-          />,
-          <DeleteResourceBtn
-            key="delete"
-            name={t('ssls.singular')}
-            target={record.value.id}
-            api={`${API_SSLS}/${record.value.id}`}
-            onSuccess={refetch}
-          />,
-        ],
-      },
-    ];
-  }, [t, refetch]);
-=======
   const filterOptions: { key: StatusFilter; label: string }[] = [
     { key: 'all', label: t('info.status.all', 'All status') },
     { key: 'enabled', label: t('table.enabled') },
     { key: 'disabled', label: t('table.disabled') },
   ];
 
->>>>>>> origin/tai
   return (
     <div className="space-y-4">
       <PageHeader title={t('sources.ssls')} />
