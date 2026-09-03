@@ -145,12 +145,9 @@ const ServiceList = () => {
         <table className="w-full text-left text-base">
           <thead>
             <tr className="border-b border-gray-100">
-              <SortableHeader
-                label={t('form.basic.name')}
-                active={sortKey === 'name'}
-                dir={sortKey === 'name' ? sortDir : undefined}
-                onClick={() => toggleSort('name')}
-              />
+              <th className="px-4 py-3 text-sm font-normal text-gray-700">
+                {t('form.basic.name')}
+              </th>
               <th className="px-4 py-3 text-sm font-normal text-gray-700">ID</th>
               <th className="px-4 py-3 text-sm font-normal text-gray-700">
                 {t('form.basic.desc')}
@@ -196,10 +193,10 @@ const ServiceList = () => {
                     key={id}
                     className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/60"
                   >
-                    <td className="px-4 py-3 font-medium text-black">{name || id}</td>
-                    <td className="px-4 py-3 font-mono text-sm text-black">{id}</td>
-                    <td className="px-4 py-3 text-black">{desc || '-'}</td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 text-sm text-black">{name || id}</td>
+                    <td className="px-4 py-3 text-sm text-black">{id}</td>
+                    <td className="px-4 py-3 text-sm text-black">{desc || '-'}</td>
+                    <td className="px-4 py-3 text-sm text-black">
                       {isEnabled ? (
                         <span className="inline-flex items-center gap-1.5 text-green-600">
                           <CheckCircle2 className="h-4 w-4" />
@@ -212,7 +209,7 @@ const ServiceList = () => {
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-black">
+                    <td className="px-4 py-3 text-sm text-black">
                       {update_time
                         ? dayjs(update_time * 1000).format('YYYY-MM-DD HH:mm:ss')
                         : '-'}

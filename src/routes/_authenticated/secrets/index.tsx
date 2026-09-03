@@ -114,7 +114,7 @@ const SecretList = () => {
                     key={id}
                     className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/60"
                   >
-                    <td className="px-4 py-3 font-mono text-sm text-black">{id}</td>
+                    <td className="px-4 py-3 text-sm text-black">{id}</td>
                     <td className="px-4 py-3">
                       <span
                         className={`rounded-full px-2.5 py-0.5 text-sm font-medium ${

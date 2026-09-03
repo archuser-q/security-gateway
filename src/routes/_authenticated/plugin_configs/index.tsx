@@ -142,7 +142,7 @@ function PluginConfigsList() {
                     key={id}
                     className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/60"
                   >
-                    <td className="px-4 py-3 font-mono">{id}</td>
+                    <td className="px-4 py-3">{id}</td>
                     <td className="px-4 py-3">{name || '-'}</td>
                     <td className="px-4 py-3">
                       <PluginBadges plugins={plugins} />
